@@ -1,0 +1,9 @@
+REAL-TIME PATIENT PREDICTION REPORT
+==================================================
+Patient ID: 1
+Disease Probability: 61.90%
+Risk Category: High
+Percentile Rank: 55.7
+Cohort Mean: 52.67%
+Cohort Std Dev: 29.91%
+==================================================
