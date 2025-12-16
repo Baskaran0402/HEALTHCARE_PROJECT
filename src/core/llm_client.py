@@ -23,7 +23,7 @@ class GeminiClient:
             model=self.model_name,
             contents=prompt,
             config=types.GenerateContentConfig(
-                temperature=0.3,          # medical safety
+                temperature=0.0,          # medical safety
                 thinking_config=types.ThinkingConfig(
                     thinking_budget=0     # disable deep thinking for speed
                 ),
