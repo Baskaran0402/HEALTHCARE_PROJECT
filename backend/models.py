@@ -1,6 +1,7 @@
 import uuid
 
-from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (JSON, Boolean, Column, DateTime, Float, ForeignKey,
+                        Integer, String, Text)
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
@@ -29,8 +30,12 @@ class Patient(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
-    consultations = relationship("Consultation", back_populates="patient", cascade="all, delete-orphan")
-    medical_records = relationship("MedicalRecord", back_populates="patient", cascade="all, delete-orphan")
+    consultations = relationship(
+        "Consultation", back_populates="patient", cascade="all, delete-orphan"
+    )
+    medical_records = relationship(
+        "MedicalRecord", back_populates="patient", cascade="all, delete-orphan"
+    )
 
 
 class Consultation(Base):
@@ -41,7 +46,9 @@ class Consultation(Base):
 
     # Consultation metadata
     role = Column(String(20), nullable=False)  # Doctor/Patient
-    stage = Column(String(50), default="intro")  # intro, consultation, medical_form, report
+    stage = Column(
+        String(50), default="intro"
+    )  # intro, consultation, medical_form, report
     confidence = Column(Float, default=0.3)
 
     # Conversation history (stored as JSON)
@@ -53,7 +60,9 @@ class Consultation(Base):
 
     # Relationships
     patient = relationship("Patient", back_populates="consultations")
-    assessments = relationship("HealthAssessment", back_populates="consultation", cascade="all, delete-orphan")
+    assessments = relationship(
+        "HealthAssessment", back_populates="consultation", cascade="all, delete-orphan"
+    )
 
 
 class MedicalRecord(Base):
@@ -105,7 +114,9 @@ class HealthAssessment(Base):
 
     # Overall Risk
     overall_risk_score = Column(Float, nullable=False)
-    overall_risk_level = Column(String(20), nullable=False)  # Low, Moderate, High, Critical
+    overall_risk_level = Column(
+        String(20), nullable=False
+    )  # Low, Moderate, High, Critical
     primary_concerns = Column(JSON, default=list)
 
     # Individual Risk Results (stored as JSON)
@@ -130,8 +141,12 @@ class AuditLog(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
 
     # Event details
-    event_type = Column(String(50), nullable=False)  # consultation_started, assessment_completed, etc.
-    entity_type = Column(String(50), nullable=False)  # patient, consultation, assessment
+    event_type = Column(
+        String(50), nullable=False
+    )  # consultation_started, assessment_completed, etc.
+    entity_type = Column(
+        String(50), nullable=False
+    )  # patient, consultation, assessment
     entity_id = Column(String, nullable=False)
 
     # User/System info

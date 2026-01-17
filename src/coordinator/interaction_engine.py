@@ -15,5 +15,7 @@ INTERACTION_WARNINGS = {
         "Paracetamol (High Dose)": "High doses may cause hepatotoxicity.",
         "Alcohol": "Alcohol may worsen liver injury.",
     },
-    "Stroke": {"Oral Contraceptives": "May increase thrombotic risk in susceptible individuals."},
+    "Stroke": {
+        "Oral Contraceptives": "May increase thrombotic risk in susceptible individuals."
+    },
 }

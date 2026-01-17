@@ -46,7 +46,9 @@ def encode_heart_features(patient):
 
     # Rest ECG - default to normal if not measured
     ecg = patient.get("rest_ecg", "normal").lower()
-    encoded["rest_ecg_left ventricular hypertrophy"] = int(ecg == "left ventricular hypertrophy")
+    encoded["rest_ecg_left ventricular hypertrophy"] = int(
+        ecg == "left ventricular hypertrophy"
+    )
     encoded["rest_ecg_normal"] = int(ecg == "normal")
 
     # Exercise induced angina - infer from breathlessness/fatigue if not tested

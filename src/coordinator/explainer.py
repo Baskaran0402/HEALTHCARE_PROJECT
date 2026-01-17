@@ -51,13 +51,17 @@ def explain_results(patient, agent_results, overall_summary):
             )
         elif level == "High":
             explanations.append(
-                f"There is a high risk indication for {disease.lower()}, " "and further testing is advised."
+                f"There is a high risk indication for {disease.lower()}, "
+                "and further testing is advised."
             )
 
     if explanations:
         lines.append(" ".join(explanations))
     else:
-        lines.append("No immediate high-risk conditions were identified, " "but regular monitoring is recommended.")
+        lines.append(
+            "No immediate high-risk conditions were identified, "
+            "but regular monitoring is recommended."
+        )
 
     lines.append("")
 

@@ -50,7 +50,12 @@ def route_agents(patient):
         agents.add("liver")
 
     # --- STROKE ---
-    if patient.age is not None and patient.age > 55 or patient.hypertension or patient.heart_disease:
+    if (
+        patient.age is not None
+        and patient.age > 55
+        or patient.hypertension
+        or patient.heart_disease
+    ):
         agents.add("stroke")
 
     return list(agents)

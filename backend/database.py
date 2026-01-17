@@ -8,7 +8,9 @@ from sqlalchemy.orm import sessionmaker
 load_dotenv()
 
 # PostgreSQL connection URL
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/healthcare_db")
+DATABASE_URL = os.getenv(
+    "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/healthcare_db"
+)
 
 # Create SQLAlchemy engine
 engine = create_engine(DATABASE_URL)

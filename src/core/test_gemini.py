@@ -10,7 +10,9 @@ if __name__ == "__main__":
     print("Test 1: Medical Follow-up Question")
     print("=" * 60)
 
-    reply = llm.generate("Ask one gentle medical follow-up question like a real doctor.")
+    reply = llm.generate(
+        "Ask one gentle medical follow-up question like a real doctor."
+    )
 
     print("\nGroq AI reply:\n")
     print(reply)
@@ -21,7 +23,9 @@ if __name__ == "__main__":
     print("Test 2: Clinical Summary")
     print("=" * 60)
 
-    summary = llm.generate("Summarize in 2 sentences: Patient reports chest pain and fatigue for 3 days.")
+    summary = llm.generate(
+        "Summarize in 2 sentences: Patient reports chest pain and fatigue for 3 days."
+    )
 
     print("\nGroq AI reply:\n")
     print(summary)
@@ -32,7 +36,9 @@ if __name__ == "__main__":
     print("Test 3: Contextual Follow-up")
     print("=" * 60)
 
-    context = llm.generate("Patient said: 'I've been having headaches.' What's a good follow-up question?")
+    context = llm.generate(
+        "Patient said: 'I've been having headaches.' What's a good follow-up question?"
+    )
 
     print("\nGroq AI reply:\n")
     print(context)

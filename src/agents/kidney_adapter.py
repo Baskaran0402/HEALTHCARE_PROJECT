@@ -7,16 +7,24 @@ def adapt_kidney_features(patient):
         "age": patient.get("age", 50),
         "bp": patient.get("blood_pressure", 120),
         # Urinalysis - normal values as defaults
-        "sg": patient.get("specific_gravity", patient.get("sg", 1.020)),  # Normal: 1.005-1.030
-        "al": patient.get("albumin", patient.get("al", 0)),  # Normal: 0 (no albumin in urine)
-        "su": patient.get("blood_sugar", patient.get("su", 0)),  # Normal: 0 (no sugar in urine)
+        "sg": patient.get(
+            "specific_gravity", patient.get("sg", 1.020)
+        ),  # Normal: 1.005-1.030
+        "al": patient.get(
+            "albumin", patient.get("al", 0)
+        ),  # Normal: 0 (no albumin in urine)
+        "su": patient.get(
+            "blood_sugar", patient.get("su", 0)
+        ),  # Normal: 0 (no sugar in urine)
         # categorical → match training encoding (0 = normal, 1 = abnormal)
         "rbc": 1 if patient.get("rbc") in [1, "abnormal"] else 0,
         "pc": 1 if patient.get("pus_cell") in [1, "abnormal"] else 0,
         "pcc": 1 if patient.get("pus_cell_clumps") in [1, "present"] else 0,
         "ba": 1 if patient.get("bacteria") in [1, "present"] else 0,
         # Blood chemistry - normal ranges as defaults
-        "bgr": patient.get("blood_glucose", patient.get("bgr", 100)),  # Normal: 70-100 mg/dL
+        "bgr": patient.get(
+            "blood_glucose", patient.get("bgr", 100)
+        ),  # Normal: 70-100 mg/dL
         "bu": patient.get("urea", 30),  # Normal: 7-20 mg/dL (using conservative 30)
         "sc": patient.get("creatinine", 1.0),  # Normal: 0.6-1.2 mg/dL
         # Electrolytes - normal ranges

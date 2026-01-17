@@ -73,7 +73,9 @@ def get_latest_medical_record(db: Session, patient_id: str):
 
 
 def create_consultation(db: Session, consultation: schemas.ConsultationCreate):
-    db_consultation = models.Consultation(patient_id=consultation.patient_id, role=consultation.role)
+    db_consultation = models.Consultation(
+        patient_id=consultation.patient_id, role=consultation.role
+    )
     db.add(db_consultation)
     db.commit()
     db.refresh(db_consultation)
@@ -81,10 +83,16 @@ def create_consultation(db: Session, consultation: schemas.ConsultationCreate):
 
 
 def get_consultation(db: Session, consultation_id: str):
-    return db.query(models.Consultation).filter(models.Consultation.id == consultation_id).first()
+    return (
+        db.query(models.Consultation)
+        .filter(models.Consultation.id == consultation_id)
+        .first()
+    )
 
 
-def update_consultation(db: Session, consultation_id: str, update: schemas.ConsultationUpdate):
+def update_consultation(
+    db: Session, consultation_id: str, update: schemas.ConsultationUpdate
+):
     db_consultation = get_consultation(db, consultation_id)
     if db_consultation is None:
         return None
@@ -138,7 +146,11 @@ def get_consultation_assessments(db: Session, consultation_id: str):
 
 
 def get_assessment(db: Session, assessment_id: str):
-    return db.query(models.HealthAssessment).filter(models.HealthAssessment.id == assessment_id).first()
+    return (
+        db.query(models.HealthAssessment)
+        .filter(models.HealthAssessment.id == assessment_id)
+        .first()
+    )
 
 
 # ============================================================

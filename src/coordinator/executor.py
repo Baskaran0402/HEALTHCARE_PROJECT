@@ -33,7 +33,9 @@ def run_selected_agents(patient):
     # -------------------------------
     # 2. Normalize raw clinical inputs
     # -------------------------------
-    patient_dict["smoking_history_norm"] = ClinicalNormalizer.normalize_smoking(patient_dict.get("smoking_raw"))
+    patient_dict["smoking_history_norm"] = ClinicalNormalizer.normalize_smoking(
+        patient_dict.get("smoking_raw")
+    )
 
     # (Future-proof)
     # patient_dict["alcohol_norm"] = ClinicalNormalizer.normalize_alcohol(...)
@@ -104,7 +106,9 @@ def run_selected_agents(patient):
     critical = [r["disease"] for r in individual_risks if r["risk_level"] == "Critical"]
     moderate = [r["disease"] for r in individual_risks if r["risk_level"] == "Moderate"]
 
-    overall_score = round(sum(r["risk_score"] for r in individual_risks) / len(individual_risks), 2)
+    overall_score = round(
+        sum(r["risk_score"] for r in individual_risks) / len(individual_risks), 2
+    )
 
     if critical:
         level = "Critical"
@@ -128,7 +132,9 @@ def run_selected_agents(patient):
         enhanced_risks.append(
             {
                 **r,
-                "clinical_impression": clinical_impression(r["disease"], r["risk_score"]),
+                "clinical_impression": clinical_impression(
+                    r["disease"], r["risk_score"]
+                ),
                 "guidelines": GUIDELINES.get(r["disease"], []),
             }
         )
