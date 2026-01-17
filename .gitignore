@@ -26,3 +26,10 @@ Thumbs.db
 htmlcov/
 .pytest_cache/
 *.log
+
+# Generated Reports
+medical_reports_pdf/
+
+# Diagnostic Scripts
+scripts/ci_diagnostic.sh
+export_pdf_reports.py
