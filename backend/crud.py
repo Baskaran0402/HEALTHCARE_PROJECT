@@ -1,11 +1,13 @@
-from sqlalchemy.orm import Session
-from backend import models, schemas
 from datetime import datetime
 
+from sqlalchemy.orm import Session
+
+from backend import models, schemas
 
 # ============================================================
 # Patient CRUD
 # ============================================================
+
 
 def get_patient(db: Session, patient_id: str):
     return db.query(models.Patient).filter(models.Patient.id == patient_id).first()
@@ -26,7 +28,7 @@ def create_patient(db: Session, patient: schemas.PatientCreate):
         age=patient.age,
         gender=patient.gender,
         email=patient.email,
-        phone=patient.phone
+        phone=patient.phone,
     )
     db.add(db_patient)
     db.commit()
@@ -38,6 +40,7 @@ def create_patient(db: Session, patient: schemas.PatientCreate):
 # Medical Record CRUD
 # ============================================================
 
+
 def create_medical_record(db: Session, record: schemas.MedicalRecordCreate):
     db_record = models.MedicalRecord(**record.model_dump())
     db.add(db_record)
@@ -47,25 +50,31 @@ def create_medical_record(db: Session, record: schemas.MedicalRecordCreate):
 
 
 def get_patient_medical_records(db: Session, patient_id: str):
-    return db.query(models.MedicalRecord).filter(
-        models.MedicalRecord.patient_id == patient_id
-    ).order_by(models.MedicalRecord.recorded_at.desc()).all()
+    return (
+        db.query(models.MedicalRecord)
+        .filter(models.MedicalRecord.patient_id == patient_id)
+        .order_by(models.MedicalRecord.recorded_at.desc())
+        .all()
+    )
 
 
 def get_latest_medical_record(db: Session, patient_id: str):
-    return db.query(models.MedicalRecord).filter(
-        models.MedicalRecord.patient_id == patient_id
-    ).order_by(models.MedicalRecord.recorded_at.desc()).first()
+    return (
+        db.query(models.MedicalRecord)
+        .filter(models.MedicalRecord.patient_id == patient_id)
+        .order_by(models.MedicalRecord.recorded_at.desc())
+        .first()
+    )
 
 
 # ============================================================
 # Consultation CRUD
 # ============================================================
 
+
 def create_consultation(db: Session, consultation: schemas.ConsultationCreate):
     db_consultation = models.Consultation(
-        patient_id=consultation.patient_id,
-        role=consultation.role
+        patient_id=consultation.patient_id, role=consultation.role
     )
     db.add(db_consultation)
     db.commit()
@@ -74,38 +83,46 @@ def create_consultation(db: Session, consultation: schemas.ConsultationCreate):
 
 
 def get_consultation(db: Session, consultation_id: str):
-    return db.query(models.Consultation).filter(
-        models.Consultation.id == consultation_id
-    ).first()
+    return (
+        db.query(models.Consultation)
+        .filter(models.Consultation.id == consultation_id)
+        .first()
+    )
 
 
-def update_consultation(db: Session, consultation_id: str, update: schemas.ConsultationUpdate):
+def update_consultation(
+    db: Session, consultation_id: str, update: schemas.ConsultationUpdate
+):
     db_consultation = get_consultation(db, consultation_id)
     if db_consultation is None:
         return None
-    
+
     update_data = update.model_dump(exclude_unset=True)
     for key, value in update_data.items():
         setattr(db_consultation, key, value)
-    
+
     # Mark as completed if stage is 'report'
     if update.stage == "report" and db_consultation.completed_at is None:
         db_consultation.completed_at = datetime.utcnow()
-    
+
     db.commit()
     db.refresh(db_consultation)
     return db_consultation
 
 
 def get_patient_consultations(db: Session, patient_id: str):
-    return db.query(models.Consultation).filter(
-        models.Consultation.patient_id == patient_id
-    ).order_by(models.Consultation.started_at.desc()).all()
+    return (
+        db.query(models.Consultation)
+        .filter(models.Consultation.patient_id == patient_id)
+        .order_by(models.Consultation.started_at.desc())
+        .all()
+    )
 
 
 # ============================================================
 # Health Assessment CRUD
 # ============================================================
+
 
 def create_health_assessment(db: Session, assessment: schemas.HealthAssessmentCreate):
     db_assessment = models.HealthAssessment(**assessment.model_dump())
@@ -116,20 +133,26 @@ def create_health_assessment(db: Session, assessment: schemas.HealthAssessmentCr
 
 
 def get_consultation_assessments(db: Session, consultation_id: str):
-    return db.query(models.HealthAssessment).filter(
-        models.HealthAssessment.consultation_id == consultation_id
-    ).order_by(models.HealthAssessment.assessed_at.desc()).all()
+    return (
+        db.query(models.HealthAssessment)
+        .filter(models.HealthAssessment.consultation_id == consultation_id)
+        .order_by(models.HealthAssessment.assessed_at.desc())
+        .all()
+    )
 
 
 def get_assessment(db: Session, assessment_id: str):
-    return db.query(models.HealthAssessment).filter(
-        models.HealthAssessment.id == assessment_id
-    ).first()
+    return (
+        db.query(models.HealthAssessment)
+        .filter(models.HealthAssessment.id == assessment_id)
+        .first()
+    )
 
 
 # ============================================================
 # Audit Log CRUD
 # ============================================================
+
 
 def create_audit_log(db: Session, log: schemas.AuditLogCreate):
     db_log = models.AuditLog(**log.model_dump())

@@ -1,5 +1,6 @@
 import os
 import time
+
 from dotenv import load_dotenv
 from groq import Groq
 
@@ -22,10 +23,10 @@ class GeminiClient:
 
         # 🔥 Ordered fallback list - Groq models
         self.models = [
-            "llama-3.3-70b-versatile",      # Latest, most capable
-            "llama-3.1-70b-versatile",      # Fallback
-            "mixtral-8x7b-32768",           # Alternative
-            "llama-3.1-8b-instant",         # Fastest fallback
+            "llama-3.3-70b-versatile",  # Latest, most capable
+            "llama-3.1-70b-versatile",  # Fallback
+            "mixtral-8x7b-32768",  # Alternative
+            "llama-3.1-8b-instant",  # Fastest fallback
         ]
 
     def generate(self, prompt: str) -> str:
@@ -39,19 +40,23 @@ class GeminiClient:
                     messages=[
                         {
                             "role": "system",
-                            "content": "You are a helpful medical AI assistant. Provide accurate, professional, and empathetic responses."
+                            "content": (
+                                "You are a helpful medical AI assistant. "
+                                "Provide accurate, professional, and empathetic responses."
+                            ),
                         },
-                        {
-                            "role": "user",
-                            "content": prompt
-                        }
+                        {"role": "user", "content": prompt},
                     ],
                     temperature=0.0,
                     top_p=0.1,
                     max_tokens=2048,
                 )
 
-                if response and response.choices and response.choices[0].message.content:
+                if (
+                    response
+                    and response.choices
+                    and response.choices[0].message.content
+                ):
                     return response.choices[0].message.content.strip()
 
             except Exception as e:

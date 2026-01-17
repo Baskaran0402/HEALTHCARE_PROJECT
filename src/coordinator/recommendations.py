@@ -3,18 +3,18 @@ def lifestyle_recommendations(disease, level):
         "Diabetes": [
             "Limit refined sugar and processed carbohydrates",
             "Engage in at least 30 minutes of physical activity daily",
-            "Monitor blood glucose regularly"
+            "Monitor blood glucose regularly",
         ],
         "Heart Disease": [
             "Reduce salt and saturated fat intake",
             "Avoid smoking and alcohol",
-            "Practice stress management techniques"
+            "Practice stress management techniques",
         ],
         "Kidney Disease": [
             "Limit sodium and protein intake",
             "Stay hydrated as advised by a doctor",
-            "Avoid over-the-counter painkillers"
-        ]
+            "Avoid over-the-counter painkillers",
+        ],
     }
 
     if level == "Critical":

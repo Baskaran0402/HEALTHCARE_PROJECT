@@ -47,6 +47,26 @@ npm run dev
 
 ---
 
+## 🎬 Demo Video
+
+See the AI Doctor Assistant in action:
+
+https://github.com/user-attachments/assets/your-video-id-here
+
+> **Note**: The video demonstrates the complete clinical workflow from patient data entry to AI-generated risk assessment and SOAP notes.
+
+**Key Features Shown:**
+
+- ✅ Professional medical UI designed for clinical use
+- ✅ Multi-disease risk assessment (Heart, Stroke, Diabetes, Kidney, Liver)
+- ✅ Real-time AI-powered analysis
+- ✅ Structured SOAP format clinical reports
+- ✅ Explainable risk stratification
+
+**Alternative**: If you prefer to view the demo locally, the video is available at `docs/demo/app-demo.mp4`
+
+---
+
 ## ⚠️ Important Disclaimer
 
 **This system is a Clinical Decision Support Tool for Licensed Healthcare Professionals Only.**

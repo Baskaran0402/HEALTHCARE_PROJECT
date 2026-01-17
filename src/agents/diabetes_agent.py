@@ -1,13 +1,13 @@
 import pickle
+
 import pandas as pd
 
-from src.agents.diabetes_adapter import adapt_diabetes_features
-from src.agents.diabetes_adapter import normalize_smoking
-
+from src.agents.diabetes_adapter import (adapt_diabetes_features,
+                                         normalize_smoking)
 
 with open(
     "models/diabetes_hypertension_model/diabetes_and_hypertension_prediction_model.pkl",
-    "rb"
+    "rb",
 ) as f:
     diabetes_model = pickle.load(f)
 
@@ -28,9 +28,7 @@ def diabetes_risk(patient_data):
     features = adapt_diabetes_features(patient_data)
 
     # 2️⃣ NORMALIZE categorical inputs (CRITICAL FIX)
-    features["smoking_history"] = normalize_smoking(
-        features.get("smoking_history")
-    )
+    features["smoking_history"] = normalize_smoking(features.get("smoking_history"))
 
     # 3️⃣ Create DataFrame with correct schema
     X = pd.DataFrame([features])
@@ -42,5 +40,5 @@ def diabetes_risk(patient_data):
     return {
         "disease": "Diabetes",
         "risk_score": risk_score,
-        "risk_level": risk_level(risk_score)
+        "risk_level": risk_level(risk_score),
     }

@@ -1,20 +1,17 @@
-from src.coordinator.patient_state import PatientState
-from src.coordinator.executor import run_selected_agents
-from src.coordinator.aggregator import aggregate_risks
-from src.coordinator.explainer import explain_results
 import warnings
+
 from sklearn.exceptions import DataConversionWarning
 
-warnings.filterwarnings(
-    "ignore",
-    category=UserWarning,
-    message="X does not have valid feature names"
-)
+from src.coordinator.aggregator import aggregate_risks
+from src.coordinator.executor import run_selected_agents
+from src.coordinator.explainer import explain_results
+from src.coordinator.patient_state import PatientState
 
 warnings.filterwarnings(
-    "ignore",
-    category=DataConversionWarning
+    "ignore", category=UserWarning, message="X does not have valid feature names"
 )
+
+warnings.filterwarnings("ignore", category=DataConversionWarning)
 
 
 def main():
@@ -58,9 +55,7 @@ def main():
 
     # 4️⃣ Generate doctor-style explanation
     explanation = explain_results(
-        patient=patient,
-        agent_results=agent_results,
-        overall_summary=overall_summary
+        patient=patient, agent_results=agent_results, overall_summary=overall_summary
     )
 
     # 5️⃣ Final output
@@ -80,10 +75,7 @@ def main():
     )
 
     if overall_summary["primary_concerns"]:
-        print(
-            "- Primary Concerns:",
-            ", ".join(overall_summary["primary_concerns"])
-        )
+        print("- Primary Concerns:", ", ".join(overall_summary["primary_concerns"]))
 
     print("\nDoctor's Explanation:")
     print(explanation)

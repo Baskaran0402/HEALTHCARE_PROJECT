@@ -8,14 +8,12 @@ class ClinicalNormalizer:
         "current": "current",
         "smoker": "current",
         None: "never",
-        "": "never"
+        "": "never",
     }
 
     @staticmethod
     def normalize_smoking(value):
-        return ClinicalNormalizer.SMOKING_MAP.get(
-            str(value).lower(), "never"
-        )
+        return ClinicalNormalizer.SMOKING_MAP.get(str(value).lower(), "never")
 
     @staticmethod
     def normalize_gender(value):
@@ -27,12 +25,12 @@ class ClinicalNormalizer:
     def safe_int(value, default=0):
         try:
             return int(value)
-        except:
+        except (ValueError, TypeError):
             return default
 
     @staticmethod
     def safe_float(value, default=0.0):
         try:
             return float(value)
-        except:
+        except (ValueError, TypeError):
             return default

@@ -1,13 +1,12 @@
 import pickle
+
 import pandas as pd
 
 from src.agents.stroke_adapter import adapt_stroke_features
 
-with open(
-    "models/strokePrediction/strokeprediction.pkl",
-    "rb"
-) as f:
+with open("models/strokePrediction/strokeprediction.pkl", "rb") as f:
     stroke_model = pickle.load(f)
+
 
 def risk_level(score):
     if score < 20:
@@ -18,6 +17,7 @@ def risk_level(score):
         return "High"
     else:
         return "Critical"
+
 
 def stroke_risk(patient_data):
     adapted = adapt_stroke_features(patient_data)

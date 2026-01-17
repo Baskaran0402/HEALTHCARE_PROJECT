@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 
 
 def summarize_conversation(memory: Dict) -> str:

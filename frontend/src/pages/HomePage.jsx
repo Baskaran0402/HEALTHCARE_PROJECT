@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import { Brain, Heart, Shield } from 'lucide-react'
 import './HomePage.css'
 
@@ -106,16 +106,27 @@ const HomePage = () => {
                 </p>
               </div>
 
-              {/* Start Button */}
-              <motion.button
-                className="medical-button start-button"
-                onClick={handleStart}
-                disabled={!selectedRole}
-                whileHover={{ scale: selectedRole ? 1.05 : 1 }}
-                whileTap={{ scale: selectedRole ? 0.95 : 1 }}
-              >
-                Begin Consultation
-              </motion.button>
+              {/* Action Buttons */}
+              <div className="action-buttons">
+                <motion.button
+                  className="medical-button start-button"
+                  onClick={handleStart}
+                  disabled={!selectedRole}
+                  whileHover={{ scale: selectedRole ? 1.05 : 1 }}
+                  whileTap={{ scale: selectedRole ? 0.95 : 1 }}
+                >
+                  Begin Consultation
+                </motion.button>
+
+                <motion.button
+                  className="medical-button demo-button"
+                  onClick={() => navigate('/demo')}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  View Demo
+                </motion.button>
+              </div>
 
               {/* Disclaimer */}
               <div className="disclaimer">

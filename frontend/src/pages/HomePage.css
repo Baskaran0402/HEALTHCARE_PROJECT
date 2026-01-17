@@ -213,13 +213,37 @@
   margin-right: auto;
 }
 
-.start-button {
-  width: 100%;
-  max-width: 450px;
+.action-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
   margin: 3rem auto;
+  max-width: 900px;
+  flex-wrap: wrap;
+}
+
+.start-button,
+.demo-button {
+  flex: 1;
+  min-width: 250px;
+  max-width: 400px;
   font-size: 1.25rem;
   padding: 1.25rem 2.5rem;
   border-radius: 14px;
+}
+
+.demo-button {
+  background: #ffffff;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+  box-shadow: 0 4px 12px rgba(33, 95, 255, 0.15);
+}
+
+.demo-button:hover {
+  background: #eff6ff;
+  border-color: var(--primary-hover);
+  color: var(--primary-hover);
+  box-shadow: 0 6px 16px rgba(33, 95, 255, 0.25);
 }
 
 .disclaimer {
@@ -286,5 +310,16 @@
   .role-buttons {
     flex-direction: column;
     align-items: center;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .start-button,
+  .demo-button {
+    width: 100%;
+    max-width: 100%;
   }
 }

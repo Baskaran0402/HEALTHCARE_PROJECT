@@ -1,7 +1,7 @@
 def build_feature_vector(patient_data, feature_order, default=0):
     """
     Converts unified patient data into a model-ready feature vector.
-    
+
     patient_data : dict
         Unified patient schema dictionary
     feature_order : list
@@ -9,7 +9,4 @@ def build_feature_vector(patient_data, feature_order, default=0):
     default : any
         Value to use if a feature is missing
     """
-    return [
-        patient_data.get(feature, default)
-        for feature in feature_order
-    ]
+    return [patient_data.get(feature, default) for feature in feature_order]

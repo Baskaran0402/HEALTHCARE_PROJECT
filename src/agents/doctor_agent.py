@@ -1,6 +1,5 @@
-from typing import Dict, List, Optional
 import json
-
+from typing import Dict, List, Optional
 
 FORBIDDEN_TERMS = [
     "diagnosed",
@@ -43,9 +42,7 @@ class DoctorAgent:
     # 1. Dynamic Follow-up Questioning
     # --------------------------------------------------
     def ask_next_question(
-        self,
-        conversation_history: List[Dict],
-        confidence: float
+        self, conversation_history: List[Dict], confidence: float
     ) -> Optional[str]:
 
         if confidence >= 0.85:
@@ -75,20 +72,16 @@ class DoctorAgent:
     # 3. Patient + Doctor Reports
     # --------------------------------------------------
     def generate_reports(
-        self,
-        ml_report: Dict,
-        conversation_summary: str
+        self, ml_report: Dict, conversation_summary: str
     ) -> Dict[str, str]:
 
         try:
             patient_prompt = self._patient_report_prompt(
-                ml_report=ml_report,
-                summary=conversation_summary
+                ml_report=ml_report, summary=conversation_summary
             )
 
             doctor_prompt = self._doctor_report_prompt(
-                ml_report=ml_report,
-                summary=conversation_summary
+                ml_report=ml_report, summary=conversation_summary
             )
 
             patient_text = sanitize(self.llm.generate(patient_prompt))
@@ -115,11 +108,7 @@ class DoctorAgent:
     # --------------------------------------------------
     # 4. SOAP → JSON (EMR Ready, deterministic fallback)
     # --------------------------------------------------
-    def generate_soap_json(
-        self,
-        ml_report: Dict,
-        conversation_summary: str
-    ) -> Dict:
+    def generate_soap_json(self, ml_report: Dict, conversation_summary: str) -> Dict:
 
         try:
             prompt = self._soap_json_prompt(ml_report, conversation_summary)
@@ -139,7 +128,7 @@ class DoctorAgent:
                 "history_of_present_illness": "",
                 "duration": "",
                 "associated_symptoms": [],
-                "relevant_negatives": []
+                "relevant_negatives": [],
             },
             "objective": {
                 "vitals": {},
@@ -147,7 +136,7 @@ class DoctorAgent:
                 "ml_risk_scores": {
                     r["disease"]: r["risk_score"]
                     for r in ml_report.get("individual_risks", [])
-                }
+                },
             },
             "assessment": {
                 "risk_stratification": [
@@ -155,19 +144,19 @@ class DoctorAgent:
                 ],
                 "clinical_impressions": [
                     "Risk stratification derived from ML models only"
-                ]
+                ],
             },
             "plan": {
                 "monitoring": ["Routine follow-up and trend monitoring"],
                 "investigations": [],
                 "referrals": [],
-                "lifestyle_guidance": []
+                "lifestyle_guidance": [],
             },
             "disclaimer": (
                 "This SOAP note was auto-generated using fallback logic. "
                 "No diagnosis or treatment decisions are implied. "
                 "Physician review required."
-            )
+            ),
         }
 
     # ==================================================

@@ -10,13 +10,13 @@ def encode_heart_features(patient):
     encoded["age"] = age
     encoded["resting_blood_pressure"] = patient.get("blood_pressure", 120)
     encoded["cholesterol"] = patient.get("cholesterol", 200)
-    
+
     # Estimate max heart rate if not provided (220 - age formula)
     encoded["max_heart_rate_achieved"] = patient.get("max_heart_rate", 220 - age)
-    
+
     # Default to no ST depression if not measured
     encoded["st_depression"] = patient.get("st_depression", 0)
-    
+
     # Default to 0 major vessels if catheterization not done
     encoded["num_major_vessels"] = patient.get("num_major_vessels", 0)
 
@@ -26,11 +26,11 @@ def encode_heart_features(patient):
     # Chest pain (one-hot) - use symptom data if available
     cp = patient.get("chest_pain_type", "").lower()
     has_chest_pain = patient.get("chest_pain", 0)
-    
+
     # If no specific type but patient has chest pain, assume atypical angina (most common)
     if not cp and has_chest_pain:
         cp = "atypical angina"
-    
+
     encoded["chest_pain_type_atypical angina"] = int(cp == "atypical angina")
     encoded["chest_pain_type_non-anginal pain"] = int(cp == "non-anginal pain")
     encoded["chest_pain_type_typical angina"] = int(cp == "typical angina")
@@ -40,8 +40,8 @@ def encode_heart_features(patient):
     if fbs is None:
         # Use blood_glucose as proxy if available
         glucose = patient.get("blood_glucose")
-        fbs = glucose if glucose is not None else 100 # Default to normal if both None
-    
+        fbs = glucose if glucose is not None else 100  # Default to normal if both None
+
     encoded["fasting_blood_sugar_lower than 120mg/ml"] = int(fbs < 120)
 
     # Rest ECG - default to normal if not measured
@@ -58,7 +58,7 @@ def encode_heart_features(patient):
         breathlessness = patient.get("breathlessness", 0)
         fatigue = patient.get("fatigue", 0)
         eia = 1 if (breathlessness or fatigue) else 0
-    
+
     encoded["exercise_induced_angina_yes"] = int(eia == 1)
 
     # ST slope - default to upsloping (normal) if not measured

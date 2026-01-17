@@ -18,7 +18,6 @@ def normalize_smoking(smoking):
         return "non-smoker"
 
 
-
 def adapt_diabetes_features(patient):
     """
     Maps unified patient schema to diabetes model features.
@@ -28,16 +27,12 @@ def adapt_diabetes_features(patient):
     return {
         # Gender must match training format
         "gender": "Male" if patient.get("gender") == 1 else "Female",
-
         "age": patient.get("age", 0),
         "hypertension": patient.get("hypertension", 0),
         "heart_disease": patient.get("heart_disease", 0),
-
         # ✅ SAFE categorical input (already normalized)
         "smoking_history": patient.get("smoking_history_norm", "non-smoker"),
-
         "bmi": patient.get("bmi", 0),
         "HbA1c_level": patient.get("hba1c", 0),
         "blood_glucose_level": patient.get("blood_glucose", 0),
     }
-

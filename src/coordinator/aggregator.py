@@ -27,8 +27,8 @@ def aggregate_risks(agent_results):
         if score >= 70:
             concerns.append(result.get("disease"))
 
-    if not scores: # Handle cases where risks_list might be empty after processing
-         return {
+    if not scores:  # Handle cases where risks_list might be empty after processing
+        return {
             "overall_risk_score": 0.0,
             "overall_risk_level": "Low",
             "primary_concerns": [],

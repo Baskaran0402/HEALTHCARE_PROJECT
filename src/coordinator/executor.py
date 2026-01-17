@@ -1,18 +1,14 @@
-from src.coordinator.rule_engine import route_agents
-
-from src.agents.heart_agent import heart_risk
 from src.agents.diabetes_agent import diabetes_risk
+from src.agents.heart_agent import heart_risk
 from src.agents.kidney_agent import kidney_risk
 from src.agents.liver_agent import liver_risk
 from src.agents.stroke_agent import stroke_risk
-
 from src.coordinator.clinical_impression import clinical_impression
-from src.coordinator.guideline_engine import GUIDELINES
 from src.coordinator.explainability_engine import explain_risk
+from src.coordinator.guideline_engine import GUIDELINES
 from src.coordinator.interaction_engine import INTERACTION_WARNINGS
-
+from src.coordinator.rule_engine import route_agents
 from src.core.clinical_normalizer import ClinicalNormalizer
-
 
 AGENT_REGISTRY = {
     "heart": heart_risk,
@@ -59,49 +55,50 @@ def run_selected_agents(patient):
         agent_fn = AGENT_REGISTRY[agent_name]
         result = agent_fn(patient_dict)
 
-        individual_risks.append({
-            "disease": result["disease"],
-            "risk_score": float(result["risk_score"]),
-            "risk_level": result["risk_level"],
-            "why": explain_risk(result["disease"], patient_dict),
-            "interaction_warnings": INTERACTION_WARNINGS.get(result["disease"], {}),
-        })
+        individual_risks.append(
+            {
+                "disease": result["disease"],
+                "risk_score": float(result["risk_score"]),
+                "risk_level": result["risk_level"],
+                "why": explain_risk(result["disease"], patient_dict),
+                "interaction_warnings": INTERACTION_WARNINGS.get(result["disease"], {}),
+            }
+        )
 
     # -------------------------------
     # 5. Safety check
     # -------------------------------
     if not individual_risks:
         return {
-        "individual_risks": [
-            {
-                "disease": "General Health",
-                "risk_score": 0.0,
-                "risk_level": "Low",
-                "why": [
-                    "Vital signs are within normal range",
-                    "No significant laboratory abnormalities detected",
-                    "No high-risk chronic conditions identified"
-                ],
-                "clinical_impression": (
-                    "Overall health indicators are within normal limits. "
-                    "No immediate medical concerns identified."
-                ),
-                "guidelines": [
-                    "Maintain a balanced diet",
-                    "Engage in regular physical activity (150 minutes/week)",
-                    "Continue routine health screenings",
-                    "Avoid smoking and excessive alcohol consumption"
-                ],
-                "interaction_warnings": {}
-            }
-        ],
-        "overall_risk": {
-            "score": 0.0,
-            "level": "Low",
-            "primary_concerns": [],
-        },
-    }
-
+            "individual_risks": [
+                {
+                    "disease": "General Health",
+                    "risk_score": 0.0,
+                    "risk_level": "Low",
+                    "why": [
+                        "Vital signs are within normal range",
+                        "No significant laboratory abnormalities detected",
+                        "No high-risk chronic conditions identified",
+                    ],
+                    "clinical_impression": (
+                        "Overall health indicators are within normal limits. "
+                        "No immediate medical concerns identified."
+                    ),
+                    "guidelines": [
+                        "Maintain a balanced diet",
+                        "Engage in regular physical activity (150 minutes/week)",
+                        "Continue routine health screenings",
+                        "Avoid smoking and excessive alcohol consumption",
+                    ],
+                    "interaction_warnings": {},
+                }
+            ],
+            "overall_risk": {
+                "score": 0.0,
+                "level": "Low",
+                "primary_concerns": [],
+            },
+        }
 
     # -------------------------------
     # 6. Aggregate overall risk
@@ -132,11 +129,15 @@ def run_selected_agents(patient):
     enhanced_risks = []
 
     for r in individual_risks:
-        enhanced_risks.append({
-            **r,
-            "clinical_impression": clinical_impression(r["disease"], r["risk_score"]),
-            "guidelines": GUIDELINES.get(r["disease"], []),
-        })
+        enhanced_risks.append(
+            {
+                **r,
+                "clinical_impression": clinical_impression(
+                    r["disease"], r["risk_score"]
+                ),
+                "guidelines": GUIDELINES.get(r["disease"], []),
+            }
+        )
 
     return {
         "individual_risks": enhanced_risks,

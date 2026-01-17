@@ -1,11 +1,12 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List, Dict, Any
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from pydantic import BaseModel, EmailStr, Field
 
 # ============================================================
 # Patient Schemas
 # ============================================================
+
 
 class PatientBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=200)
@@ -33,6 +34,7 @@ class PatientResponse(PatientBase):
 # Medical Record Schemas
 # ============================================================
 
+
 class MedicalRecordBase(BaseModel):
     bmi: Optional[float] = Field(None, ge=10.0, le=60.0)
     blood_pressure: Optional[int] = Field(None, ge=60, le=250)
@@ -44,13 +46,13 @@ class MedicalRecordBase(BaseModel):
     bilirubin_total: Optional[float] = None
     alt: Optional[float] = None
     ast: Optional[float] = None
-    
+
     hypertension: bool = False
     diabetes: bool = False
     heart_disease: bool = False
-    
+
     smoking_status: Optional[str] = Field(None, pattern="^(never|former|current)$")
-    
+
     chest_pain: bool = False
     breathlessness: bool = False
     fatigue: bool = False
@@ -73,6 +75,7 @@ class MedicalRecordResponse(MedicalRecordBase):
 # ============================================================
 # Consultation Schemas
 # ============================================================
+
 
 class ConsultationBase(BaseModel):
     role: str = Field(..., pattern="^(Doctor|Patient)$")
@@ -105,6 +108,7 @@ class ConsultationResponse(ConsultationBase):
 # Health Assessment Schemas
 # ============================================================
 
+
 class HealthAssessmentCreate(BaseModel):
     consultation_id: str
     overall_risk_score: float
@@ -129,8 +133,10 @@ class HealthAssessmentResponse(HealthAssessmentCreate):
 # Combined Request/Response Schemas
 # ============================================================
 
+
 class AnalyzeHealthRequest(BaseModel):
     """Request for complete health analysis"""
+
     patient_data: PatientCreate
     medical_data: MedicalRecordBase
     conversation_history: List[Dict[str, str]] = []
@@ -139,6 +145,7 @@ class AnalyzeHealthRequest(BaseModel):
 
 class AnalyzeHealthResponse(BaseModel):
     """Complete health analysis response"""
+
     patient: PatientResponse
     medical_record: MedicalRecordResponse
     consultation: ConsultationResponse
@@ -148,6 +155,7 @@ class AnalyzeHealthResponse(BaseModel):
 # ============================================================
 # Audit Log Schema
 # ============================================================
+
 
 class AuditLogCreate(BaseModel):
     event_type: str

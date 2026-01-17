@@ -1,6 +1,7 @@
-from src.agents.heart_agent import heart_risk
 from src.agents.diabetes_agent import diabetes_risk
+from src.agents.heart_agent import heart_risk
 from src.agents.kidney_agent import kidney_risk
+
 
 def run_health_assessment(patient_data):
     report = {}

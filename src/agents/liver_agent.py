@@ -1,12 +1,11 @@
 import pickle
+
 import pandas as pd
-import numpy as np
 
 from src.agents.liver_adapter import adapt_liver_features
 
 with open(
-    "models/liverdiseasepredictionmodel/liverdiseasepredictionmodel.pkl",
-    "rb"
+    "models/liverdiseasepredictionmodel/liverdiseasepredictionmodel.pkl", "rb"
 ) as f:
     liver_model = pickle.load(f)
 
@@ -23,6 +22,7 @@ FEATURE_ORDER = [
     "Albumin_and_Globulin_Ratio",
 ]
 
+
 def risk_level(score):
     if score < 20:
         return "Low"
@@ -33,13 +33,11 @@ def risk_level(score):
     else:
         return "Critical"
 
+
 def liver_risk(patient_data):
     adapted = adapt_liver_features(patient_data)
 
-    X = pd.DataFrame(
-        [[adapted[f] for f in FEATURE_ORDER]],
-        columns=FEATURE_ORDER
-    )
+    X = pd.DataFrame([[adapted[f] for f in FEATURE_ORDER]], columns=FEATURE_ORDER)
 
     probas = liver_model.predict_proba(X)[0]
     classes = liver_model.classes_

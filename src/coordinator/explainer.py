@@ -9,9 +9,7 @@ def explain_results(patient, agent_results, overall_summary):
     # --- HEADER ---
     lines.append("Health Risk Summary")
     lines.append("-" * 20)
-    lines.append(
-        f"Overall Risk Level: {overall_summary['overall_risk_level'].upper()}"
-    )
+    lines.append(f"Overall Risk Level: {overall_summary['overall_risk_level'].upper()}")
     lines.append("")
 
     # --- KEY CONCERNS ---
@@ -31,13 +29,9 @@ def explain_results(patient, agent_results, overall_summary):
             level = result["risk_level"]
 
             if level in ["High", "Critical"]:
-                lines.append(
-                    f"• {disease} ({score}%) – {level}"
-                )
+                lines.append(f"• {disease} ({score}%) – {level}")
             elif level == "Moderate":
-                lines.append(
-                    f"• {disease} ({score}%) – Moderate"
-                )
+                lines.append(f"• {disease} ({score}%) – Moderate")
 
         lines.append("")
 
@@ -75,16 +69,20 @@ def explain_results(patient, agent_results, overall_summary):
     lines.append("Recommended Action:")
 
     if overall_summary["overall_risk_level"] in ["High", "Critical"]:
-        lines.extend([
-            "• Consult a qualified healthcare professional soon",
-            "• Additional laboratory tests or imaging may be required",
-            "• Do not ignore symptoms such as fatigue, swelling, or breathlessness",
-        ])
+        lines.extend(
+            [
+                "• Consult a qualified healthcare professional soon",
+                "• Additional laboratory tests or imaging may be required",
+                "• Do not ignore symptoms such as fatigue, swelling, or breathlessness",
+            ]
+        )
     else:
-        lines.extend([
-            "• Maintain a healthy lifestyle",
-            "• Continue routine health checkups",
-        ])
+        lines.extend(
+            [
+                "• Maintain a healthy lifestyle",
+                "• Continue routine health checkups",
+            ]
+        )
 
     lines.append("")
 
