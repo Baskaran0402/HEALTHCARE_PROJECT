@@ -41,9 +41,7 @@ class DoctorAgent:
     # --------------------------------------------------
     # 1. Dynamic Follow-up Questioning
     # --------------------------------------------------
-    def ask_next_question(
-        self, conversation_history: List[Dict], confidence: float
-    ) -> Optional[str]:
+    def ask_next_question(self, conversation_history: List[Dict], confidence: float) -> Optional[str]:
 
         if confidence >= 0.85:
             return None
@@ -71,18 +69,12 @@ class DoctorAgent:
     # --------------------------------------------------
     # 3. Patient + Doctor Reports
     # --------------------------------------------------
-    def generate_reports(
-        self, ml_report: Dict, conversation_summary: str
-    ) -> Dict[str, str]:
+    def generate_reports(self, ml_report: Dict, conversation_summary: str) -> Dict[str, str]:
 
         try:
-            patient_prompt = self._patient_report_prompt(
-                ml_report=ml_report, summary=conversation_summary
-            )
+            patient_prompt = self._patient_report_prompt(ml_report=ml_report, summary=conversation_summary)
 
-            doctor_prompt = self._doctor_report_prompt(
-                ml_report=ml_report, summary=conversation_summary
-            )
+            doctor_prompt = self._doctor_report_prompt(ml_report=ml_report, summary=conversation_summary)
 
             patient_text = sanitize(self.llm.generate(patient_prompt))
             doctor_text = sanitize(self.llm.generate(doctor_prompt))
@@ -133,18 +125,11 @@ class DoctorAgent:
             "objective": {
                 "vitals": {},
                 "labs": {},
-                "ml_risk_scores": {
-                    r["disease"]: r["risk_score"]
-                    for r in ml_report.get("individual_risks", [])
-                },
+                "ml_risk_scores": {r["disease"]: r["risk_score"] for r in ml_report.get("individual_risks", [])},
             },
             "assessment": {
-                "risk_stratification": [
-                    r["risk_level"] for r in ml_report.get("individual_risks", [])
-                ],
-                "clinical_impressions": [
-                    "Risk stratification derived from ML models only"
-                ],
+                "risk_stratification": [r["risk_level"] for r in ml_report.get("individual_risks", [])],
+                "clinical_impressions": ["Risk stratification derived from ML models only"],
             },
             "plan": {
                 "monitoring": ["Routine follow-up and trend monitoring"],

@@ -53,6 +53,8 @@ jobs:
       - name: Run tests with coverage
         env:
           DATABASE_URL: postgresql://test_user:test_password@localhost:5432/test_db
+          GROQ_API_KEY: "test_key_for_ci"
+          GEMINI_API_KEY: "test_key_for_ci"
         run: |
           pytest tests/ -v --cov=src --cov=backend --cov-report=xml --cov-report=term
 

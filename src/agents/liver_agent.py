@@ -4,9 +4,7 @@ import pandas as pd
 
 from src.agents.liver_adapter import adapt_liver_features
 
-with open(
-    "models/liverdiseasepredictionmodel/liverdiseasepredictionmodel.pkl", "rb"
-) as f:
+with open("models/liverdiseasepredictionmodel/liverdiseasepredictionmodel.pkl", "rb") as f:
     liver_model = pickle.load(f)
 
 FEATURE_ORDER = [

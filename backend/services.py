@@ -18,9 +18,7 @@ class HealthAnalysisService:
         self.llm = GeminiClient()
         self.doctor_agent = DoctorAgent(self.llm)
 
-    async def analyze_health(
-        self, request: schemas.AnalyzeHealthRequest
-    ) -> schemas.AnalyzeHealthResponse:
+    async def analyze_health(self, request: schemas.AnalyzeHealthRequest) -> schemas.AnalyzeHealthResponse:
         """
         Complete health analysis workflow:
         1. Create/get patient
@@ -48,12 +46,9 @@ class HealthAnalysisService:
 
             if (
                 request.patient_data.medical_record_number
-                and patient.medical_record_number
-                != request.patient_data.medical_record_number
+                and patient.medical_record_number != request.patient_data.medical_record_number
             ):
-                patient.medical_record_number = (
-                    request.patient_data.medical_record_number
-                )
+                patient.medical_record_number = request.patient_data.medical_record_number
                 should_update = True
 
             if should_update:
@@ -61,15 +56,11 @@ class HealthAnalysisService:
                 self.db.refresh(patient)
 
         # 2. Create medical record
-        medical_record_data = schemas.MedicalRecordCreate(
-            patient_id=patient.id, **request.medical_data.model_dump()
-        )
+        medical_record_data = schemas.MedicalRecordCreate(patient_id=patient.id, **request.medical_data.model_dump())
         medical_record = crud.create_medical_record(self.db, medical_record_data)
 
         # 3. Create consultation
-        consultation_data = schemas.ConsultationCreate(
-            patient_id=patient.id, role=request.role
-        )
+        consultation_data = schemas.ConsultationCreate(patient_id=patient.id, role=request.role)
         consultation = crud.create_consultation(self.db, consultation_data)
 
         # Update consultation with conversation history
@@ -92,20 +83,17 @@ class HealthAnalysisService:
         # 6. Generate comprehensive reports with enhanced explainability
         from src.agents.enhanced_report_generator import (
             generate_comprehensive_doctor_report,
-            generate_comprehensive_patient_report)
+            generate_comprehensive_patient_report,
+        )
 
         patient_name = request.patient_data.name
 
         try:
             # Generate patient-friendly report
-            patient_report = generate_comprehensive_patient_report(
-                ml_report=ml_report, patient_name=patient_name
-            )
+            patient_report = generate_comprehensive_patient_report(ml_report=ml_report, patient_name=patient_name)
 
             # Generate doctor-facing clinical report
-            doctor_report = generate_comprehensive_doctor_report(
-                ml_report=ml_report, patient_name=patient_name
-            )
+            doctor_report = generate_comprehensive_doctor_report(ml_report=ml_report, patient_name=patient_name)
         except Exception as e:
             # Fallback if LLM fails (prevent crash)
             print(f"Error generating LLM reports: {e}")
@@ -117,13 +105,9 @@ class HealthAnalysisService:
         # Generate SOAP note (keep existing logic)
         conversation_summary = ""
         if request.conversation_history:
-            conversation_summary = self.doctor_agent.summarize_case(
-                request.conversation_history
-            )
+            conversation_summary = self.doctor_agent.summarize_case(request.conversation_history)
 
-        soap_json = self.doctor_agent.generate_soap_json(
-            ml_report=ml_report, conversation_summary=conversation_summary
-        )
+        soap_json = self.doctor_agent.generate_soap_json(ml_report=ml_report, conversation_summary=conversation_summary)
 
         # 7. Create health assessment
         assessment_data = schemas.HealthAssessmentCreate(
@@ -140,9 +124,7 @@ class HealthAnalysisService:
         assessment = crud.create_health_assessment(self.db, assessment_data)
 
         # 8. Mark consultation as completed
-        crud.update_consultation(
-            self.db, consultation.id, schemas.ConsultationUpdate(stage="report")
-        )
+        crud.update_consultation(self.db, consultation.id, schemas.ConsultationUpdate(stage="report"))
 
         # 9. Create audit log
         crud.create_audit_log(
@@ -173,9 +155,7 @@ class HealthAnalysisService:
             assessment=assessment,
         )
 
-    def _convert_to_patient_state(
-        self, request: schemas.AnalyzeHealthRequest
-    ) -> PatientState:
+    def _convert_to_patient_state(self, request: schemas.AnalyzeHealthRequest) -> PatientState:
         """Convert API request to PatientState for ML pipeline"""
         patient_state = PatientState()
 

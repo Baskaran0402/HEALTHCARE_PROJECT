@@ -4,9 +4,7 @@ import pandas as pd
 
 from src.agents.kidney_adapter import adapt_kidney_features
 
-with open(
-    "models/kidneyDiseasePrediction/kidney_disease_prediction_model.pkl", "rb"
-) as f:
+with open("models/kidneyDiseasePrediction/kidney_disease_prediction_model.pkl", "rb") as f:
     kidney_model = pickle.load(f)
 
 
@@ -81,9 +79,7 @@ def kidney_risk(patient_data):
     adapted = adapt_kidney_features(patient_data)
 
     X = pd.DataFrame(
-        [
-            [adapted[k] for k in FEATURE_MAP.keys()]
-        ],  # Map using the keys corresponding to abbreviations
+        [[adapted[k] for k in FEATURE_MAP.keys()]],  # Map using the keys corresponding to abbreviations
         columns=FEATURE_ORDER,
     )
 

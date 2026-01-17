@@ -16,20 +16,14 @@ def get_patient_history(patient_id: str, db: Session = Depends(get_db)):
     Returns a list of assessments sorted by date.
     """
     # 1. Fetch all consultations for the patient
-    consultations = (
-        db.query(models.Consultation)
-        .filter(models.Consultation.patient_id == patient_id)
-        .all()
-    )
+    consultations = db.query(models.Consultation).filter(models.Consultation.patient_id == patient_id).all()
 
     history = []
 
     for consult in consultations:
         # Get assessments for this consultation
         assessments = (
-            db.query(models.HealthAssessment)
-            .filter(models.HealthAssessment.consultation_id == consult.id)
-            .all()
+            db.query(models.HealthAssessment).filter(models.HealthAssessment.consultation_id == consult.id).all()
         )
 
         for assessment in assessments:

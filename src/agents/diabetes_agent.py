@@ -2,8 +2,7 @@ import pickle
 
 import pandas as pd
 
-from src.agents.diabetes_adapter import (adapt_diabetes_features,
-                                         normalize_smoking)
+from src.agents.diabetes_adapter import adapt_diabetes_features, normalize_smoking
 
 with open(
     "models/diabetes_hypertension_model/diabetes_and_hypertension_prediction_model.pkl",
