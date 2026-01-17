@@ -83,9 +83,7 @@ def get_patient(patient_id: str, db: Session = Depends(get_db)):
     return db_patient
 
 
-@app.get(
-    "/api/patients", response_model=List[schemas.PatientResponse], tags=["Patients"]
-)
+@app.get("/api/patients", response_model=List[schemas.PatientResponse], tags=["Patients"])
 def list_patients(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """List all patients"""
     patients = crud.get_patients(db, skip=skip, limit=limit)
@@ -103,9 +101,7 @@ def list_patients(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
     status_code=status.HTTP_201_CREATED,
     tags=["Medical Records"],
 )
-def create_medical_record(
-    record: schemas.MedicalRecordCreate, db: Session = Depends(get_db)
-):
+def create_medical_record(record: schemas.MedicalRecordCreate, db: Session = Depends(get_db)):
     """Create a new medical record"""
     return crud.create_medical_record(db=db, record=record)
 
@@ -131,9 +127,7 @@ def get_patient_medical_records(patient_id: str, db: Session = Depends(get_db)):
     status_code=status.HTTP_201_CREATED,
     tags=["Consultations"],
 )
-def create_consultation(
-    consultation: schemas.ConsultationCreate, db: Session = Depends(get_db)
-):
+def create_consultation(consultation: schemas.ConsultationCreate, db: Session = Depends(get_db)):
     """Start a new consultation"""
     return crud.create_consultation(db=db, consultation=consultation)
 
@@ -162,9 +156,7 @@ def update_consultation(
     db: Session = Depends(get_db),
 ):
     """Update consultation (stage, confidence, conversation)"""
-    db_consultation = crud.update_consultation(
-        db, consultation_id=consultation_id, update=update
-    )
+    db_consultation = crud.update_consultation(db, consultation_id=consultation_id, update=update)
     if db_consultation is None:
         raise HTTPException(status_code=404, detail="Consultation not found")
     return db_consultation
@@ -181,9 +173,7 @@ def update_consultation(
     status_code=status.HTTP_201_CREATED,
     tags=["Assessments"],
 )
-def create_assessment(
-    assessment: schemas.HealthAssessmentCreate, db: Session = Depends(get_db)
-):
+def create_assessment(assessment: schemas.HealthAssessmentCreate, db: Session = Depends(get_db)):
     """Create a new health assessment"""
     return crud.create_health_assessment(db=db, assessment=assessment)
 
@@ -203,12 +193,8 @@ def get_consultation_assessments(consultation_id: str, db: Session = Depends(get
 # ============================================================
 
 
-@app.post(
-    "/api/analyze", response_model=schemas.AnalyzeHealthResponse, tags=["Analysis"]
-)
-async def analyze_health(
-    request: schemas.AnalyzeHealthRequest, db: Session = Depends(get_db)
-):
+@app.post("/api/analyze", response_model=schemas.AnalyzeHealthResponse, tags=["Analysis"])
+async def analyze_health(request: schemas.AnalyzeHealthRequest, db: Session = Depends(get_db)):
     """
     Complete health analysis workflow:
     1. Create/update patient

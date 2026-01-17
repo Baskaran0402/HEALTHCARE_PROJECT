@@ -7,9 +7,7 @@ from src.coordinator.executor import run_selected_agents
 from src.coordinator.explainer import explain_results
 from src.coordinator.patient_state import PatientState
 
-warnings.filterwarnings(
-    "ignore", category=UserWarning, message="X does not have valid feature names"
-)
+warnings.filterwarnings("ignore", category=UserWarning, message="X does not have valid feature names")
 
 warnings.filterwarnings("ignore", category=DataConversionWarning)
 
@@ -54,25 +52,17 @@ def main():
     overall_summary = aggregate_risks(agent_results)
 
     # 4️⃣ Generate doctor-style explanation
-    explanation = explain_results(
-        patient=patient, agent_results=agent_results, overall_summary=overall_summary
-    )
+    explanation = explain_results(patient=patient, agent_results=agent_results, overall_summary=overall_summary)
 
     # 5️⃣ Final output
     print("\n===== AI DOCTOR REPORT =====\n")
 
     print("Individual Risk Assessments:")
     for result in agent_results.get("individual_risks", []):
-        print(
-            f"- {result['disease']}: "
-            f"{result['risk_score']}% ({result['risk_level']})"
-        )
+        print(f"- {result['disease']}: " f"{result['risk_score']}% ({result['risk_level']})")
 
     print("\nOverall Health Risk:")
-    print(
-        f"- Score: {overall_summary['overall_risk_score']}%"
-        f" | Level: {overall_summary['overall_risk_level']}"
-    )
+    print(f"- Score: {overall_summary['overall_risk_score']}%" f" | Level: {overall_summary['overall_risk_level']}")
 
     if overall_summary["primary_concerns"]:
         print("- Primary Concerns:", ", ".join(overall_summary["primary_concerns"]))

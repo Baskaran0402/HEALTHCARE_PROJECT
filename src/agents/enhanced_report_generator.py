@@ -6,9 +6,7 @@ with strong emphasis on explainability and actionable insights.
 """
 
 
-def generate_comprehensive_patient_report(
-    ml_report: dict, patient_name: str = "Patient"
-) -> str:
+def generate_comprehensive_patient_report(ml_report: dict, patient_name: str = "Patient") -> str:
     """
     Generate a comprehensive, explainable patient report using the ML risk assessment.
 
@@ -45,9 +43,7 @@ def generate_comprehensive_patient_report(
     report_sections.append(f"**Risk Score:** {overall_risk.get('score', 0):.1f}%")
 
     if overall_risk.get("primary_concerns"):
-        report_sections.append(
-            f"**Primary Areas of Concern:** {', '.join(overall_risk['primary_concerns'])}"
-        )
+        report_sections.append(f"**Primary Areas of Concern:** {', '.join(overall_risk['primary_concerns'])}")
     report_sections.append("")
 
     # 4. Detailed Risk Analysis by Condition
@@ -114,9 +110,7 @@ def generate_comprehensive_patient_report(
     return "\n".join(report_sections)
 
 
-def generate_comprehensive_doctor_report(
-    ml_report: dict, patient_name: str = "Patient"
-) -> str:
+def generate_comprehensive_doctor_report(ml_report: dict, patient_name: str = "Patient") -> str:
     """
     Generate a comprehensive doctor-facing clinical report.
 
@@ -147,9 +141,7 @@ def generate_comprehensive_doctor_report(
     )
 
     if overall_risk.get("primary_concerns"):
-        report_sections.append(
-            f"**High-Priority Concerns:** {', '.join(overall_risk['primary_concerns'])}"
-        )
+        report_sections.append(f"**High-Priority Concerns:** {', '.join(overall_risk['primary_concerns'])}")
     report_sections.append("")
 
     # 3. Risk Stratification by System
@@ -189,9 +181,7 @@ def generate_comprehensive_doctor_report(
     # 4. Clinical Recommendations
     report_sections.append("## Clinical Recommendations")
     report_sections.append("")
-    report_sections.append(
-        _generate_doctor_recommendations(individual_risks, overall_risk)
-    )
+    report_sections.append(_generate_doctor_recommendations(individual_risks, overall_risk))
     report_sections.append("")
 
     # 5. Suggested Investigations
@@ -205,13 +195,9 @@ def generate_comprehensive_doctor_report(
     report_sections.append("")
     report_sections.append("**Models Used:**")
     for risk in individual_risks:
-        report_sections.append(
-            f"• {risk.get('disease')}: Machine Learning Risk Prediction Model"
-        )
+        report_sections.append(f"• {risk.get('disease')}: Machine Learning Risk Prediction Model")
     report_sections.append("")
-    report_sections.append(
-        "**Confidence Level:** Based on available clinical data and model training"
-    )
+    report_sections.append("**Confidence Level:** Based on available clinical data and model training")
     report_sections.append("")
 
     # 7. Professional Disclaimer
@@ -241,17 +227,25 @@ def _get_risk_emoji(level: str) -> str:
 def _explain_risk_level(level: str, disease: str) -> str:
     """Explain what a risk level means in patient-friendly terms"""
     explanations = {
-        "Critical": (f"The screening indicates a significantly elevated risk for {disease}. "
-                     "This means several risk factors are present that warrant immediate "
-                     "medical attention and further testing."),
-        "High": (f"The screening shows an elevated risk for {disease}. Multiple risk factors "
-                 "have been identified that suggest you should consult with a healthcare "
-                 "provider for further evaluation."),
-        "Moderate": (f"The screening indicates a moderate risk for {disease}. Some risk factors "
-                     "are present, and lifestyle modifications along with regular monitoring "
-                     "are recommended."),
-        "Low": (f"The screening shows a low risk for {disease} based on current indicators. "
-                "Continue maintaining healthy habits and regular check-ups."),
+        "Critical": (
+            f"The screening indicates a significantly elevated risk for {disease}. "
+            "This means several risk factors are present that warrant immediate "
+            "medical attention and further testing."
+        ),
+        "High": (
+            f"The screening shows an elevated risk for {disease}. Multiple risk factors "
+            "have been identified that suggest you should consult with a healthcare "
+            "provider for further evaluation."
+        ),
+        "Moderate": (
+            f"The screening indicates a moderate risk for {disease}. Some risk factors "
+            "are present, and lifestyle modifications along with regular monitoring "
+            "are recommended."
+        ),
+        "Low": (
+            f"The screening shows a low risk for {disease} based on current indicators. "
+            "Continue maintaining healthy habits and regular check-ups."
+        ),
     }
     return explanations.get(level, f"Risk assessment for {disease} has been completed.")
 
@@ -260,31 +254,37 @@ def _generate_executive_summary(overall_risk: dict, individual_risks: list) -> s
     """Generate executive summary"""
     level = overall_risk.get("level", "Unknown")
 
-    critical_count = sum(
-        1 for r in individual_risks if r.get("risk_level") == "Critical"
-    )
+    critical_count = sum(1 for r in individual_risks if r.get("risk_level") == "Critical")
     high_count = sum(1 for r in individual_risks if r.get("risk_level") == "High")
 
     if level == "Critical" or critical_count > 0:
-        return (f"This health screening has identified **{level.lower()} risk** areas that "
-                f"require prompt medical attention. {critical_count + high_count} condition(s) "
-                "show elevated risk levels. We strongly recommend scheduling a consultation "
-                "with your healthcare provider for comprehensive evaluation and personalized "
-                "care planning.")
+        return (
+            f"This health screening has identified **{level.lower()} risk** areas that "
+            f"require prompt medical attention. {critical_count + high_count} condition(s) "
+            "show elevated risk levels. We strongly recommend scheduling a consultation "
+            "with your healthcare provider for comprehensive evaluation and personalized "
+            "care planning."
+        )
     elif level == "High" or high_count > 0:
-        return (f"This screening shows **{level.lower()} risk** in certain health areas. "
-                f"{high_count} condition(s) have elevated risk indicators. We recommend "
-                "consulting with your healthcare provider to discuss these findings "
-                "and develop an appropriate monitoring or intervention plan.")
+        return (
+            f"This screening shows **{level.lower()} risk** in certain health areas. "
+            f"{high_count} condition(s) have elevated risk indicators. We recommend "
+            "consulting with your healthcare provider to discuss these findings "
+            "and develop an appropriate monitoring or intervention plan."
+        )
     elif level == "Moderate":
-        return ("This screening indicates **moderate risk** in some health areas. "
-                "While not immediately concerning, these findings suggest opportunities "
-                "for preventive care and lifestyle optimization. Regular monitoring "
-                "and healthy habits are recommended.")
+        return (
+            "This screening indicates **moderate risk** in some health areas. "
+            "While not immediately concerning, these findings suggest opportunities "
+            "for preventive care and lifestyle optimization. Regular monitoring "
+            "and healthy habits are recommended."
+        )
     else:
-        return ("This screening shows **low risk** across assessed health areas. "
-                "Continue maintaining your current healthy practices and schedule "
-                "regular check-ups as recommended by your healthcare provider.")
+        return (
+            "This screening shows **low risk** across assessed health areas. "
+            "Continue maintaining your current healthy practices and schedule "
+            "regular check-ups as recommended by your healthcare provider."
+        )
 
 
 def _generate_general_recommendations(individual_risks: list) -> str:
@@ -404,9 +404,7 @@ def _generate_doctor_recommendations(individual_risks: list, overall_risk: dict)
     recommendations.append("**General Clinical Approach:**")
     recommendations.append("• Review patient's complete medical history")
     recommendations.append("• Perform focused physical examination")
-    recommendations.append(
-        "• Order confirmatory laboratory/imaging studies as indicated"
-    )
+    recommendations.append("• Order confirmatory laboratory/imaging studies as indicated")
     recommendations.append("• Develop individualized care plan")
     recommendations.append("• Schedule appropriate follow-up intervals")
     recommendations.append("• Provide patient education on risk factors")
@@ -424,28 +422,18 @@ def _generate_investigation_recommendations(individual_risks: list) -> str:
 
         if level in ["Critical", "High"]:
             if "Diabetes" in disease:
-                investigations.append(
-                    "• Fasting blood glucose, HbA1c, oral glucose tolerance test"
-                )
+                investigations.append("• Fasting blood glucose, HbA1c, oral glucose tolerance test")
             if "Heart" in disease:
-                investigations.append(
-                    "• ECG, echocardiogram, stress test, cardiac biomarkers"
-                )
+                investigations.append("• ECG, echocardiogram, stress test, cardiac biomarkers")
             if "Kidney" in disease:
-                investigations.append(
-                    "• Complete metabolic panel, urinalysis, eGFR, kidney ultrasound"
-                )
+                investigations.append("• Complete metabolic panel, urinalysis, eGFR, kidney ultrasound")
             if "Liver" in disease:
-                investigations.append(
-                    "• Liver function tests, hepatitis panel, liver ultrasound"
-                )
+                investigations.append("• Liver function tests, hepatitis panel, liver ultrasound")
             if "Stroke" in disease:
                 investigations.append("• Carotid ultrasound, brain MRI/CT, lipid panel")
 
     if not investigations:
-        investigations.append(
-            "• Routine health screening labs as per age and risk factors"
-        )
+        investigations.append("• Routine health screening labs as per age and risk factors")
         investigations.append("• Baseline ECG and vital signs")
 
     return "\n".join(list(set(investigations)))  # Remove duplicates

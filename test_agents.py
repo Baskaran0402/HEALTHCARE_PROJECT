@@ -1,15 +1,15 @@
-import pickle
-import pandas as pd
-import numpy as np
-import sys
 import os
+
+import sys
+
+
+from src.agents.heart_agent import heart_risk
+from src.agents.kidney_agent import kidney_risk
+from src.agents.liver_agent import liver_risk
 
 # Add project root to path
 sys.path.append(os.getcwd())
 
-from src.agents.kidney_agent import kidney_risk
-from src.agents.heart_agent import heart_risk
-from src.agents.liver_agent import liver_risk
 
 # Mock Patient Data
 patient = {
@@ -25,7 +25,7 @@ patient = {
     # Heart specific
     "chest_pain_type": "typical angina",
     # Liver specific
-    "bilirubin_total": 0.8
+    "bilirubin_total": 0.8,
 }
 
 print("Testing Kidney Agent...")

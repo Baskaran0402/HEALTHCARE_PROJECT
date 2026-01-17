@@ -22,12 +22,6 @@ def heart_risk(patient_data):
         "disease": "Heart Disease",
         "risk_score": risk_score,
         "risk_level": (
-            "Low"
-            if risk_score < 20
-            else (
-                "Moderate"
-                if risk_score < 50
-                else "High" if risk_score < 75 else "Critical"
-            )
+            "Low" if risk_score < 20 else ("Moderate" if risk_score < 50 else "High" if risk_score < 75 else "Critical")
         ),
     }
