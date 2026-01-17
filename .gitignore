@@ -20,3 +20,9 @@ Thumbs.db
 *.mp4
 *.mov
 *.avi
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+*.log

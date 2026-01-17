@@ -111,6 +111,10 @@ def get_patient_consultations(db: Session, patient_id: str):
     )
 
 
+def get_consultations(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Consultation).offset(skip).limit(limit).all()
+
+
 # ============================================================
 # Health Assessment CRUD
 # ============================================================

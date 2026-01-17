@@ -25,7 +25,7 @@ def run_migration():
             text(
                 """
             SELECT column_name
-            FROM information_schema.columns 
+            FROM information_schema.columns
             WHERE table_name = 'patients'
         """
             )
@@ -39,7 +39,7 @@ def run_migration():
             db.execute(
                 text(
                     """
-                ALTER TABLE patients 
+                ALTER TABLE patients
                 ADD COLUMN name VARCHAR(200)
             """
                 )
@@ -55,7 +55,7 @@ def run_migration():
             db.execute(
                 text(
                     """
-                ALTER TABLE patients 
+                ALTER TABLE patients
                 ADD COLUMN medical_record_number VARCHAR(50) UNIQUE
             """
                 )
@@ -81,7 +81,7 @@ def run_migration():
             db.execute(
                 text(
                     """
-                UPDATE patients 
+                UPDATE patients
                 SET name = 'Patient-' || SUBSTRING(id, 1, 8)
                 WHERE name IS NULL
             """
@@ -99,7 +99,7 @@ def run_migration():
                 db.execute(
                     text(
                         """
-                    ALTER TABLE patients 
+                    ALTER TABLE patients
                     ALTER COLUMN name SET NOT NULL
                 """
                     )
@@ -119,7 +119,7 @@ def run_migration():
             text(
                 """
             SELECT column_name, data_type, is_nullable
-            FROM information_schema.columns 
+            FROM information_schema.columns
             WHERE table_name = 'patients'
             ORDER BY ordinal_position
         """

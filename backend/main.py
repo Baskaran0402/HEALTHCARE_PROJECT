@@ -162,6 +162,12 @@ def update_consultation(
     return db_consultation
 
 
+@app.get("/api/consultations", response_model=List[schemas.ConsultationResponse], tags=["Consultations"])
+def list_consultations(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """List all consultations"""
+    return crud.get_consultations(db, skip=skip, limit=limit)
+
+
 # ============================================================
 # Health Assessment Endpoints
 # ============================================================

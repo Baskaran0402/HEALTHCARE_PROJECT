@@ -72,7 +72,7 @@ def load_custom_css():
     .main {
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     }
-    
+
     /* Header styling */
     .main-header {
         text-align: center;
@@ -83,18 +83,18 @@ def load_custom_css():
         margin-bottom: 2rem;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    
+
     .main-header h1 {
         font-size: 2.5rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
     }
-    
+
     .main-header p {
         font-size: 1.1rem;
         opacity: 0.95;
     }
-    
+
     /* Card styling */
     .card {
         background: white;
@@ -104,12 +104,12 @@ def load_custom_css():
         margin-bottom: 1.5rem;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    
+
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
-    
+
     /* Button styling */
     .stButton>button {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -121,12 +121,12 @@ def load_custom_css():
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
-    
+
     .stButton>button:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
     }
-    
+
     /* Chat message styling */
     .chat-message {
         padding: 1.5rem;
@@ -134,22 +134,22 @@ def load_custom_css():
         margin-bottom: 1rem;
         animation: fadeIn 0.5s ease;
     }
-    
+
     .doctor-message {
         background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
         border-left: 5px solid #00bcd4;
     }
-    
+
     .patient-message {
         background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
         border-left: 5px solid #9c27b0;
     }
-    
+
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    
+
     /* Progress bar styling */
     .progress-container {
         background: #e0e0e0;
@@ -158,14 +158,14 @@ def load_custom_css():
         margin: 1rem 0;
         overflow: hidden;
     }
-    
+
     .progress-bar {
         height: 100%;
         background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
         border-radius: 10px;
         transition: width 0.5s ease;
     }
-    
+
     /* Input field styling */
     .stTextInput>div>div>input {
         border-radius: 10px;
@@ -173,12 +173,12 @@ def load_custom_css():
         padding: 0.75rem;
         transition: border-color 0.3s ease;
     }
-    
+
     .stTextInput>div>div>input:focus {
         border-color: #667eea;
         box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
-    
+
     /* Risk level badges */
     .risk-badge {
         display: inline-block;
@@ -187,25 +187,25 @@ def load_custom_css():
         font-weight: 600;
         margin: 0.5rem 0;
     }
-    
+
     .risk-critical {
         background: #ffebee;
         color: #c62828;
         border: 2px solid #ef5350;
     }
-    
+
     .risk-moderate {
         background: #fff3e0;
         color: #e65100;
         border: 2px solid #ff9800;
     }
-    
+
     .risk-low {
         background: #e8f5e9;
         color: #2e7d32;
         border: 2px solid #4caf50;
     }
-    
+
     /* Section headers */
     .section-header {
         font-size: 1.5rem;
@@ -215,7 +215,7 @@ def load_custom_css():
         padding-bottom: 0.5rem;
         border-bottom: 3px solid #667eea;
     }
-    
+
     /* Metric cards */
     .metric-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -225,18 +225,18 @@ def load_custom_css():
         text-align: center;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-    
+
     .metric-value {
         font-size: 2.5rem;
         font-weight: 700;
         margin: 0.5rem 0;
     }
-    
+
     .metric-label {
         font-size: 1rem;
         opacity: 0.9;
     }
-    
+
     /* Info boxes */
     .info-box {
         background: #e3f2fd;
@@ -245,7 +245,7 @@ def load_custom_css():
         border-radius: 8px;
         margin: 1rem 0;
     }
-    
+
     .warning-box {
         background: #fff3e0;
         border-left: 5px solid #ff9800;
@@ -253,7 +253,7 @@ def load_custom_css():
         border-radius: 8px;
         margin: 1rem 0;
     }
-    
+
     .success-box {
         background: #e8f5e9;
         border-left: 5px solid #4caf50;
@@ -261,7 +261,7 @@ def load_custom_css():
         border-radius: 8px;
         margin: 1rem 0;
     }
-    
+
     /* Hide Streamlit branding */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
@@ -325,7 +325,7 @@ if st.session_state.stage == "intro":
         <div class="card">
             <h2 style="text-align: center; color: #667eea;">Welcome to Your AI Health Assistant</h2>
             <p style="text-align: center; font-size: 1.1rem; color: #666; margin-top: 1rem;">
-                Experience advanced AI-powered clinical decision support designed to assist healthcare professionals 
+                Experience advanced AI-powered clinical decision support designed to assist healthcare professionals
                 and empower patients with intelligent health insights.
             </p>
         </div>
@@ -433,7 +433,8 @@ elif st.session_state.stage == "consultation":
     progress = min(st.session_state.confidence * 100, 100)
     st.markdown(
         f"""
-    <div style="background: white; padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
+    <div style="background: white; padding: 1.5rem; border-radius: 15px;
+                margin-bottom: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
             <span style="font-weight: 600; color: #667eea;">Consultation Progress</span>
             <span style="font-weight: 600; color: #667eea;">{progress:.0f}%</span>
@@ -488,7 +489,8 @@ elif st.session_state.stage == "consultation":
         else:
             st.markdown(
                 f"""
-            <div class="chat-message doctor-message" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+            <div class="chat-message doctor-message"
+                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
                 <strong style="font-size: 1.1rem;">👨‍⚕️ Doctor:</strong><br>
                 <p style="font-size: 1.05rem; margin-top: 0.5rem;">{question}</p>
             </div>
@@ -705,7 +707,7 @@ elif st.session_state.stage == "report":
 
         st.markdown(
             f"""
-        <div style="background: {bg_gradient}; border-left: 5px solid {border_color}; 
+        <div style="background: {bg_gradient}; border-left: 5px solid {border_color};
                     padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;
                     box-shadow: 0 5px 15px rgba(0,0,0,0.08);">
             <h3 style="margin: 0; color: #333;">{icon} {item['disease']} - {item['risk_level']} Risk</h3>
@@ -796,9 +798,9 @@ elif st.session_state.stage == "report":
     st.markdown(
         """
     <div class="info-box">
-        <strong>ℹ️ Medical Disclaimer:</strong> This system provides AI-assisted clinical decision support only. 
-        All outputs must be reviewed and validated by a licensed healthcare professional 
-        before any clinical decisions are made. This is not a substitute for professional 
+        <strong>ℹ️ Medical Disclaimer:</strong> This system provides AI-assisted clinical decision support only.
+        All outputs must be reviewed and validated by a licensed healthcare professional
+        before any clinical decisions are made. This is not a substitute for professional
         medical advice, diagnosis, or treatment.
     </div>
     """,

@@ -86,7 +86,9 @@ class TestDatabaseEndpoints:
 
     def test_create_patient(self):
         """Test patient creation endpoint"""
-        patient_data = {"name": "John Doe", "age": 50, "gender": "Male", "email": "john@example.com"}
+        import uuid
+        email = f"test_{uuid.uuid4().hex[:8]}@example.com"
+        patient_data = {"name": "John Doe", "age": 50, "gender": "Male", "email": email}
 
         response = client.post("/api/patients", json=patient_data)
 
