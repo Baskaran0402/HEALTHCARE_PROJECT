@@ -26,7 +26,7 @@ def generate_comprehensive_patient_report(
     report_sections = []
 
     # 1. Header
-    report_sections.append(f"# HEALTH SCREENING REPORT")
+    report_sections.append("# HEALTH SCREENING REPORT")
     report_sections.append(f"**Patient:** {patient_name}")
     report_sections.append(f"**Report Date:** {_get_current_date()}")
     report_sections.append("")
@@ -133,10 +133,10 @@ def generate_comprehensive_doctor_report(
     report_sections = []
 
     # 1. Header
-    report_sections.append(f"# CLINICAL DECISION SUPPORT REPORT")
+    report_sections.append("# CLINICAL DECISION SUPPORT REPORT")
     report_sections.append(f"**Patient:** {patient_name}")
     report_sections.append(f"**Assessment Date:** {_get_current_date()}")
-    report_sections.append(f"**Report Type:** AI-Assisted Risk Stratification")
+    report_sections.append("**Report Type:** AI-Assisted Risk Stratification")
     report_sections.append("")
 
     # 2. Clinical Summary
@@ -241,10 +241,17 @@ def _get_risk_emoji(level: str) -> str:
 def _explain_risk_level(level: str, disease: str) -> str:
     """Explain what a risk level means in patient-friendly terms"""
     explanations = {
-        "Critical": f"The screening indicates a significantly elevated risk for {disease}. This means several risk factors are present that warrant immediate medical attention and further testing.",
-        "High": f"The screening shows an elevated risk for {disease}. Multiple risk factors have been identified that suggest you should consult with a healthcare provider for further evaluation.",
-        "Moderate": f"The screening indicates a moderate risk for {disease}. Some risk factors are present, and lifestyle modifications along with regular monitoring are recommended.",
-        "Low": f"The screening shows a low risk for {disease} based on current indicators. Continue maintaining healthy habits and regular check-ups.",
+        "Critical": (f"The screening indicates a significantly elevated risk for {disease}. "
+                     "This means several risk factors are present that warrant immediate "
+                     "medical attention and further testing."),
+        "High": (f"The screening shows an elevated risk for {disease}. Multiple risk factors "
+                 "have been identified that suggest you should consult with a healthcare "
+                 "provider for further evaluation."),
+        "Moderate": (f"The screening indicates a moderate risk for {disease}. Some risk factors "
+                     "are present, and lifestyle modifications along with regular monitoring "
+                     "are recommended."),
+        "Low": (f"The screening shows a low risk for {disease} based on current indicators. "
+                "Continue maintaining healthy habits and regular check-ups."),
     }
     return explanations.get(level, f"Risk assessment for {disease} has been completed.")
 
@@ -252,7 +259,6 @@ def _explain_risk_level(level: str, disease: str) -> str:
 def _generate_executive_summary(overall_risk: dict, individual_risks: list) -> str:
     """Generate executive summary"""
     level = overall_risk.get("level", "Unknown")
-    score = overall_risk.get("score", 0)
 
     critical_count = sum(
         1 for r in individual_risks if r.get("risk_level") == "Critical"
@@ -262,19 +268,19 @@ def _generate_executive_summary(overall_risk: dict, individual_risks: list) -> s
     if level == "Critical" or critical_count > 0:
         return (f"This health screening has identified **{level.lower()} risk** areas that "
                 f"require prompt medical attention. {critical_count + high_count} condition(s) "
-                f"show elevated risk levels. We strongly recommend scheduling a consultation "
-                f"with your healthcare provider for comprehensive evaluation and personalized "
-                f"care planning.")
+                "show elevated risk levels. We strongly recommend scheduling a consultation "
+                "with your healthcare provider for comprehensive evaluation and personalized "
+                "care planning.")
     elif level == "High" or high_count > 0:
         return (f"This screening shows **{level.lower()} risk** in certain health areas. "
                 f"{high_count} condition(s) have elevated risk indicators. We recommend "
-                f"consulting with your healthcare provider to discuss these findings "
-                f"and develop an appropriate monitoring or intervention plan.")
+                "consulting with your healthcare provider to discuss these findings "
+                "and develop an appropriate monitoring or intervention plan.")
     elif level == "Moderate":
-        return (f"This screening indicates **moderate risk** in some health areas. "
-                f"While not immediately concerning, these findings suggest opportunities "
-                f"for preventive care and lifestyle optimization. Regular monitoring "
-                f"and healthy habits are recommended.")
+        return ("This screening indicates **moderate risk** in some health areas. "
+                "While not immediately concerning, these findings suggest opportunities "
+                "for preventive care and lifestyle optimization. Regular monitoring "
+                "and healthy habits are recommended.")
     else:
         return ("This screening shows **low risk** across assessed health areas. "
                 "Continue maintaining your current healthy practices and schedule "

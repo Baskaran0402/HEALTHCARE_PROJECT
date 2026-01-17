@@ -1,0 +1,2 @@
+src/agents/enhanced_report_generator.py:136:28: F541 f-string is missing placeholders
+src/agents/enhanced_report_generator.py:139:28: F541 f-string is missing placeholders
