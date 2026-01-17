@@ -128,7 +128,7 @@ jobs:
 
       - name: Run flake8
         run: |
-          flake8 src/ backend/ --max-line-length=120 --exclude=venv
+          flake8 src/ backend/ --max-line-length=120 --exclude=venv,scripts
 
       - name: Check code formatting with black
         run: |

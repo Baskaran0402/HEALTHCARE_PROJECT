@@ -36,7 +36,6 @@ cd HEALTHCARE_PROJECT
     ```
 
 3.  **Configure Environment**:
-
     - Create `.env` in the root directory:
 
     ```env
@@ -92,17 +91,15 @@ To verify the system is working:
 
 ```bash
 # From project root
-python test_system.py
+python scripts/test_system.py
 ```
 
 ## ❓ Troubleshooting
 
 - **ModuleNotFoundError: No module named 'fastapi'**:
-
   - Ensure you activated your `venv` and ran `pip install -r requirements.txt`.
 
 - **npm error: no such file or directory 'package.json'**:
-
   - Ensure you are inside the `frontend` directory (`cd frontend`) before running npm commands.
 
 - **Database Connection Errors**:

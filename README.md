@@ -51,7 +51,7 @@ npm run dev
 
 See the AI Doctor Assistant in action:
 
-https://github.com/user-attachments/assets/your-video-id-here
+https://github.com/user-attachments/assets/b0a1cc6f-66c0-4b70-b383-e22ee934f28c
 
 > **Note**: The video demonstrates the complete clinical workflow from patient data entry to AI-generated risk assessment and SOAP notes.
 
@@ -311,7 +311,7 @@ HEALTHCARE_PROJECT/
 pytest tests/test_api.py -v
 
 # ML agent tests
-pytest tests/test_agents.py -v
+pytest tests/test_ml_agents.py -v
 
 # Full test suite with coverage
 pytest --cov=src --cov=backend --cov-report=html
@@ -577,7 +577,7 @@ GET /api/assessments/{assessment_id}
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please see [CONTRIBUTING.md](docs/guides/CONTRIBUTING.md) for guidelines.
 
 Key areas for contribution:
 
@@ -619,9 +619,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📚 Additional Resources
 
-- [Setup Guide](SETUP.md) - Detailed installation instructions
-- [Backend Guide](BACKEND_GUIDE.md) - API and database documentation
-- [Frontend Guide](REACT_FRONTEND_GUIDE.md) - UI component documentation
+- [Setup Guide](docs/guides/SETUP.md) - Detailed installation instructions
+- [Backend Guide](docs/guides/BACKEND_GUIDE.md) - API and database documentation
+- [Frontend Guide](docs/guides/REACT_FRONTEND_GUIDE.md) - UI component documentation
 - [Model Training Notebooks](notebooks/) - Jupyter notebooks for ML pipeline
 
 ---
