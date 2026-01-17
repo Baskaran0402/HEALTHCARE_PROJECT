@@ -1,7 +1,7 @@
 # 🩺 AI Doctor Assistant
 
-> **Multi-Agent Healthcare Decision Support System**  
-> An intelligent clinical decision support platform combining machine learning disease risk models with LLM-powered conversational agents to provide explainable, guideline-aware healthcare insights.
+> **Clinical Decision Support System for Healthcare Professionals**  
+> An intelligent platform combining machine learning disease risk models with LLM-powered analysis to provide explainable, guideline-aware clinical insights for licensed medical practitioners.
 
 <div align="center">
 
@@ -43,28 +43,29 @@ npm run dev
 # ✅ Frontend running at http://localhost:5173
 ```
 
-**🎉 Open your browser to `http://localhost:5173` and start analyzing health data!**
+**🎉 Open your browser to `http://localhost:5173` and start clinical analysis!**
 
 ---
 
 ## ⚠️ Important Disclaimer
 
-**This system is NOT a medical diagnostic tool.**
+**This system is a Clinical Decision Support Tool for Licensed Healthcare Professionals Only.**
 
-- All outputs are **advisory only** and must be reviewed by licensed healthcare professionals
+- All outputs are **advisory only** and must be reviewed by the attending physician
 - Intended for **clinical decision support**, not autonomous medical decision-making
-- For **educational, research, and portfolio demonstration purposes**
+- **Not for patient self-diagnosis or direct patient use**
+- For **professional medical practice, education, and research purposes**
 
 ---
 
 ## 🎯 Key Features
 
-### 🤖 **Intelligent Conversational Agent**
+### 🤖 **AI-Powered Clinical Analysis**
 
-- Human-like medical conversation powered by LLM (Groq/Gemini)
-- Confidence-based adaptive questioning
-- Natural language symptom extraction
-- Safety-first prompting (no diagnosis, no prescriptions)
+- LLM-powered report generation (Groq/Gemini)
+- Structured clinical documentation (SOAP format)
+- Evidence-based reasoning and recommendations
+- Safety-first design (no diagnosis, no prescriptions)
 
 ### 🩺 **Multi-Disease Risk Assessment**
 
@@ -81,25 +82,27 @@ Each model provides:
 - Risk score (0-100%)
 - Risk level classification (Low/Moderate/High/Critical)
 - Evidence-based reasoning
+- Clinical attention areas
 
 ### 🔍 **Explainability & Clinical Guidelines**
 
-- **Why** a risk was flagged (transparent reasoning)
-- Guideline-based clinical considerations
-- Drug-disease interaction warnings
-- Feature importance visualization
+- **Transparent reasoning** - Why each risk was flagged
+- **Guideline integration** - Evidence-based clinical considerations
+- **Drug-disease interactions** - Safety warnings
+- **Feature importance** - Which patient factors drive predictions
 
 ### 📊 **Professional Medical Reports**
 
-- **Patient Report** - Simple, reassuring language
-- **Doctor Report** - SOAP format clinical notes
+- **Clinical SOAP Notes** - Structured Subjective, Objective, Assessment, Plan format
+- **Risk Stratification** - Clear visual indicators and percentages
+- **Attention Areas** - Prioritized clinical recommendations
 - **SOAP JSON** - Structured EMR/EHR-ready output
 
 ### 🏗️ **Production-Ready Architecture**
 
 - **FastAPI** backend with RESTful API
 - **PostgreSQL** database with audit logging
-- **React** frontend with modern UI/UX
+- **React** frontend with professional medical UI
 - **Multi-agent** orchestration system
 - **Modular** and scalable design
 
@@ -150,9 +153,10 @@ Each model provides:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        React Frontend (Vite)                     │
+│                 React Frontend (Medical UI)                      │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐          │
-│  │  Home Page   │  │ Consultation │  │ Results Page │          │
+│  │  Dashboard   │  │ Clinical     │  │ Results &    │          │
+│  │              │  │ Data Entry   │  │ Reports      │          │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘          │
 └─────────┼──────────────────┼──────────────────┼─────────────────┘
           │                  │                  │
@@ -200,16 +204,16 @@ Each model provides:
           └──────────────────────────────────────────────────────┘
 ```
 
-### Data Flow
+### Clinical Workflow
 
-1. **User Input** → React form captures patient demographics, vitals, and symptoms
+1. **Physician Input** → Doctor enters patient demographics, vitals, and clinical data
 2. **API Request** → Frontend sends structured data to `/api/analyze`
 3. **Agent Orchestration** → Coordinator dispatches data to specialized ML agents
 4. **Risk Assessment** → Each agent runs predictions and returns risk scores
 5. **Aggregation** → Results combined with explainability and guidelines
-6. **LLM Report Generation** → Doctor agent creates patient and clinical reports
+6. **LLM Report Generation** → Clinical SOAP notes and recommendations generated
 7. **Database Persistence** → All data stored in PostgreSQL with audit trail
-8. **Response** → Structured JSON returned to frontend for visualization
+8. **Clinical Review** → Physician reviews AI-generated insights and makes final decisions
 
 ---
 
@@ -239,7 +243,6 @@ HEALTHCARE_PROJECT/
 │
 ├── src/                        # Core ML/AI logic
 │   ├── agents/                # Disease prediction agents
-│   │   ├── doctor_agent.py   # LLM conversational agent
 │   │   ├── diabetes_agent.py
 │   │   ├── heart_agent.py
 │   │   ├── stroke_agent.py
@@ -290,11 +293,8 @@ pytest tests/test_api.py -v
 # ML agent tests
 pytest tests/test_agents.py -v
 
-# Database tests
-pytest tests/test_database.py -v
-
-# Full test suite
-pytest --cov=src --cov-report=html
+# Full test suite with coverage
+pytest --cov=src --cov=backend --cov-report=html
 ```
 
 ### Test Coverage
@@ -311,15 +311,15 @@ pytest --cov=src --cov-report=html
 
 ### How This Project Differs from Existing Solutions
 
-| Feature                      | Traditional CDSS     | Commercial AI Health Apps    | **This Project**                      |
-| ---------------------------- | -------------------- | ---------------------------- | ------------------------------------- |
-| **Multi-Disease Assessment** | Single disease focus | Limited (2-3 conditions)     | ✅ 5 major diseases                   |
-| **Explainability**           | Rule-based only      | Black box ML                 | ✅ Transparent reasoning + guidelines |
-| **Conversational Interface** | Form-based only      | Chatbot (no medical context) | ✅ LLM-powered medical conversation   |
-| **Clinical Reports**         | Manual entry         | Patient-facing only          | ✅ Dual reports (patient + SOAP)      |
-| **EMR Integration**          | Custom per vendor    | None                         | ✅ Structured SOAP JSON               |
-| **Open Source**              | Proprietary          | Proprietary                  | ✅ Fully open source                  |
-| **Safety Guardrails**        | Minimal              | Variable                     | ✅ Explicit no-diagnosis policy       |
+| Feature                      | Traditional CDSS     | Commercial AI Health Apps | **This Project**                      |
+| ---------------------------- | -------------------- | ------------------------- | ------------------------------------- |
+| **Target User**              | Physicians only      | Patients + Physicians     | ✅ **Physicians only**                |
+| **Multi-Disease Assessment** | Single disease focus | Limited (2-3 conditions)  | ✅ 5 major diseases                   |
+| **Explainability**           | Rule-based only      | Black box ML              | ✅ Transparent reasoning + guidelines |
+| **Clinical Reports**         | Manual entry         | Basic summaries           | ✅ Professional SOAP notes            |
+| **EMR Integration**          | Custom per vendor    | None                      | ✅ Structured SOAP JSON               |
+| **Open Source**              | Proprietary          | Proprietary               | ✅ Fully open source                  |
+| **Safety Guardrails**        | Minimal              | Variable                  | ✅ Explicit no-diagnosis policy       |
 
 ### Related Research & Projects
 
@@ -328,10 +328,10 @@ pytest --cov=src --cov-report=html
    - Limitation: Closed-source, expensive, single-disease focus
    - Our Advantage: Multi-agent architecture, open-source, explainable
 
-2. **Ada Health** (Mobile App)
-   - Strength: User-friendly symptom checker
-   - Limitation: No clinical SOAP notes, limited to triage
-   - Our Advantage: Professional clinical documentation, EMR-ready output
+2. **UpToDate Clinical Decision Support** (Commercial)
+   - Strength: Comprehensive medical knowledge base
+   - Limitation: Manual lookup, no predictive analytics
+   - Our Advantage: AI-powered risk prediction, automated analysis
 
 3. **Research: "Explainable AI for Healthcare" (Nature Medicine, 2023)**
    - Paper demonstrates SHAP-based interpretability for single models
@@ -441,12 +441,8 @@ Each ML model includes SHAP (SHapley Additive exPlanations) values to show which
 # Generate SHAP plots
 python scripts/generate_shap_plots.py
 
-# Output: visualizations/shap_summary.png
+# Output: docs/images/shap_*.png
 ```
-
-**Example SHAP Summary Plot:**
-
-![SHAP Feature Importance](docs/images/shap_example.png)
 
 ### Key Insights from Model Analysis
 
@@ -470,39 +466,37 @@ python scripts/generate_shap_plots.py
 
 ---
 
-## 🎓 Educational Use & Portfolio Value
+## 🎓 Professional Use Cases
 
-This project demonstrates:
+This system is designed for:
 
-✅ **Full-Stack Development**
+### ✅ **Clinical Practice**
 
-- Modern React frontend with professional UI/UX
-- RESTful API design with FastAPI
-- Database design and ORM usage
+- Risk stratification during patient consultations
+- Evidence-based clinical decision support
+- Structured documentation generation
+- Multi-disease screening
 
-✅ **Machine Learning Engineering**
+### ✅ **Medical Education**
 
-- Multi-model training and deployment
-- Model interpretability (SHAP)
-- Production ML pipelines
+- Teaching clinical reasoning
+- Demonstrating AI in healthcare
+- Understanding ML model interpretability
+- Learning SOAP documentation
 
-✅ **AI/LLM Integration**
+### ✅ **Research & Development**
 
-- Prompt engineering for medical safety
-- Agent-based architecture
-- Structured output generation
+- Healthcare AI prototyping
+- Clinical workflow optimization
+- ML model validation
+- EMR integration testing
 
-✅ **Software Engineering Best Practices**
+### ✅ **Portfolio & Career Development**
 
-- Modular, scalable architecture
-- Comprehensive testing
-- Documentation and deployment guides
-
-✅ **Healthcare Domain Knowledge**
-
-- Medical data handling
-- Clinical workflow understanding
-- Safety and ethics awareness
+- Demonstrating full-stack development skills
+- Showcasing ML engineering expertise
+- Healthcare domain knowledge
+- Production-ready system design
 
 ---
 
@@ -515,6 +509,7 @@ This project follows medical AI safety principles:
 | ❌ **No Diagnosis**         | System explicitly states it does not diagnose |
 | ❌ **No Prescriptions**     | No medication or dosage recommendations       |
 | ❌ **No Treatment Plans**   | Only suggests areas for clinical attention    |
+| ❌ **No Patient Access**    | Designed exclusively for licensed physicians  |
 | ✅ **Explainability**       | All predictions include reasoning             |
 | ✅ **Human-in-the-Loop**    | Designed to assist, not replace, clinicians   |
 | ✅ **Explicit Disclaimers** | Clear warnings on every output                |
@@ -535,11 +530,20 @@ Once the backend is running, visit:
 # Health check
 GET /health
 
-# Analyze patient health
+# Analyze patient clinical data
 POST /api/analyze
 {
-  "patient_data": {...},
-  "medical_data": {...}
+  "patient_data": {
+    "name": "string",
+    "age": 0,
+    "gender": "string"
+  },
+  "medical_data": {
+    "bmi": 0,
+    "blood_pressure": 0,
+    "cholesterol": 0,
+    ...
+  }
 }
 
 # Get consultation history
@@ -553,19 +557,24 @@ GET /api/assessments/{assessment_id}
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please:
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Key areas for contribution:
+
+- Additional disease prediction models
+- Enhanced explainability features
+- EMR/EHR integration modules
+- Clinical guideline updates
+- UI/UX improvements
+- Testing and documentation
 
 ---
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+**Medical Disclaimer**: This software is provided for educational and professional use by licensed healthcare practitioners only. Not intended for patient self-diagnosis or autonomous medical decision-making.
 
 ---
 
@@ -601,6 +610,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ If you find this project useful, please consider giving it a star!**
 
-Built with ❤️ for healthcare innovation
+Built for healthcare professionals, by healthcare AI enthusiasts
+
+**For Licensed Medical Professionals Only** 🩺
 
 </div>
