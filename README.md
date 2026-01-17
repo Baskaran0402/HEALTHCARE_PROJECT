@@ -79,80 +79,80 @@ No markdown, no hallucinated fields
 🏗️ System Architecture 🔁 High-Level Flow
 
 User
- │
- ▼
+│
+▼
 Streamlit UI
- │
- ▼
+│
+▼
 Doctor Agent (LLM)
- │   ├─ Conversational questioning
- │   ├─ Confidence-based stopping
- │   └─ Case summarization
- │
- ▼
+│ ├─ Conversational questioning
+│ ├─ Confidence-based stopping
+│ └─ Case summarization
+│
+▼
 Patient State (Normalized)
- │
- ▼
+│
+▼
 Coordinator / Orchestrator
- │
- ├─ Disease ML Agents
- │   ├─ Diabetes Agent
- │   ├─ Heart Agent
- │   ├─ Stroke Agent
- │   ├─ Kidney Agent
- │   └─ Liver Agent
- │
- ├─ Explainability Engine
- ├─ Guideline Engine
- ├─ Rule Engine
- └─ Interaction Engine
- │
- ▼
+│
+├─ Disease ML Agents
+│ ├─ Diabetes Agent
+│ ├─ Heart Agent
+│ ├─ Stroke Agent
+│ ├─ Kidney Agent
+│ └─ Liver Agent
+│
+├─ Explainability Engine
+├─ Guideline Engine
+├─ Rule Engine
+└─ Interaction Engine
+│
+▼
 Aggregated Risk Report
- │
- ▼
+│
+▼
 Doctor Agent (LLM)
- │   ├─ Patient Report
- │   ├─ Doctor SOAP Note
- │   └─ SOAP JSON
- │
- ▼
+│ ├─ Patient Report
+│ ├─ Doctor SOAP Note
+│ └─ SOAP JSON
+│
+▼
 Final UI Output
 
 📂 Project Structure
 
 HEALTHCARE_PROJECT/
 │
-├── streamlit_app.py        # Main Streamlit application
+├── streamlit_app.py # Main Streamlit application
 │
 ├── src/
-│   ├── agents/             # Disease & Doctor agents
-│   │   ├── doctor_agent.py
-│   │   ├── diabetes_agent.py
-│   │   ├── heart_agent.py
-│   │   ├── stroke_agent.py
-│   │   ├── kidney_agent.py
-│   │   └── liver_agent.py
-│   │
-│   ├── coordinator/        # Orchestration & reasoning
-│   │   ├── executor.py
-│   │   ├── aggregator.py
-│   │   ├── explainability_engine.py
-│   │   ├── guideline_engine.py
-│   │   ├── rule_engine.py
-│   │   └── patient_state.py
-│   │
-│   ├── core/               # Core utilities
-│   │   ├── llm_client.py
-│   │   ├── patient_schema.py
-│   │   └── clinical_normalizer.py
-│   │
-│   └── models/             # Model loading
-│       └── model_loader.py
+│ ├── agents/ # Disease & Doctor agents
+│ │ ├── doctor_agent.py
+│ │ ├── diabetes_agent.py
+│ │ ├── heart_agent.py
+│ │ ├── stroke_agent.py
+│ │ ├── kidney_agent.py
+│ │ └── liver_agent.py
+│ │
+│ ├── coordinator/ # Orchestration & reasoning
+│ │ ├── executor.py
+│ │ ├── aggregator.py
+│ │ ├── explainability_engine.py
+│ │ ├── guideline_engine.py
+│ │ ├── rule_engine.py
+│ │ └── patient_state.py
+│ │
+│ ├── core/ # Core utilities
+│ │ ├── llm_client.py
+│ │ ├── patient_schema.py
+│ │ └── clinical_normalizer.py
+│ │
+│ └── models/ # Model loading
+│ └── model_loader.py
 │
-├── models/                 # Trained ML models (.pkl)
-├── notebooks/              # Archived experiments
-├── data/                   # Raw datasets
+├── models/ # Trained ML models (.pkl)
+├── notebooks/ # Archived experiments
+├── data/ # Raw datasets
 └── README.md
 
 🛠️ Tech Stack
@@ -203,3 +203,55 @@ Healthcare AI safety awareness
 Production-ready code structure
 
 Built to showcase engineering depth — not just predictions.
+
+## 🏗️ Backend Architecture
+
+This project now includes a **FastAPI + PostgreSQL** backend for production-ready deployment:
+
+### Database Schema
+
+- **patients** - Patient demographics and contact info
+- **consultations** - Consultation sessions with conversation history
+- **medical_records** - Patient vitals, labs, and medical history
+- **health_assessments** - ML risk assessments and LLM reports
+- **audit_logs** - System event tracking and compliance
+
+### API Features
+
+- ✅ RESTful API with automatic OpenAPI documentation
+- ✅ PostgreSQL database with SQLAlchemy ORM
+- ✅ Complete CRUD operations for all entities
+- ✅ All-in-one `/api/analyze` endpoint for health analysis
+- ✅ Audit logging for compliance
+- ✅ Request validation with Pydantic schemas
+
+### Quick Start
+
+#### 1. Backend Server
+
+```bash
+# In the project root (HEALTHCARE_PROJECT)
+pip install -r requirements.txt
+python -m backend.main
+```
+
+**Expected**: Server running on `http://localhost:8000`
+
+#### 2. Frontend Application
+
+```bash
+# Navigate to frontend directory
+cd frontend
+# Install dependencies (first time only)
+npm install
+# Run development server
+npm run dev
+```
+
+**Expected**: Application running on `http://localhost:5173`
+
+For detailed backend documentation, see **[Backend Guide](BACKEND_GUIDE.md)**.
+
+## 🛠️ Getting Started
+
+For detailed installation and execution instructions, please refer to the **[Setup Guide](SETUP.md)**.

@@ -1,0 +1,20 @@
+streamlit
+groq
+python-dotenv
+# ML Core
+scikit-learn==1.6.1
+imbalanced-learn
+pandas
+numpy
+
+# Audio
+SpeechRecognition
+pyaudio
+
+# FastAPI Backend
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic[email]
+alembic

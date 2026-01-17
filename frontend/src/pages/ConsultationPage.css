@@ -1,0 +1,120 @@
+.consultation-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.consultation-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.medical-form {
+  margin-top: 2rem;
+}
+
+.form-section {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  color: #1a1a1a;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.checkbox-label:hover {
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.bmi-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.bmi-category {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+.bmi-category.underweight { background: #fee2e2; color: #991b1b; }
+.bmi-category.normal { background: #dcfce7; color: #166534; }
+.bmi-category.overweight { background: #fef9c3; color: #854d0e; }
+.bmi-category.obese { background: #ffedd5; color: #9a3412; }
+
+.cyber-input.readonly {
+  background: #f3f4f6;
+  cursor: default;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #00ff88;
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 2rem;
+  font-size: 1.2rem;
+  padding: 1.2rem;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .checkbox-grid {
+    grid-template-columns: 1fr;
+  }
+}

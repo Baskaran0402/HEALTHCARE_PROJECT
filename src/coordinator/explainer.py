@@ -15,10 +15,17 @@ def explain_results(patient, agent_results, overall_summary):
     lines.append("")
 
     # --- KEY CONCERNS ---
-    if agent_results:
+    # Handle new dictionary format
+    if "individual_risks" in agent_results:
+        risks_list = agent_results["individual_risks"]
+    else:
+        # Fallback/Legacy support
+        risks_list = agent_results.values() if isinstance(agent_results, dict) else []
+
+    if risks_list:
         lines.append("Key Concerns:")
 
-        for _, result in agent_results.items():
+        for result in risks_list:
             disease = result["disease"]
             score = result["risk_score"]
             level = result["risk_level"]
@@ -39,7 +46,7 @@ def explain_results(patient, agent_results, overall_summary):
 
     explanations = []
 
-    for _, result in agent_results.items():
+    for result in risks_list:
         disease = result["disease"]
         level = result["risk_level"]
 

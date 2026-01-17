@@ -1,0 +1,279 @@
+.home-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.home-header {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.logo-icon {
+  color: #2563eb;
+  filter: none;
+}
+
+.logo h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.professional-title {
+  color: #111827;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.professional-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(37, 99, 235, 0.1);
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  color: #1e40af;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.professional-notice svg {
+  color: #2563eb;
+}
+
+.subtitle {
+  color: #4b5563;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-top: 0.5rem;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 900px;
+}
+
+.main-card {
+  padding: 3rem;
+}
+
+.card-title {
+  color: #1a1a1a;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card-description {
+  color: #4a4a4a;
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.feature-icon {
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  color: #1a1a1a;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.role-selection {
+  margin: 3rem 0;
+}
+
+.section-title {
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.role-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.role-button {
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 2rem;
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.role-button small {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.role-button:hover {
+  border-color: #2563eb;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.role-button.selected {
+  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.05);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.role-button svg {
+  color: #2563eb;
+}
+
+.role-notice {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(251, 191, 36, 0.1);
+  border: 2px solid #f59e0b;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.start-button {
+  width: 100%;
+  max-width: 400px;
+  margin: 2rem auto;
+  display: block;
+  font-size: 1.2rem;
+  padding: 1.2rem 2rem;
+}
+
+.start-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.disclaimer {
+  background: rgba(255, 245, 240, 0.98);
+  border: 2px solid rgba(255, 100, 0, 0.5);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.disclaimer h4 {
+  color: #ff6400;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.disclaimer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.disclaimer li {
+  color: #4a4a4a;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.disclaimer li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #ff6400;
+}
+
+.home-footer {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .logo h1 {
+    font-size: 2.5rem;
+  }
+
+  .main-card {
+    padding: 2rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .role-buttons {
+    grid-template-columns: 1fr;
+  }
+}

@@ -67,7 +67,7 @@ def main():
     print("\n===== AI DOCTOR REPORT =====\n")
 
     print("Individual Risk Assessments:")
-    for disease, result in agent_results.items():
+    for result in agent_results.get("individual_risks", []):
         print(
             f"- {result['disease']}: "
             f"{result['risk_score']}% ({result['risk_level']})"

@@ -1,0 +1,47 @@
+{
+  "patient_data": {
+    "age": 58,
+    "gender": "Male",
+    "email": "john.doe@example.com",
+    "phone": "+1-555-0123"
+  },
+  "medical_data": {
+    "bmi": 31.5,
+    "blood_pressure": 150,
+    "blood_glucose": 210.0,
+    "hba1c": 7.8,
+    "cholesterol": 240.0,
+    "creatinine": 2.1,
+    "urea": 55.0,
+    "bilirubin_total": 3.0,
+    "alt": 85.0,
+    "ast": 90.0,
+    "hypertension": true,
+    "diabetes": true,
+    "heart_disease": false,
+    "smoking_status": "current",
+    "chest_pain": true,
+    "breathlessness": true,
+    "fatigue": true,
+    "edema": true
+  },
+  "conversation_history": [
+    {
+      "role": "doctor",
+      "content": "Hello, welcome. I'm here to listen and help. What brings you in today?"
+    },
+    {
+      "role": "patient",
+      "content": "I've been feeling very tired lately and sometimes have chest pain."
+    },
+    {
+      "role": "doctor",
+      "content": "I understand. How long have you been experiencing these symptoms?"
+    },
+    {
+      "role": "patient",
+      "content": "About 3 weeks now. The fatigue is constant and the chest pain comes and goes."
+    }
+  ],
+  "role": "Patient"
+}

@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import pickle
 
 
@@ -18,7 +19,7 @@ def heart_risk(patient_data):
     encoded = encode_heart_features(patient_data)
 
     feature_order = heart_model.feature_names_in_
-    X = np.array([[encoded[f] for f in feature_order]], dtype=float)
+    X = pd.DataFrame([[encoded[f] for f in feature_order]], columns=feature_order)
 
 
     probability = heart_model.predict_proba(X)[0][1]

@@ -1,4 +1,5 @@
 import pickle
+import pandas as pd
 import numpy as np
 
 from src.agents.liver_adapter import adapt_liver_features
@@ -35,9 +36,9 @@ def risk_level(score):
 def liver_risk(patient_data):
     adapted = adapt_liver_features(patient_data)
 
-    X = np.array(
+    X = pd.DataFrame(
         [[adapted[f] for f in FEATURE_ORDER]],
-        dtype=float
+        columns=FEATURE_ORDER
     )
 
     probas = liver_model.predict_proba(X)[0]

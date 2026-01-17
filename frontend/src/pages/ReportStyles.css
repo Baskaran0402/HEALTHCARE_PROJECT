@@ -1,0 +1,74 @@
+/* Professional Clinical Report Styling */
+.clinical-report-markdown {
+  font-family: 'Inter', sans-serif;
+  color: #1e293b; /* Slate 800 */
+  line-height: 1.6;
+}
+
+.clinical-report-markdown h1,
+.clinical-report-markdown h2,
+.clinical-report-markdown h3 {
+  color: #0f172a; /* Slate 900 */
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.clinical-report-markdown h1 {
+  font-size: 1.5rem;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+.clinical-report-markdown h2 {
+  font-size: 1.25rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.25rem;
+}
+
+.clinical-report-markdown h3 {
+  font-size: 1.1rem;
+  color: #334155; /* Slate 700 */
+}
+
+.clinical-report-markdown ul,
+.clinical-report-markdown ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.clinical-report-markdown li {
+  margin-bottom: 0.5rem;
+}
+
+.clinical-report-markdown strong {
+  color: #0f172a; /* Slate 900 */
+  font-weight: 600;
+}
+
+.clinical-report-markdown blockquote {
+  border-left: 4px solid #3b82f6; /* Blue 500 */
+  background-color: #f8fafc; /* Slate 50 */
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+  font-style: italic;
+  color: #475569;
+}
+
+.clinical-report-markdown hr {
+  border: 0;
+  border-top: 1px solid #cbd5e1;
+  margin: 2rem 0;
+}
+
+/* Highlight critical sections */
+.clinical-report-markdown p {
+  margin-bottom: 1rem;
+}
+
+/* Make it look like paper/document */
+.clinical-report-markdown {
+  background-color: transparent;
+}

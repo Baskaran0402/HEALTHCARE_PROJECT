@@ -3,19 +3,19 @@ def normalize_smoking(smoking):
     Normalize smoking history to match training categories exactly
     """
     if smoking is None:
-        return "never"
+        return "non-smoker"
 
     smoking = str(smoking).lower()
 
-    if smoking in ["never", "no", "non-smoker"]:
-        return "never"
-    elif smoking in ["former", "ex-smoker", "quit"]:
-        return "former"
+    if smoking in ["never", "no", "non-smoker", "nep"]:
+        return "non-smoker"
+    elif smoking in ["former", "ex-smoker", "quit", "past_smoker"]:
+        return "past_smoker"
     elif smoking in ["current", "smoker", "yes"]:
         return "current"
     else:
         # safest fallback → MUST be a known category
-        return "never"
+        return "non-smoker"
 
 
 
@@ -34,7 +34,7 @@ def adapt_diabetes_features(patient):
         "heart_disease": patient.get("heart_disease", 0),
 
         # ✅ SAFE categorical input (already normalized)
-        "smoking_history": patient.get("smoking_history_norm", "never"),
+        "smoking_history": patient.get("smoking_history_norm", "non-smoker"),
 
         "bmi": patient.get("bmi", 0),
         "HbA1c_level": patient.get("hba1c", 0),
