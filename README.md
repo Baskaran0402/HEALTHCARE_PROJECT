@@ -14,6 +14,10 @@
 
 </div>
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/18f3d0f3-7001-4358-a473-86351e3c7775" width="800" alt="AI Doctor Assistant UI"/>
+</div>
+
 ---
 
 ## ⚡ Quick Start
