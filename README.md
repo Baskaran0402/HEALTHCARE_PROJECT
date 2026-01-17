@@ -51,7 +51,7 @@ npm run dev
 
 See the AI Doctor Assistant in action:
 
-https://github.com/user-attachments/assets/your-video-id-here
+[https://github.com/user-attachments/assets/your-video-id-here](https://github.com/user-attachments/assets/b0a1cc6f-66c0-4b70-b383-e22ee934f28c)
 
 > **Note**: The video demonstrates the complete clinical workflow from patient data entry to AI-generated risk assessment and SOAP notes.
 
