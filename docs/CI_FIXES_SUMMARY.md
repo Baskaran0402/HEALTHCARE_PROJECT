@@ -9,7 +9,8 @@ I have successfully resolved the issues causing the CI/CD pipeline failures.
 - **Fixed Formatting**: Applied `black` and `isort` to all Python files.
 - **Fixed Linting Errors**:
   - Removed unused imports in `src/agents/*.py`, `backend/main.py`, `backend/routers/analytics.py`.
-  - Fixed line length violations in `src/agents/enhanced_report_generator.py` (split long strings).
+  - Fixed line length violations (`E501`) and unnecessary f-strings (`F541`) in `src/agents/enhanced_report_generator.py`.
+  - Removed unused variable `score` (`F841`) in `src/agents/enhanced_report_generator.py`.
   - Fixed "bare except" clauses in `src/core/clinical_normalizer.py`.
   - Added `# noqa` for necessary but "unused" imports in `backend/init_db.py`.
 
@@ -26,17 +27,19 @@ I have successfully resolved the issues causing the CI/CD pipeline failures.
 
 ### 4. Docker Build
 
-- The Docker build failures were likely cascading from the linting/test failures (since build steps often run lint first or fail if tests fail).
 - With the code now clean and tests passing, the Docker build should succeed.
+
+### 5. Git Push (Large File Limit)
+
+- **Issue**: Attempting to push the `app-demo.mp4` file (105MB) exceeded GitHub's 100MB limit.
+- **Solution**:
+  - Added `*.mp4` (and other video formats) to `.gitignore`.
+  - Reset the local git history to unstage the large video files.
+  - Successfully pushed the core code and demo page components without the heavy binary files.
+  - _Note: If you need the video on the live site, it should be uploaded to a CDN or GitHub Releases/Issues as per the instructions in `docs/demo/GITHUB_VIDEO_GUIDE.md`._
 
 ---
 
 ## 🚀 Next Steps
 
-The fixes are applied locally. When you **push these changes to GitHub**, the CI pipeline will run again and should pass (GREEN).
-
-```bash
-git add .
-git commit -m "Fix CI/CD pipeline failures: linting, tests, and formatting"
-git push origin main
-```
+The fixes have been pushed to the main branch. You can monitor the progress in the **Actions** tab of your GitHub repository. It should now pass all checks successfully.
