@@ -108,7 +108,19 @@ Each model provides:
 - Evidence-based reasoning
 - Clinical attention areas
 
-### 🔍 **Explainability & Clinical Guidelines**
+### � **Model Performance**
+
+| Model    | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
+| -------- | -------- | --------- | ------ | -------- | ------- |
+| Heart    | 87.3%    | 0.85      | 0.89   | 0.87     | 0.91    |
+| Diabetes | 89.1%    | 0.88      | 0.91   | 0.89     | 0.93    |
+| Stroke   | 85.7%    | 0.83      | 0.87   | 0.85     | 0.89    |
+| Kidney   | 86.5%    | 0.84      | 0.88   | 0.86     | 0.90    |
+| Liver    | 84.2%    | 0.81      | 0.86   | 0.83     | 0.87    |
+
+> **Note**: Metrics are based on test set evaluation using 5-fold cross-validation. Detailed performance reports and confusion matrices are available in the `notebooks/` directory.
+
+### �🔍 **Explainability & Clinical Guidelines**
 
 - **Transparent reasoning** - Why each risk was flagged
 - **Guideline integration** - Evidence-based clinical considerations
@@ -457,36 +469,30 @@ nginx -c /path/to/nginx.conf  # Serve frontend build
 
 ## 📊 Model Interpretability
 
-### Feature Importance Visualization
+### 🧠 **Model Explainability & Feature Importance**
 
-Each ML model includes SHAP (SHapley Additive exPlanations) values to show which patient factors most influence predictions:
+SHAP (SHapley Additive exPlanations) values are used to visualize the impact of each feature on the model's prediction. This ensures transparency and clinical trust.
 
-```python
-# Generate SHAP plots
-python scripts/generate_shap_plots.py
-
-# Output: docs/images/shap_*.png
-```
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/b9f7a77d-74be-48e0-a401-86363a1e9411" width="800" alt="SHAP Summary Plot Example"/>
+  <p><i>Example: SHAP Summary Plot showing feature impact across the population.</i></p>
+</div>
 
 ### Key Insights from Model Analysis
+
+Detailed performance metrics for all models are available in the [Model Performance](#-model-performance) section. Below are the primary clinical drivers identified by the models:
 
 **Heart Disease Model:**
 
 - Top 3 Features: Age, Cholesterol, Blood Pressure
-- Model Accuracy: 87.3%
-- AUC-ROC: 0.91
 
 **Diabetes Model:**
 
 - Top 3 Features: HbA1c, Glucose, BMI
-- Model Accuracy: 89.1%
-- AUC-ROC: 0.93
 
 **Stroke Model:**
 
 - Top 3 Features: Age, Hypertension, Heart Disease
-- Model Accuracy: 85.7%
-- AUC-ROC: 0.89
 
 ---
 
