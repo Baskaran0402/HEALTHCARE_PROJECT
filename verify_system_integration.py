@@ -1,4 +1,3 @@
-
 import time
 
 import requests
@@ -29,7 +28,7 @@ def test_full_analysis():
             "name": "Integration Test User",
             "age": 55,
             "gender": "Male",
-            "medical_record_number": "TEST-101"
+            "medical_record_number": "TEST-101",
         },
         "medical_data": {
             "bmi": 28.5,
@@ -49,9 +48,9 @@ def test_full_analysis():
             "chest_pain": 1,  # Trigger Heart Model
             "breathlessness": 0,
             "fatigue": 1,
-            "edema": 0
+            "edema": 0,
         },
-        "role": "Doctor"  # Capitalized
+        "role": "Doctor",  # Capitalized
     }
 
     try:

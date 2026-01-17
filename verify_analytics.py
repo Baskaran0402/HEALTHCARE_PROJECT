@@ -1,4 +1,3 @@
-
 import time
 import uuid
 
@@ -15,7 +14,7 @@ def verify_analytics():
         "name": f"History Test User {uuid.uuid4().hex[:4]}",
         "age": 45,
         "gender": "Female",
-        "medical_record_number": f"TEST-HIST-{uuid.uuid4().hex[:6]}"
+        "medical_record_number": f"TEST-HIST-{uuid.uuid4().hex[:6]}",
     }
 
     print("\n1. Creating Patient...")
@@ -26,10 +25,8 @@ def verify_analytics():
     # Run 1: High Risk
     payload1 = {
         "patient_data": patient_data,
-        "medical_data": {
-            "bmi": 30, "blood_pressure": 150, "diabetes": 1, "creatinine": 1.5
-        },
-        "role": "Doctor"
+        "medical_data": {"bmi": 30, "blood_pressure": 150, "diabetes": 1, "creatinine": 1.5},
+        "role": "Doctor",
     }
     r1 = requests.post(f"{BASE_URL}/api/analyze", json=payload1)
     if r1.status_code != 200:
@@ -44,10 +41,8 @@ def verify_analytics():
     # Run 2: Moderate Risk (Improvement)
     payload2 = {
         "patient_data": patient_data,
-        "medical_data": {
-            "bmi": 28, "blood_pressure": 130, "diabetes": 1, "creatinine": 1.1
-        },
-        "role": "Doctor"
+        "medical_data": {"bmi": 28, "blood_pressure": 130, "diabetes": 1, "creatinine": 1.1},
+        "role": "Doctor",
     }
     r2 = requests.post(f"{BASE_URL}/api/analyze", json=payload2)
     if r2.status_code == 200:
