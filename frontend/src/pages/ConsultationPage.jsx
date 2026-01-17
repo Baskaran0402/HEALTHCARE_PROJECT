@@ -138,7 +138,7 @@ const ConsultationPage = () => {
       <div className="content-overlay">
         <div className="consultation-container">
           <motion.div
-            className="glass-card"
+            className="medical-card"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -158,7 +158,7 @@ const ConsultationPage = () => {
                       name="patient_name"
                       value={formData.patient_name}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       required
                       placeholder="Enter patient's full name"
                     />
@@ -170,7 +170,7 @@ const ConsultationPage = () => {
                       name="medical_record_number"
                       value={formData.medical_record_number}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       placeholder="Auto-generated if not provided"
                     />
                   </div>
@@ -188,7 +188,7 @@ const ConsultationPage = () => {
                       name="age"
                       value={formData.age}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       required
                       min="0"
                       max="120"
@@ -200,7 +200,7 @@ const ConsultationPage = () => {
                       name="gender"
                       value={formData.gender}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       required
                     >
                       <option value="Male">Male</option>
@@ -214,7 +214,7 @@ const ConsultationPage = () => {
                       name="height"
                       value={formData.height}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       required
                       placeholder="e.g. 175"
                     />
@@ -226,7 +226,7 @@ const ConsultationPage = () => {
                       name="weight"
                       value={formData.weight}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       required
                       placeholder="e.g. 70"
                     />
@@ -263,7 +263,7 @@ const ConsultationPage = () => {
                       name="blood_pressure"
                       value={formData.blood_pressure}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       min="60"
                       max="250"
                     />
@@ -275,7 +275,7 @@ const ConsultationPage = () => {
                       name="blood_glucose"
                       value={formData.blood_glucose}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       step="0.1"
                       min="50"
                       max="500"
@@ -288,7 +288,7 @@ const ConsultationPage = () => {
                       name="hba1c"
                       value={formData.hba1c}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       step="0.1"
                       min="3"
                       max="15"
@@ -301,7 +301,7 @@ const ConsultationPage = () => {
                       name="cholesterol"
                       value={formData.cholesterol}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       min="100"
                       max="400"
                     />
@@ -313,7 +313,7 @@ const ConsultationPage = () => {
                       name="creatinine"
                       value={formData.creatinine}
                       onChange={handleChange}
-                      className="cyber-input"
+                      className="medical-input"
                       step="0.1"
                       min="0.1"
                       max="10"
@@ -401,7 +401,7 @@ const ConsultationPage = () => {
                     name="smoking_status"
                     value={formData.smoking_status}
                     onChange={handleChange}
-                    className="cyber-input"
+                    className="medical-input"
                   >
                     <option value="never">Never</option>
                     <option value="former">Former</option>
@@ -413,7 +413,7 @@ const ConsultationPage = () => {
               {/* Submit Button */}
               <motion.button
                 type="submit"
-                className="neon-button submit-button"
+                className="medical-button submit-button"
                 disabled={loading}
                 whileHover={{ scale: loading ? 1 : 1.05 }}
                 whileTap={{ scale: loading ? 1 : 0.95 }}

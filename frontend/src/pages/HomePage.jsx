@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Activity, Brain, Heart, Shield } from 'lucide-react'
+import { Brain, Heart, Shield } from 'lucide-react'
 import './HomePage.css'
 
 const HomePage = () => {
@@ -28,7 +28,7 @@ const HomePage = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="logo">
-              <Activity className="logo-icon" size={48} />
+              <img src="/logo.png" alt="AI Doctor Logo" className="logo-img" style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
               <h1 className="professional-title">AI Doctor Assistant</h1>
             </div>
             <p className="subtitle">Clinical Decision Support System for Healthcare Professionals</p>
@@ -45,7 +45,7 @@ const HomePage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="glass-card main-card">
+            <div className="medical-card main-card">
               <h2 className="card-title">Welcome to Your AI Health Assistant</h2>
               <p className="card-description">
                 Experience advanced AI-powered clinical decision support designed to assist
@@ -59,7 +59,7 @@ const HomePage = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <Brain className="feature-icon neon-text" size={32} />
+                  <Brain className="feature-icon text-primary" size={32} />
                   <h3>AI-Powered Analysis</h3>
                   <p>Advanced machine learning models analyze your health data comprehensively</p>
                 </motion.div>
@@ -69,7 +69,7 @@ const HomePage = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <Heart className="feature-icon neon-text-blue" size={32} />
+                  <Heart className="feature-icon text-primary" size={32} />
                   <h3>Risk Assessment</h3>
                   <p>Multi-disease risk evaluation with actionable insights</p>
                 </motion.div>
@@ -79,7 +79,7 @@ const HomePage = () => {
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: 'spring', stiffness: 300 }}
                 >
-                  <Shield className="feature-icon neon-text-pink" size={32} />
+                  <Shield className="feature-icon text-primary" size={32} />
                   <h3>Clinical Support</h3>
                   <p>Evidence-based recommendations and SOAP documentation</p>
                 </motion.div>
@@ -108,7 +108,7 @@ const HomePage = () => {
 
               {/* Start Button */}
               <motion.button
-                className="neon-button start-button"
+                className="medical-button start-button"
                 onClick={handleStart}
                 disabled={!selectedRole}
                 whileHover={{ scale: selectedRole ? 1.05 : 1 }}
@@ -119,7 +119,7 @@ const HomePage = () => {
 
               {/* Disclaimer */}
               <div className="disclaimer">
-                <h4>⚠️ Clinical Use Disclaimer</h4>
+                <h4>Clinical Use Disclaimer</h4>
                 <ul>
                   <li>This system provides AI-assisted clinical decision support for healthcare professionals</li>
                   <li>Does NOT provide medical diagnoses, prescriptions, or treatment recommendations</li>

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { AlertCircle, CheckCircle, Home, Shield } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import LetterGlitch from '../components/LetterGlitch'
+// LetterGlitch removed for professional theme
 import './ResultsPage.css'
 import './ReportStyles.css'
 
@@ -17,7 +17,7 @@ const ResultsPage = () => {
       <div className="results-page">
         <div className="error-container">
           <h1>Clinical Data Unavailable</h1>
-          <button className="neon-button" onClick={() => navigate('/')}>
+          <button className="medical-button" onClick={() => navigate('/')}>
             Return to Dashboard
           </button>
         </div>
@@ -56,7 +56,7 @@ const ResultsPage = () => {
             </div>
 
             {/* 1. Patient Summary & Profile */}
-            <div className="glass-card report-section">
+            <div className="medical-card report-section">
               <h2 className="section-header">Patient Summary & Profile</h2>
               <div className="summary-grid">
                 <div className="summary-item">
@@ -79,7 +79,7 @@ const ResultsPage = () => {
             </div>
 
             {/* 2. BMI & Risk Context */}
-            <div className="glass-card report-section">
+            <div className="medical-card report-section">
               <h2 className="section-header">BMI & Risk Context</h2>
               <div className="overall-risk-display">
                 <div className="risk-level-indicator">
@@ -98,7 +98,7 @@ const ResultsPage = () => {
             </div>
 
             {/* 3. Symptom Pattern Analysis & Risk Flags */}
-            <div className="glass-card report-section">
+            <div className="medical-card report-section">
               <h2 className="section-header">Symptom Pattern Analysis</h2>
               <div className="concerns-grid">
                 {assessment.individual_risks.map((risk, index) => (
@@ -124,7 +124,7 @@ const ResultsPage = () => {
             </div>
 
             {/* 4. Suggested Clinical Attention Areas */}
-            <div className="glass-card report-section">
+            <div className="medical-card report-section">
               <h2 className="section-header">Suggested Clinical Attention Areas</h2>
               <div className="report-narrative">
                 <div className="clinical-report-markdown">
@@ -152,7 +152,7 @@ const ResultsPage = () => {
             </div>
 
             <div className="actions">
-              <button className="neon-button" onClick={() => navigate('/')}>
+              <button className="medical-button" onClick={() => navigate('/')}>
                 <Home size={18} />
                 <span>Return to Dashboard</span>
               </button>
