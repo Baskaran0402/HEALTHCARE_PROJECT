@@ -1,13 +1,13 @@
+# Core ML/AI
 streamlit
 groq
 python-dotenv
-# ML Core
 scikit-learn==1.6.1
 imbalanced-learn
 pandas
 numpy
 
-# Audio
+# Audio (optional)
 SpeechRecognition
 pyaudio
 
@@ -18,3 +18,16 @@ sqlalchemy
 psycopg2-binary
 pydantic[email]
 alembic
+
+# Testing
+pytest
+pytest-cov
+pytest-asyncio
+httpx
+
+# Model Interpretability
+shap
+matplotlib
+
+# Additional utilities
+requests

@@ -1,17 +1,19 @@
 /* Professional Clinical Report Styling */
 .clinical-report-markdown {
   font-family: 'Inter', sans-serif;
-  color: #1e293b; /* Slate 800 */
-  line-height: 1.6;
+  color: #1e293b;
+  line-height: 1.7;
+  background-color: transparent;
 }
 
+/* Headings */
 .clinical-report-markdown h1,
 .clinical-report-markdown h2,
 .clinical-report-markdown h3 {
-  color: #0f172a; /* Slate 900 */
+  color: #0f172a;
   font-weight: 700;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
   letter-spacing: -0.01em;
 }
 
@@ -19,56 +21,144 @@
   font-size: 1.5rem;
   border-bottom: 2px solid #e2e8f0;
   padding-bottom: 0.5rem;
+  margin-top: 0;
 }
 
 .clinical-report-markdown h2 {
   font-size: 1.25rem;
   border-bottom: 1px solid #e2e8f0;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.375rem;
+  margin-top: 2.5rem;
 }
 
 .clinical-report-markdown h3 {
-  font-size: 1.1rem;
-  color: #334155; /* Slate 700 */
+  font-size: 1.125rem;
+  color: #334155;
+  margin-top: 1.5rem;
 }
 
+/* Lists - Force vertical display */
 .clinical-report-markdown ul,
 .clinical-report-markdown ol {
-  padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  padding-left: 0;
+  margin: 1.25rem 0;
+  list-style: none;
+  display: block !important;
+  width: 100%;
 }
 
 .clinical-report-markdown li {
+  margin-bottom: 1rem;
+  padding-left: 1.75rem;
+  position: relative;
+  display: block !important;
+  width: 100%;
+  line-height: 1.7;
+  color: #475569;
+  clear: both !important;
+  float: none !important;
+}
+
+/* Custom bullet points */
+.clinical-report-markdown li::before {
+  content: '•';
+  position: absolute;
+  left: 0.5rem;
+  color: #215fff;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+/* Nested lists */
+.clinical-report-markdown li li {
+  margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
-.clinical-report-markdown strong {
-  color: #0f172a; /* Slate 900 */
-  font-weight: 600;
+.clinical-report-markdown li li::before {
+  content: '◦';
+  color: #64748b;
 }
 
+/* Strong/Bold text - make it stand out */
+.clinical-report-markdown strong {
+  color: #0f172a;
+  font-weight: 700;
+  background: linear-gradient(to bottom, transparent 60%, #fef3c7 60%);
+  padding: 0 0.125rem;
+}
+
+/* Emphasis/Italic */
+.clinical-report-markdown em {
+  font-style: italic;
+  color: #334155;
+  font-weight: 500;
+}
+
+/* Paragraphs */
+.clinical-report-markdown p {
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+  color: #475569;
+}
+
+/* Blockquotes */
 .clinical-report-markdown blockquote {
-  border-left: 4px solid #3b82f6; /* Blue 500 */
-  background-color: #f8fafc; /* Slate 50 */
-  padding: 0.75rem 1rem;
-  margin: 1rem 0;
-  border-radius: 0 4px 4px 0;
+  border-left: 4px solid #215fff;
+  background-color: #f8fafc;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
   font-style: italic;
   color: #475569;
 }
 
+/* Horizontal rules */
 .clinical-report-markdown hr {
   border: 0;
-  border-top: 1px solid #cbd5e1;
-  margin: 2rem 0;
+  border-top: 2px solid #e2e8f0;
+  margin: 2.5rem 0;
 }
 
-/* Highlight critical sections */
-.clinical-report-markdown p {
-  margin-bottom: 1rem;
+/* Code/Technical terms */
+.clinical-report-markdown code {
+  background: #f1f5f9;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  color: #0f172a;
 }
 
-/* Make it look like paper/document */
-.clinical-report-markdown {
-  background-color: transparent;
+/* Tables (if any) */
+.clinical-report-markdown table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.clinical-report-markdown th,
+.clinical-report-markdown td {
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.clinical-report-markdown th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Links */
+.clinical-report-markdown a {
+  color: #215fff;
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.clinical-report-markdown a:hover {
+  border-bottom-color: #215fff;
 }
