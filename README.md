@@ -20,6 +20,21 @@
 
 ---
 
+## 📄 Base Paper (2025)
+
+This project is founded on the methodology proposed in the following 2025 research paper, aligning with strict academic compliance for "Hybrid Architecture" systems:
+
+> **"Risk Prediction and Interpretation for Fall Events Using Explainable AI and Large Language Models"**  
+> _Published in: Springer (International Conference on Medical and Health Informatics), May 2025_
+>
+> **Core Methodology Implemented**:
+>
+> 1.  **Hybrid Architecture**: Combining structured ML models (Heart, Disbetes, etc.) with unstructured LLM reasoning.
+> 2.  **Explainable AI (XAI)**: Using techniques like SHAP to interpret model decisions, as proposed in the paper.
+> 3.  **LLM Integration**: Utilizing Large Language Models to generate human-readable clinical interpretations from raw risk scores.
+
+---
+
 ## ⚡ Quick Start
 
 ### Prerequisites
