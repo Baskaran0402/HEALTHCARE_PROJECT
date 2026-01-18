@@ -1,0 +1,14 @@
+# Exclude non-source code directories from GitHub language statistics
+notebooks/* linguist-documentation
+docs/* linguist-documentation
+data/* linguist-vendored
+models/* linguist-vendored
+medical_reports_pdf/* linguist-vendored
+htmlcov/* linguist-vendored
+
+# Ensure Python and JavaScript are detected in their respective folders
+backend/**/*.py linguist-detectable
+src/**/*.py linguist-detectable
+frontend/**/*.js linguist-detectable
+frontend/**/*.jsx linguist-detectable
+frontend/**/*.css linguist-detectable
