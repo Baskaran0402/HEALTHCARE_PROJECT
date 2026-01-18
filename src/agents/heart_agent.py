@@ -4,6 +4,7 @@ import os
 import pickle
 
 import matplotlib
+
 matplotlib.use("Agg")  # isort:skip
 import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
