@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 # ============================================================
 # Patient Schemas
@@ -14,7 +14,7 @@ class PatientBase(BaseModel):
     age: int = Field(..., ge=0, le=120)
     gender: str = Field(..., pattern="^(Male|Female)$")
     email: Optional[EmailStr] = None
-    phone: Optional[str] = None
+    phone: Optional[str] = Field(None, pattern="^\+?[1-9]\d{1,14}$")  # E.164 format
 
 
 class PatientCreate(PatientBase):
@@ -41,11 +41,11 @@ class MedicalRecordBase(BaseModel):
     blood_glucose: Optional[float] = Field(None, ge=50.0, le=500.0)
     hba1c: Optional[float] = Field(None, ge=3.0, le=15.0)
     cholesterol: Optional[float] = Field(None, ge=100.0, le=400.0)
-    creatinine: Optional[float] = Field(None, ge=0.1, le=10.0)
-    urea: Optional[float] = None
-    bilirubin_total: Optional[float] = None
-    alt: Optional[float] = None
-    ast: Optional[float] = None
+    creatinine: Optional[float] = Field(None, ge=0.1, le=15.0)
+    urea: Optional[float] = Field(None, ge=5.0, le=100.0)
+    bilirubin_total: Optional[float] = Field(None, ge=0.1, le=20.0)
+    alt: Optional[float] = Field(None, ge=5, le=500)
+    ast: Optional[float] = Field(None, ge=5, le=500)
 
     hypertension: bool = False
     diabetes: bool = False
@@ -163,4 +163,29 @@ class AuditLogCreate(BaseModel):
     entity_id: str
     user_role: Optional[str] = None
     ip_address: Optional[str] = None
-    event_data: Optional[Dict[str, Any]] = None
+# ============================================================
+# Authentication Schemas
+# ============================================================
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+class UserBase(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: Optional[str] = None
+    role: str = "Doctor"
+
+class UserCreate(UserBase):
+    password: str
+
+class UserResponse(UserBase):
+    id: str
+    is_active: bool
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)

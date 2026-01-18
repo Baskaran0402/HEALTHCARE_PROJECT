@@ -5,13 +5,29 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from starlette.responses import Response, StreamingResponse
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
 
-from backend import crud, models, schemas  # noqa: F401
+from backend import crud, models, schemas, security  # noqa: F401
 from backend.database import Base, engine, get_db
-from backend.routers import analytics
+from backend.routers import analytics, auth
 from backend.services import HealthAnalysisService
 from backend.utils.pdf_generator import PDFReportGenerator
 from src.agents.heart_agent import generate_shap_plot
+import logging
+import time
+from fastapi import Request
+from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Initialize Limiter
+limiter = Limiter(key_func=get_remote_address)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -25,8 +41,52 @@ app = FastAPI(
     redoc_url="/api/redoc",
 )
 
+# Set limiter state
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+# Global Exception Handler
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Global exception: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "An internal server error occurred. Our team has been notified."},
+    )
+
+# Request-Response Logging Middleware
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    duration = time.time() - start_time
+    logger.info(f"{request.method} {request.url.path} - {response.status_code} ({duration:.2f}s)")
+    return response
+
 # Include Routers
+app.include_router(auth.router)
 app.include_router(analytics.router)
+
+# Auth Dependency
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+
+async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, security.SECRET_KEY, algorithms=[security.ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user = crud.get_user_by_username(db, username=username)
+    if user is None:
+        raise credentials_exception
+    return user
 
 # CORS middleware
 app.add_middleware(
@@ -207,7 +267,8 @@ def get_consultation_assessments(consultation_id: str, db: Session = Depends(get
 
 
 @app.post("/api/analyze", response_model=schemas.AnalyzeHealthResponse, tags=["Analysis"])
-async def analyze_health(request: schemas.AnalyzeHealthRequest, db: Session = Depends(get_db)):
+@limiter.limit("10/minute")
+async def analyze_health(request: Request, analysis_request: schemas.AnalyzeHealthRequest, db: Session = Depends(get_db)):
     """
     Complete health analysis workflow:
     1. Create/update patient
@@ -219,7 +280,7 @@ async def analyze_health(request: schemas.AnalyzeHealthRequest, db: Session = De
     7. Return complete results
     """
     service = HealthAnalysisService(db)
-    return await service.analyze_health(request)
+    return await service.analyze_health(analysis_request)
 
 
 # ============================================================
