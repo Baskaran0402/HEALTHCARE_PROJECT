@@ -489,7 +489,7 @@ nginx -c /path/to/nginx.conf  # Serve frontend build
 SHAP (SHapley Additive exPlanations) values are used to visualize the impact of each feature on the model's prediction. This ensures transparency and clinical trust.
 
 <div align="center">
-  <img src="https://github.com/user-attachments/assets/b9f7a77d-74be-48e0-a401-86363a1e9411" width="800" alt="SHAP Summary Plot Example"/>
+  <img src="docs/images/shap_summary_plot.png" width="800" alt="SHAP Summary Plot Example"/>
   <p><i>Example: SHAP Summary Plot showing feature impact across the population.</i></p>
 </div>
 
