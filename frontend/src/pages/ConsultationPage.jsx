@@ -111,7 +111,22 @@ const ConsultationPage = () => {
       }
 
       const result = await healthAPI.analyzeHealth(requestData)
-      navigate('/results', { state: { result, role } })
+      
+      // Prepare specific payload for SHAP (mapping to encoder expectations)
+      const patientDataForSHAP = {
+        age: parseInt(formData.age),
+        gender: formData.gender === 'Male' ? 1 : 0, // Encoder expects 1 for Male
+        blood_pressure: parseInt(formData.blood_pressure) || 120,
+        blood_glucose: parseFloat(formData.blood_glucose) || 100,
+        cholesterol: parseFloat(formData.cholesterol) || 200,
+        chest_pain: formData.chest_pain ? 1 : 0,
+        breathlessness: formData.breathlessness ? 1 : 0,
+        fatigue: formData.fatigue ? 1 : 0,
+        edema: formData.edema ? 1 : 0,
+        // Add defaults for missing fields to avoid skewing (handled by encoder but good to be explicit if known)
+      }
+
+      navigate('/results', { state: { result, role, patientData: patientDataForSHAP } })
     } catch (error) {
       console.error('Error analyzing health:', error)
       if (error.code === 'ERR_NETWORK') {

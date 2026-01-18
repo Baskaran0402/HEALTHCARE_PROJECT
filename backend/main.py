@@ -9,6 +9,9 @@ from backend import crud, models, schemas  # noqa: F401
 from backend.database import Base, engine, get_db
 from backend.routers import analytics
 from backend.services import HealthAnalysisService
+from backend.utils.pdf_generator import PDFReportGenerator
+from starlette.responses import StreamingResponse, Response
+from src.agents.heart_agent import generate_shap_plot
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -217,6 +220,34 @@ async def analyze_health(request: schemas.AnalyzeHealthRequest, db: Session = De
     """
     service = HealthAnalysisService(db)
     return await service.analyze_health(request)
+
+
+# ============================================================
+# Utilities Endpoints
+# ============================================================
+
+
+@app.post("/api/generate-pdf", tags=["Utilities"])
+def generate_pdf(data: schemas.AnalyzeHealthResponse):
+    """Generate a PDF report from analysis results"""
+    # model_dump() for Pydantic v2, dict() for v1. Using dict() for safety as schemas use v1 style config
+    data_dict = data.dict()
+    pdf_buffer = PDFReportGenerator.generate_report(data_dict)
+    return StreamingResponse(
+        pdf_buffer,
+        media_type="application/pdf",
+        headers={"Content-Disposition": "attachment; filename=health_report.pdf"}
+    )
+
+
+@app.post("/api/explain/heart", tags=["Utilities"])
+def explain_heart_risk(patient_data: dict):
+    """Generate SHAP plot for heart disease prediction"""
+    img_str = generate_shap_plot(patient_data)
+    if img_str:
+        return Response(content=img_str, media_type="text/plain")
+    else:
+        raise HTTPException(status_code=500, detail="Could not generate SHAP plot")
 
 
 # ============================================================
