@@ -633,7 +633,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🙏 Acknowledgments
+## � Verified Data Sources
+
+The machine learning models in this system were trained and validated using the following authoritative datasets to ensure clinical reliability:
+
+| Disease Model      | Dataset Source                                                                                                   |
+| :----------------- | :--------------------------------------------------------------------------------------------------------------- |
+| **Liver Disease**  | [UCI Indian Liver Patient Records (Kaggle)](https://www.kaggle.com/datasets/uciml/indian-liver-patient-records)  |
+| **Diabetes**       | [Diabetes Prediction Dataset (Kaggle)](https://www.kaggle.com/datasets/iammustafatz/diabetes-prediction-dataset) |
+| **Stroke**         | [Stroke Prediction Dataset (Kaggle)](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset)      |
+| **Heart Disease**  | [UCI Heart Disease Dataset](https://archive.ics.uci.edu/dataset/45/heart+disease)                                |
+| **Kidney Disease** | [Chronic Kidney Disease Dataset (Kaggle)](https://www.kaggle.com/datasets/mansoordaku/ckdisease)                 |
+
+---
+
+## �🙏 Acknowledgments
 
 - **Datasets**: UCI Machine Learning Repository, Kaggle
 - **LLM Provider**: Groq, Google Gemini
