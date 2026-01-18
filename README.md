@@ -625,10 +625,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Your Name**
+**Baskaran S**
 
-- GitHub: [@yourusername](https://github.com/Baskaran0402)
-- LinkedIn: [Your Profile](https://linkedin.com/in/yourprofile)
+- GitHub: [@Baskaran0402](https://github.com/Baskaran0402)
+- LinkedIn: [Baskaran S](www.linkedin.com/in/baskaran0402)
 - Email: baskarseenu2005@gmail.com
 
 ---
