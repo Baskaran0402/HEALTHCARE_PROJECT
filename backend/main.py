@@ -4,13 +4,13 @@ import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from starlette.responses import Response, StreamingResponse
 
 from backend import crud, models, schemas  # noqa: F401
 from backend.database import Base, engine, get_db
 from backend.routers import analytics
 from backend.services import HealthAnalysisService
 from backend.utils.pdf_generator import PDFReportGenerator
-from starlette.responses import StreamingResponse, Response
 from src.agents.heart_agent import generate_shap_plot
 
 # Create database tables
@@ -236,7 +236,7 @@ def generate_pdf(data: schemas.AnalyzeHealthResponse):
     return StreamingResponse(
         pdf_buffer,
         media_type="application/pdf",
-        headers={"Content-Disposition": "attachment; filename=health_report.pdf"}
+        headers={"Content-Disposition": "attachment; filename=health_report.pdf"},
     )
 
 
