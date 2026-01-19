@@ -80,7 +80,8 @@ See the AI Doctor Assistant in action:
 - ✅ Multi-disease risk assessment (Heart, Stroke, Diabetes, Kidney, Liver)
 - ✅ Real-time AI-powered analysis
 - ✅ Structured SOAP format clinical reports
-- ✅ Explainable risk stratification
+- ✅ Explainable risk stratification with SHAP visualizations
+- ✅ Downloadable PDF reports for medical records
 
 **Alternative**: If you prefer to view the demo locally, the video is available at `docs/demo/app-demo.mp4`
 
@@ -158,6 +159,8 @@ Each model provides:
 - **Risk Stratification** - Clear visual indicators and percentages
 - **Attention Areas** - Prioritized clinical recommendations
 - **SOAP JSON** - Structured EMR/EHR-ready output
+- **PDF Report Download** - Downloadable secured PDF reports for medical records
+- **SHAP Explainability** - Visual SHAP (SHapley Additive exPlanations) plots showing feature importance and contribution to risk predictions
 
 ### 🏗️ **Production-Ready Architecture**
 
