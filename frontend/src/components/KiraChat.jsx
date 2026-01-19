@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion' // eslint-disable-line no-unused-vars
 import { MessageCircle, X, Send, User, Bot, Sparkles } from 'lucide-react'
 import { healthAPI } from '../services/api'
 import './KiraChat.css'

@@ -1,10 +1,10 @@
 from typing import List, Dict, Optional
-import json
 import logging
 from datetime import datetime
 
 # Adjust import based on your actual path structure
 from src.core.llm_client import GroqClient
+
 
 class KiraAgent:
     """
@@ -41,43 +41,43 @@ class KiraAgent:
         messages = [
             {"role": "system", "content": self.system_prompt}
         ]
-        
+
         # Add conversation history context (limit to last 5 turns to save tokens)
         messages.extend(history[-10:])
-        
+
         # Add current user message
         messages.append({"role": "user", "content": user_message})
 
         try:
-            # We need to bypass the strict single-prompt generate() method of the base client 
-            # to support chat history. We'll access the client directly if possible, 
+            # We need to bypass the strict single-prompt generate() method of the base client
+            # to support chat history. We'll access the client directly if possible,
             # or we will construct a single big prompt string if we must leverage the robust fallback logic.
-            
-            # Using the robust .generate() method by formatting history into a single string 
+
+            # Using the robust .generate() method by formatting history into a single string
             # is safer for error handling/fallback, though less "chatty" for the model.
             # Let's try to stringify the history for the prompt.
-            
+
             full_prompt = ""
             for msg in history:
                 role = "User" if msg['role'] == 'user' else "Kira"
                 full_prompt += f"{role}: {msg['content']}\n"
-            
+
             full_prompt += f"User: {user_message}\nKira:"
 
             # We use the existing generate method which handles fallbacks and errors
-            # But we prepend the system instructions to the prompt since the base class 
+            # But we prepend the system instructions to the prompt since the base class
             # has a hardcoded system prompt which might conflict slightly, but it's generic enough.
-            # actually, let's override the base class behavior by subclassing? 
-            # No, keep it simple. The base class system prompt is: 
-            # "You are a helpful medical AI assistant..." 
+            # actually, let's override the base class behavior by subclassing?
+            # No, keep it simple. The base class system prompt is:
+            # "You are a helpful medical AI assistant..."
             # That is compatible with Kira. We will reinforce Kira's identity in the user prompt.
-            
+
             reinforced_prompt = (
                 f"{self.system_prompt}\n\n"
                 "Conversation History:\n"
                 f"{full_prompt}"
             )
-            
+
             response = self.llm.generate(reinforced_prompt)
             return response
 

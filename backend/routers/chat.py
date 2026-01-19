@@ -6,7 +6,8 @@ import logging
 
 router = APIRouter(prefix="/api/chat", tags=["Kira Chat"])
 agent = KiraAgent()
-appointments_db = [] # Simple in-memory storage for MVP
+appointments_db = []  # Simple in-memory storage for MVP
+
 
 @router.post("/", response_model=schemas.ChatResponse)
 async def chat_with_kira(request: schemas.ChatRequest):
@@ -16,6 +17,7 @@ async def chat_with_kira(request: schemas.ChatRequest):
     except Exception as e:
         logging.error(f"Chat Error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/appointments", response_model=schemas.AppointmentResponse)
 async def book_appointment(appointment: schemas.AppointmentCreate):
