@@ -1,7 +1,7 @@
 # 🩺 AI Doctor Assistant
 
-> **Clinical Decision Support System for Healthcare Professionals**  
-> An intelligent platform combining machine learning disease risk models with LLM-powered analysis to provide explainable, guideline-aware clinical insights for licensed medical practitioners.
+> **AI-Powered Health Screening & Clinical Decision Support System**  
+> An intelligent platform combining machine learning disease risk models with LLM-powered analysis to provide health risk assessments for patients and clinical decision support for healthcare professionals. **Results should be interpreted by certified medical professionals.**
 
 <div align="center">
 
@@ -86,14 +86,24 @@ See the AI Doctor Assistant in action:
 
 ---
 
-## ⚠️ Important Disclaimer
+## ⚠️ Important Medical Disclaimer
 
-**This system is a Clinical Decision Support Tool for Licensed Healthcare Professionals Only.**
+**This system provides AI-powered health screening and risk assessment for general use, with clinical decision support features for healthcare professionals.**
 
-- All outputs are **advisory only** and must be reviewed by the attending physician
-- Intended for **clinical decision support**, not autonomous medical decision-making
-- **Not for patient self-diagnosis or direct patient use**
-- For **professional medical practice, education, and research purposes**
+### For All Users:
+
+- ✅ **Accessible to patients and general population** for health awareness and early risk detection
+- ⚠️ **Results MUST be interpreted by certified medical professionals** before making any health decisions
+- ⚠️ **This is a second opinion tool** designed to assist and support, NOT replace medical professionals
+- ⚠️ **Does NOT provide diagnoses, prescriptions, or treatment plans**
+- ⚠️ All outputs are **advisory and educational only**
+
+### Clinical Use:
+
+- ✅ Can **boost clinical experience** and assist healthcare professionals in risk stratification
+- ✅ Serves as a **productivity and quality tool** for clinical documentation
+- ✅ Provides **explainable AI insights** to support clinical decision-making
+- ⚠️ **Never replaces doctor's judgment** - final decisions remain with the attending physician
 
 ---
 
@@ -362,15 +372,15 @@ pytest --cov=src --cov=backend --cov-report=html
 
 ### How This Project Differs from Existing Solutions
 
-| Feature                      | Traditional CDSS     | Commercial AI Health Apps | **This Project**                      |
-| ---------------------------- | -------------------- | ------------------------- | ------------------------------------- |
-| **Target User**              | Physicians only      | Patients + Physicians     | ✅ **Physicians only**                |
-| **Multi-Disease Assessment** | Single disease focus | Limited (2-3 conditions)  | ✅ 5 major diseases                   |
-| **Explainability**           | Rule-based only      | Black box ML              | ✅ Transparent reasoning + guidelines |
-| **Clinical Reports**         | Manual entry         | Basic summaries           | ✅ Professional SOAP notes            |
-| **EMR Integration**          | Custom per vendor    | None                      | ✅ Structured SOAP JSON               |
-| **Open Source**              | Proprietary          | Proprietary               | ✅ Fully open source                  |
-| **Safety Guardrails**        | Minimal              | Variable                  | ✅ Explicit no-diagnosis policy       |
+| Feature                      | Traditional CDSS     | Commercial AI Health Apps | **This Project**                           |
+| ---------------------------- | -------------------- | ------------------------- | ------------------------------------------ |
+| **Target User**              | Physicians only      | Patients only             | ✅ **Patients + Healthcare Professionals** |
+| **Multi-Disease Assessment** | Single disease focus | Limited (2-3 conditions)  | ✅ 5 major diseases                        |
+| **Explainability**           | Rule-based only      | Black box ML              | ✅ Transparent reasoning + guidelines      |
+| **Clinical Reports**         | Manual entry         | Basic summaries           | ✅ Professional SOAP notes                 |
+| **EMR Integration**          | Custom per vendor    | None                      | ✅ Structured SOAP JSON                    |
+| **Open Source**              | Proprietary          | Proprietary               | ✅ Fully open source                       |
+| **Safety Guardrails**        | Minimal              | Variable                  | ✅ Explicit no-diagnosis policy            |
 
 ### Related Research & Projects
 
@@ -549,16 +559,16 @@ This system is designed for:
 
 This project follows medical AI safety principles:
 
-| Principle                   | Implementation                                |
-| --------------------------- | --------------------------------------------- |
-| ❌ **No Diagnosis**         | System explicitly states it does not diagnose |
-| ❌ **No Prescriptions**     | No medication or dosage recommendations       |
-| ❌ **No Treatment Plans**   | Only suggests areas for clinical attention    |
-| ❌ **No Patient Access**    | Designed exclusively for licensed physicians  |
-| ✅ **Explainability**       | All predictions include reasoning             |
-| ✅ **Human-in-the-Loop**    | Designed to assist, not replace, clinicians   |
-| ✅ **Explicit Disclaimers** | Clear warnings on every output                |
-| ✅ **Audit Logging**        | All interactions logged for compliance        |
+| Principle                   | Implementation                                                                       |
+| --------------------------- | ------------------------------------------------------------------------------------ |
+| ❌ **No Diagnosis**         | System explicitly states it does not diagnose                                        |
+| ❌ **No Prescriptions**     | No medication or dosage recommendations                                              |
+| ❌ **No Treatment Plans**   | Only suggests areas for clinical attention                                           |
+| ✅ **Patient Accessible**   | Designed for both patients and healthcare professionals with appropriate disclaimers |
+| ✅ **Explainability**       | All predictions include reasoning                                                    |
+| ✅ **Human-in-the-Loop**    | Designed to assist, not replace, clinicians                                          |
+| ✅ **Explicit Disclaimers** | Clear warnings on every output                                                       |
+| ✅ **Audit Logging**        | All interactions logged for compliance                                               |
 
 ---
 
@@ -619,7 +629,7 @@ Key areas for contribution:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-**Medical Disclaimer**: This software is provided for educational and professional use by licensed healthcare practitioners only. Not intended for patient self-diagnosis or autonomous medical decision-making.
+**Medical Disclaimer**: This software is provided for health awareness, educational purposes, and clinical decision support. All results must be interpreted by certified medical professionals. This tool serves as a second opinion to assist and boost clinical experience, but does NOT replace professional medical judgment, diagnosis, or treatment by licensed physicians.
 
 ---
 
@@ -669,8 +679,8 @@ The machine learning models in this system were trained and validated using the 
 
 **⭐ If you find this project useful, please consider giving it a star!**
 
-Built for healthcare professionals, by healthcare AI enthusiasts
+Built for patients and healthcare professionals, by healthcare AI enthusiasts
 
-**For Licensed Medical Professionals Only** 🩺
+**⚠️ Results must be interpreted by certified medical professionals** 🩺
 
 </div>

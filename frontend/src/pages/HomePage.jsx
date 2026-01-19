@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import { Brain, Heart, Shield } from 'lucide-react'
@@ -6,12 +5,9 @@ import './HomePage.css'
 
 const HomePage = () => {
   const navigate = useNavigate()
-  const [selectedRole, setSelectedRole] = useState(null)
 
   const handleStart = () => {
-    if (selectedRole) {
-      navigate('/consultation', { state: { role: selectedRole } })
-    }
+    navigate('/consultation')
   }
 
   return (
@@ -31,10 +27,10 @@ const HomePage = () => {
               <img src="/logo.png" alt="AI Doctor Logo" className="logo-img" style={{ width: '64px', height: '64px', objectFit: 'contain' }} />
               <h1 className="professional-title">AI Doctor Assistant</h1>
             </div>
-            <p className="subtitle">Clinical Decision Support System for Healthcare Professionals</p>
+            <p className="subtitle">AI-Powered Health Screening & Clinical Decision Support</p>
             <div className="professional-notice">
               <Shield size={20} />
-              <span>This system is intended to assist licensed medical professionals only</span>
+              <span>Results must be interpreted by certified medical professionals</span>
             </div>
           </motion.div>
 
@@ -48,8 +44,9 @@ const HomePage = () => {
             <div className="medical-card main-card">
               <h2 className="card-title">Welcome to Your AI Health Assistant</h2>
               <p className="card-description">
-                Experience advanced AI-powered clinical decision support designed to assist
-                healthcare professionals and empower patients with intelligent health insights.
+                Experience advanced AI-powered health risk assessment designed for patients and
+                healthcare professionals. Get intelligent health insights and clinical decision support
+                to assist your healthcare journey.
               </p>
 
               {/* Features Grid */}
@@ -85,37 +82,15 @@ const HomePage = () => {
                 </motion.div>
               </div>
 
-              {/* Role Selection */}
-              <div className="role-selection">
-                <h3 className="section-title">Confirm Your Role</h3>
-                <div className="role-buttons">
-                  <motion.button
-                    className={`role-button ${selectedRole === 'Doctor' ? 'selected' : ''}`}
-                    onClick={() => setSelectedRole('Doctor')}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Shield size={24} />
-                    <span>Healthcare Professional</span>
-                    <small>Licensed medical practitioner</small>
-                  </motion.button>
-                </div>
-                <p className="role-notice">
-                  By proceeding, you confirm that you are a licensed healthcare professional 
-                  using this system for clinical decision support purposes only.
-                </p>
-              </div>
-
               {/* Action Buttons */}
               <div className="action-buttons">
                 <motion.button
                   className="medical-button start-button"
                   onClick={handleStart}
-                  disabled={!selectedRole}
-                  whileHover={{ scale: selectedRole ? 1.05 : 1 }}
-                  whileTap={{ scale: selectedRole ? 0.95 : 1 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  Begin Consultation
+                  Begin Health Assessment
                 </motion.button>
 
                 <motion.button
@@ -128,15 +103,15 @@ const HomePage = () => {
                 </motion.button>
               </div>
 
-              {/* Disclaimer */}
               <div className="disclaimer">
-                <h4>Clinical Use Disclaimer</h4>
+                <h4>⚠️ Medical Disclaimer</h4>
                 <ul>
-                  <li>This system provides AI-assisted clinical decision support for healthcare professionals</li>
+                  <li>This system provides AI-powered health screening for patients and clinical decision support for healthcare professionals</li>
+                  <li><strong>Results MUST be interpreted by certified medical professionals</strong> before making any health decisions</li>
+                  <li>This is a <strong>second opinion tool</strong> designed to assist and support, NOT replace doctors</li>
                   <li>Does NOT provide medical diagnoses, prescriptions, or treatment recommendations</li>
-                  <li>All outputs must be reviewed and validated by a licensed physician before clinical use</li>
-                  <li>Intended to assist in early symptom detection and risk stratification only</li>
-                  <li>Not a substitute for professional medical judgment and clinical examination</li>
+                  <li>All outputs are advisory and educational only - never a substitute for professional medical judgment</li>
+                  <li>Can boost clinical experience and assist in risk stratification, but final decisions remain with your physician</li>
                 </ul>
               </div>
             </div>
