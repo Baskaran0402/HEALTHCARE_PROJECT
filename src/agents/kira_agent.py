@@ -38,9 +38,7 @@ class KiraAgent:
             history = []
 
         # Construct the messages list for the LLM
-        messages = [
-            {"role": "system", "content": self.system_prompt}
-        ]
+        messages = [{"role": "system", "content": self.system_prompt}]
 
         # Add conversation history context (limit to last 5 turns to save tokens)
         messages.extend(history[-10:])
@@ -59,7 +57,7 @@ class KiraAgent:
 
             full_prompt = ""
             for msg in history:
-                role = "User" if msg['role'] == 'user' else "Kira"
+                role = "User" if msg["role"] == "user" else "Kira"
                 full_prompt += f"{role}: {msg['content']}\n"
 
             full_prompt += f"User: {user_message}\nKira:"
@@ -72,11 +70,7 @@ class KiraAgent:
             # "You are a helpful medical AI assistant..."
             # That is compatible with Kira. We will reinforce Kira's identity in the user prompt.
 
-            reinforced_prompt = (
-                f"{self.system_prompt}\n\n"
-                "Conversation History:\n"
-                f"{full_prompt}"
-            )
+            reinforced_prompt = f"{self.system_prompt}\n\n" "Conversation History:\n" f"{full_prompt}"
 
             response = self.llm.generate(reinforced_prompt)
             return response
