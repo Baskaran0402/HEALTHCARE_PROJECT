@@ -64,6 +64,18 @@ export const healthAPI = {
     });
     return response.data;
   },
+
+  // Chat with Kira
+  chatWithKira: async (chatData) => {
+    const response = await api.post("/api/chat/", chatData);
+    return response.data;
+  },
+
+  // Book appointment
+  bookAppointment: async (appointmentData) => {
+    const response = await api.post("/api/chat/appointments", appointmentData);
+    return response.data;
+  },
 };
 
 export default api;

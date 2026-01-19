@@ -164,3 +164,31 @@ class AuditLogCreate(BaseModel):
     user_role: Optional[str] = None
     ip_address: Optional[str] = None
     event_data: Optional[Dict[str, Any]] = None
+
+
+# ============================================================
+# Chat & Appointment Schemas
+# ============================================================
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[Dict[str, str]] = []
+
+
+class ChatResponse(BaseModel):
+    response: str
+    intent: Optional[str] = None  # "booking" or "question"
+
+
+class AppointmentCreate(BaseModel):
+    patient_name: str
+    date: str
+    time: str
+    department: Optional[str] = "General"
+    status: str = "Pending"
+
+
+class AppointmentResponse(AppointmentCreate):
+    id: int
+    created_at: datetime

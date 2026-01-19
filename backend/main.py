@@ -8,7 +8,7 @@ from starlette.responses import Response, StreamingResponse
 
 from backend import crud, models, schemas  # noqa: F401
 from backend.database import Base, engine, get_db
-from backend.routers import analytics
+from backend.routers import analytics, chat
 from backend.services import HealthAnalysisService
 from backend.utils.pdf_generator import PDFReportGenerator
 from src.agents.heart_agent import generate_shap_plot
@@ -27,6 +27,7 @@ app = FastAPI(
 
 # Include Routers
 app.include_router(analytics.router)
+app.include_router(chat.router)
 
 # CORS middleware
 app.add_middleware(
