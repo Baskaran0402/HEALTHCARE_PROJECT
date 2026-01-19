@@ -48,7 +48,7 @@ const DemoPage = () => {
                   <div className="feature-number">1</div>
                   <div className="feature-content">
                     <h3>Professional Medical UI</h3>
-                    <p>Clean, hospital-grade interface designed for clinical use by healthcare professionals</p>
+                    <p>Clean, hospital-grade interface designed for both patients and healthcare professionals</p>
                   </div>
                 </div>
 
@@ -142,9 +142,10 @@ const DemoPage = () => {
             {/* Disclaimer */}
             <div className="demo-disclaimer">
               <p>
-                <strong>Note:</strong> This demonstration shows the complete clinical decision support workflow. 
-                The system is designed exclusively for licensed healthcare professionals and should not be used 
-                for patient self-diagnosis or autonomous medical decision-making.
+                <strong>⚠️ Important:</strong> This demonstration shows the complete health assessment workflow. 
+                The system is accessible to patients and healthcare professionals. All results MUST be 
+                interpreted by certified medical professionals before making any health decisions. This is a 
+                second opinion tool to assist, not replace, professional medical judgment.
               </p>
             </div>
           </motion.div>
