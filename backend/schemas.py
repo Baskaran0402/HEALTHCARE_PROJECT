@@ -57,6 +57,7 @@ class MedicalRecordBase(BaseModel):
     breathlessness: bool = False
     fatigue: bool = False
     edema: bool = False
+    mri_image_path: Optional[str] = None
 
 
 class MedicalRecordCreate(MedicalRecordBase):

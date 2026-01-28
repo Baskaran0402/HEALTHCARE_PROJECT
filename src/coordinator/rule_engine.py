@@ -53,4 +53,8 @@ def route_agents(patient):
     if patient.age is not None and patient.age > 55 or patient.hypertension or patient.heart_disease:
         agents.add("stroke")
 
+    # --- BRAIN TUMOR ---
+    if hasattr(patient, "mri_image_path") and patient.mri_image_path:
+        agents.add("brain_tumor")
+
     return list(agents)

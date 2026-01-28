@@ -1,7 +1,10 @@
-from typing import List
+from typing import List, Optional
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile
+import os
+import shutil
+import uuid
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from starlette.responses import Response, StreamingResponse
@@ -219,6 +222,52 @@ async def analyze_health(request: schemas.AnalyzeHealthRequest, db: Session = De
     6. Store assessment
     7. Return complete results
     """
+    service = HealthAnalysisService(db)
+    return await service.analyze_health(request)
+
+
+@app.post("/api/analyze/brain-tumor", tags=["Analysis"])
+async def analyze_brain_tumor(
+    patient_name: str,
+    age: int,
+    gender: str,
+    email: Optional[str] = None,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    """
+    Specialized endpoint for brain tumor analysis via MRI upload.
+    """
+    # 1. Save the uploaded file
+    upload_dir = "data/uploads/mri"
+    os.makedirs(upload_dir, exist_ok=True)
+    
+    file_extension = os.path.splitext(file.filename)[1]
+    file_id = str(uuid.uuid4())
+    file_path = os.path.join(upload_dir, f"{file_id}{file_extension}")
+    
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    # 2. Prepare analysis request
+    request_data = {
+        "patient_data": {
+            "name": patient_name,
+            "age": age,
+            "gender": gender,
+            "email": email if email and email.strip() else None
+        },
+        "medical_data": {
+            "mri_image_path": file_path
+        },
+        "conversation_history": [],
+        "role": "Patient"
+    }
+    
+    # Convert to schema
+    request = schemas.AnalyzeHealthRequest(**request_data)
+    
+    # 3. Run analysis
     service = HealthAnalysisService(db)
     return await service.analyze_health(request)
 

@@ -16,4 +16,8 @@ INTERACTION_WARNINGS = {
         "Alcohol": "Alcohol may worsen liver injury.",
     },
     "Stroke": {"Oral Contraceptives": "May increase thrombotic risk in susceptible individuals."},
+    "Brain Tumor Detection": {
+        "Certain anticoagulants": "May increase risk of intratumoral hemorrhage.",
+        "Systemic corticosteroids": "Should be used cautiously and monitored for dosage tapering."
+    },
 }

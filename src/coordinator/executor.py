@@ -3,6 +3,7 @@ from src.agents.heart_agent import heart_risk
 from src.agents.kidney_agent import kidney_risk
 from src.agents.liver_agent import liver_risk
 from src.agents.stroke_agent import stroke_risk
+from src.agents.brain_tumor_agent import brain_tumor_risk
 from src.coordinator.clinical_impression import clinical_impression
 from src.coordinator.explainability_engine import explain_risk
 from src.coordinator.guideline_engine import GUIDELINES
@@ -16,6 +17,7 @@ AGENT_REGISTRY = {
     "kidney": kidney_risk,
     "liver": liver_risk,
     "stroke": stroke_risk,
+    "brain_tumor": brain_tumor_risk,
 }
 
 
@@ -55,10 +57,8 @@ def run_selected_agents(patient):
 
         individual_risks.append(
             {
-                "disease": result["disease"],
-                "risk_score": float(result["risk_score"]),
-                "risk_level": result["risk_level"],
-                "why": explain_risk(result["disease"], patient_dict),
+                **result,
+                "why": explain_risk(result["disease"], patient_dict, result),
                 "interaction_warnings": INTERACTION_WARNINGS.get(result["disease"], {}),
             }
         )

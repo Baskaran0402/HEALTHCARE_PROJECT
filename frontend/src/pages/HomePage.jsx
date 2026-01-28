@@ -101,6 +101,17 @@ const HomePage = () => {
                 >
                   View Demo
                 </motion.button>
+
+                <motion.button
+                  className="medical-button secondary-button"
+                  onClick={() => navigate('/brain-tumor')}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{ background: '#f8fafc', color: '#2563eb', border: '1px solid #2563eb' }}
+                >
+                  <Brain size={18} style={{ marginRight: '8px' }} />
+                  Brain MRI Analysis (Trial)
+                </motion.button>
               </div>
 
               <div className="disclaimer">

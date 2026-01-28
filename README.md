@@ -78,7 +78,8 @@ See the AI Doctor Assistant in action:
 
 - ✅ Professional medical UI designed for clinical use
 - ✅ Multi-disease risk assessment (Heart, Stroke, Diabetes, Kidney, Liver)
-- ✅ Real-time AI-powered analysis
+- ✅ **New: Brain Tumor Detection via MRI Analysis (Trial)**
+- ✅ Real-time AI-powered analysis using Computer Vision (EfficientNet-B0)
 - ✅ Structured SOAP format clinical reports
 - ✅ Explainable risk stratification with SHAP visualizations
 - ✅ Downloadable PDF reports for medical records
@@ -136,15 +137,16 @@ Each model provides:
 
 ### � **Model Performance**
 
-| Model    | Accuracy | Precision | Recall | F1-Score | AUC-ROC |
-| -------- | -------- | --------- | ------ | -------- | ------- |
-| Heart    | 87.3%    | 0.85      | 0.89   | 0.87     | 0.91    |
-| Diabetes | 89.1%    | 0.88      | 0.91   | 0.89     | 0.93    |
-| Stroke   | 85.7%    | 0.83      | 0.87   | 0.85     | 0.89    |
-| Kidney   | 86.5%    | 0.84      | 0.88   | 0.86     | 0.90    |
-| Liver    | 84.2%    | 0.81      | 0.86   | 0.83     | 0.87    |
+| Model           | Accuracy  | Precision | Recall   | F1-Score | AUC-ROC  |
+| --------------- | --------- | --------- | -------- | -------- | -------- |
+| Heart           | 87.3%     | 0.85      | 0.89     | 0.87     | 0.91     |
+| Diabetes        | 89.1%     | 0.88      | 0.91     | 0.89     | 0.93     |
+| Stroke          | 85.7%     | 0.83      | 0.87     | 0.85     | 0.89     |
+| Kidney          | 86.5%     | 0.84      | 0.88     | 0.86     | 0.90     |
+| Liver           | 84.2%     | 0.81      | 0.86     | 0.83     | 0.87     |
+| **Brain Tumor** | **99.7%** | **0.99**  | **0.99** | **0.99** | **0.99** |
 
-> **Note**: Metrics are based on test set evaluation using 5-fold cross-validation. Detailed performance reports and confusion matrices are available in the `notebooks/` directory.
+> **Note**: Metrics are based on test set evaluation using 5-fold cross-validation. Detailed performance reports, bias validation, and confusion matrices are available in the `notebooks/` and `scripts/validation_scripts/` directories.
 
 ### �🔍 **Explainability & Clinical Guidelines**
 
@@ -242,12 +244,12 @@ Each model provides:
           │                                   │                 │
           │         ┌─────────────────────────┴─────────┐      │
           │         ▼         ▼         ▼         ▼     ▼      │
-          │    ┌────────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │
-          │    │ Heart  │ │Stroke│ │Diabetes││Kidney│ │Liver │ │
-          │    │ Agent  │ │Agent │ │ Agent  ││Agent │ │Agent │ │
-          │    └────────┘ └──────┘ └──────┘ └──────┘ └──────┘ │
-          │         │         │         │         │       │     │
-          │         └─────────┴─────────┴─────────┴───────┘     │
+          │    ┌────────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │
+          │    │ Heart  │ │Stroke│ │Diabetes││Kidney│ │Liver │ │Brain │ │
+          │    │ Agent  │ │Agent │ │ Agent  ││Agent │ │Agent │ │Agent │ │
+          │    └────────┘ └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ │
+          │         │         │         │         │       │        │     │
+          │         └─────────┴─────────┴─────────┴───────┴────────┘     │
           │                      │                               │
           │         ┌────────────┴────────────┐                 │
           │         ▼                         ▼                 │
@@ -339,7 +341,14 @@ HEALTHCARE_PROJECT/
 ├── notebooks/                 # Jupyter notebooks (EDA, training)
 ├── tests/                     # Unit and integration tests
 │
-├── requirements.txt           # Python dependencies
+├── scripts/                    # Maintenance & validation scripts
+│   ├── training_scripts/      # Model training & optimization
+│   ├── validation_scripts/    # Bias & performance validation (CI integration)
+│   ├── system_scripts/        # Database migrations & diagnostics
+│   └── utility_scripts/       # Plots, inspections, and utilities
+│
+├── requirements.txt           # Python dependencies (includes torch/torchvision)
+├── .github/workflows/         # CI/CD: Automated Model Validation & Tests
 ├── .env.example              # Environment variables template
 └── README.md                 # This file
 ```
@@ -603,6 +612,9 @@ POST /api/analyze
     ...
   }
 }
+
+# Specialized Brain MRI Trial (File Upload)
+POST /api/analyze/brain-tumor
 
 # Get consultation history
 GET /api/consultations/{patient_id}

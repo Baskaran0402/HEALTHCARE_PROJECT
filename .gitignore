@@ -32,4 +32,13 @@ medical_reports_pdf/
 
 # Diagnostic Scripts
 scripts/ci_diagnostic.sh
-export_pdf_reports.py
+# Large Data & Models
+data/raw/
+data/uploads/
+models/**/*.pth
+models/**/*.pt
+notebooks/**/*.pth
+notebooks/**/*.pt
+*.pth
+*.pt
+*.pkl

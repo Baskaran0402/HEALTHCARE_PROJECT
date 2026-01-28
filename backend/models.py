@@ -89,6 +89,7 @@ class MedicalRecord(Base):
     breathlessness = Column(Boolean, default=False)
     fatigue = Column(Boolean, default=False)
     edema = Column(Boolean, default=False)
+    mri_image_path = Column(String, nullable=True)
 
     # Timestamps
     recorded_at = Column(DateTime(timezone=True), server_default=func.now())
