@@ -426,6 +426,53 @@ def mark_message_as_read(db: Session, message_id: str):
     return db_message
 
 
+# ============================================================
+# Emergency SOS CRUD
+# ============================================================
+
+
+def create_sos_alert(db: Session, sos: schemas.SOSAlertCreate):
+    db_sos = models.SOSAlert(**sos.model_dump())
+    db.add(db_sos)
+    db.commit()
+    db.refresh(db_sos)
+    return db_sos
+
+
+def get_active_sos(db: Session, patient_id: str):
+    return (
+        db.query(models.SOSAlert)
+        .filter(models.SOSAlert.patient_id == patient_id, models.SOSAlert.status == "active")
+        .first()
+    )
+
+
+def resolve_sos(db: Session, sos_id: str):
+    db_sos = db.query(models.SOSAlert).filter(models.SOSAlert.id == sos_id).first()
+    if db_sos:
+        db_sos.status = "resolved"
+        db_sos.resolved_at = datetime.utcnow()
+        db.commit()
+    return db_sos
+
+
+# ============================================================
+# Payment CRUD
+# ============================================================
+
+
+def create_payment(db: Session, payment: schemas.PaymentCreate):
+    db_payment = models.Payment(**payment.model_dump())
+    db.add(db_payment)
+    # Update consultation status if payment succeeds
+    consultation = db.query(models.DoctorConsultation).filter(models.DoctorConsultation.id == payment.consultation_id).first()
+    if consultation:
+        consultation.payment_status = "completed"
+    db.commit()
+    db.refresh(db_payment)
+    return db_payment
+
+
 def create_audit_log(db: Session, audit_log: schemas.AuditLogCreate):
     db_audit_log = models.AuditLog(**audit_log.model_dump())
     db.add(db_audit_log)

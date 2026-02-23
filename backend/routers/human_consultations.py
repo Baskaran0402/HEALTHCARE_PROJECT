@@ -48,12 +48,22 @@ def get_doctor_consultations(doctor_id: str, db: Session = Depends(get_db)):
     return crud.get_doctor_human_consultations(db, doctor_id=doctor_id)
 
 
-@router.post("/{consultation_id}/start-video")
-def start_video_consultation(consultation_id: str, db: Session = Depends(get_db)):
-    # Placeholder for Agora/Twilio token generation
-    return {"token": f"mock_token_{consultation_id}", "channel": f"room_{consultation_id}"}
+@router.post("/prescriptions", response_model=schemas.PrescriptionResponse)
+def create_prescription(
+    prescription: schemas.PrescriptionCreate, 
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.check_role(["doctor"]))
+):
+    # Verify doctor is who they say they are
+    if current_user.doctor_profile.id != prescription.doctor_id:
+        raise HTTPException(status_code=403, detail="Not authorized to issue prescription for this doctor")
+        
+    db_prescription = models.Prescription(**prescription.model_dump())
+    db.add(db_prescription)
+    db.commit()
+    db.refresh(db_prescription)
+    return db_prescription
 
-
-@router.get("/{consultation_id}/video-token")
-def get_video_token(consultation_id: str, db: Session = Depends(get_db)):
-    return {"token": f"mock_token_{consultation_id}", "channel": f"room_{consultation_id}"}
+@router.get("/{consultation_id}/prescriptions", response_model=List[schemas.PrescriptionResponse])
+def get_consultation_prescriptions(consultation_id: str, db: Session = Depends(get_db)):
+    return db.query(models.Prescription).filter(models.Prescription.consultation_id == consultation_id).all()

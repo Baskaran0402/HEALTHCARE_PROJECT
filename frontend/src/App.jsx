@@ -13,9 +13,13 @@ import Register from './pages/auth/Register'
 import DoctorDashboard from './pages/doctor/Dashboard'
 import FindDoctors from './pages/patient/FindDoctors'
 
+import TelemedicineDashboard from './components/patient/TelemedicineDashboard'
 import PatientRecords from './pages/patient/Records'
+import PatientDashboard from './pages/PatientDashboard'
 
 function App() {
+  const user = JSON.parse(localStorage.getItem('user'));
+
   return (
     <Router>
       <Routes>
@@ -26,6 +30,7 @@ function App() {
         <Route path="/consultation" element={<ConsultationPage />} />
         <Route path="/find-doctors" element={<FindDoctors />} />
         <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+        <Route path="/patient/dashboard" element={<TelemedicineDashboard user={user} />} />
         <Route path="/records/:patientId" element={<PatientRecords />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/dashboard/:patientId" element={<PatientDashboard />} />

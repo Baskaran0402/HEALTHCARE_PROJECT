@@ -376,6 +376,7 @@ class DoctorConsultationUpdate(BaseModel):
     notes: Optional[str] = None
     consultation_fee: Optional[float] = None
     payment_status: Optional[str] = None
+    meeting_link: Optional[str] = None
     rating: Optional[int] = Field(None, ge=1, le=5)
     patient_feedback: Optional[str] = None
 
@@ -393,6 +394,7 @@ class DoctorConsultationResponse(DoctorConsultationBase):
     notes: Optional[str] = None
     consultation_fee: Optional[float] = None
     payment_status: str
+    meeting_link: Optional[str] = None
     rating: Optional[int] = None
     patient_feedback: Optional[str] = None
 
@@ -506,5 +508,77 @@ class AuditLogResponse(AuditLogCreate):
     id: str
     created_at: datetime
 
+    class Config:
+        from_attributes = True
+
+
+# ============================================================
+# Prescription Schemas
+# ============================================================
+
+class PrescriptionBase(BaseModel):
+    consultation_id: str
+    medicines: List[Dict[str, Any]]
+    notes: Optional[str] = None
+    digital_signature: Optional[str] = None
+
+class PrescriptionCreate(PrescriptionBase):
+    doctor_id: str
+    patient_id: str
+
+class PrescriptionResponse(PrescriptionBase):
+    id: str
+    doctor_id: str
+    patient_id: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+# ============================================================
+# Emergency SOS Schemas
+# ============================================================
+
+class SOSAlertBase(BaseModel):
+    patient_id: str
+    latitude: float
+    longitude: float
+    severity: str = "critical"
+    detected_condition: Optional[str] = None
+
+class SOSAlertCreate(SOSAlertBase):
+    nearby_hospitals: List[Dict[str, Any]] = []
+
+class SOSAlertResponse(SOSAlertBase):
+    id: str
+    status: str
+    nearby_hospitals: List[Dict[str, Any]]
+    created_at: datetime
+    resolved_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+# ============================================================
+# Payment Schemas
+# ============================================================
+
+class PaymentBase(BaseModel):
+    consultation_id: str
+    amount: float
+    currency: str = "USD"
+    payment_method: Optional[str] = None
+
+class PaymentCreate(PaymentBase):
+    transaction_id: Optional[str] = None
+
+class PaymentResponse(PaymentBase):
+    id: str
+    status: str
+    transaction_id: Optional[str]
+    created_at: datetime
+    
     class Config:
         from_attributes = True

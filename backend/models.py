@@ -267,6 +267,7 @@ class DoctorConsultation(Base):
     consultation_fee = Column(Numeric(10, 2), nullable=True)
     payment_status = Column(String(50), default="pending")
 
+    meeting_link = Column(String(500), nullable=True)  # Telemedicine stub
     rating = Column(Integer, nullable=True)
     patient_feedback = Column(Text, nullable=True)
 
@@ -275,6 +276,61 @@ class DoctorConsultation(Base):
     doctor = relationship("Doctor", back_populates="consultations")
     ai_assessment = relationship("HealthAssessment")
     messages = relationship("Message", back_populates="consultation", cascade="all, delete-orphan")
+    prescriptions = relationship("Prescription", back_populates="consultation")
+
+
+class Prescription(Base):
+    __tablename__ = "prescriptions"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    consultation_id = Column(String, ForeignKey("doctor_consultations.id"), nullable=False)
+    doctor_id = Column(String, ForeignKey("doctors.id"), nullable=False)
+    patient_id = Column(String, ForeignKey("patients.id"), nullable=False)
+
+    medicines = Column(JSON, nullable=False)  # List of {name, dosage, frequency, duration}
+    notes = Column(Text, nullable=True)
+    digital_signature = Column(Text, nullable=True)  # Base64 or hash
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    consultation = relationship("DoctorConsultation", back_populates="prescriptions")
+
+
+class SOSAlert(Base):
+    __tablename__ = "sos_alerts"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    patient_id = Column(String, ForeignKey("patients.id"), nullable=False)
+    
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    status = Column(String(50), default="active")  # active, responded, resolved
+    
+    severity = Column(String(20), default="critical")
+    detected_condition = Column(String(100), nullable=True)
+    
+    nearby_hospitals = Column(JSON, default=list)  # Snapshotted nearest facilities
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    resolved_at = Column(DateTime(timezone=True), nullable=True)
+
+    patient = relationship("Patient")
+
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    consultation_id = Column(String, ForeignKey("doctor_consultations.id"), nullable=False)
+    
+    amount = Column(Numeric(10, 2), nullable=False)
+    currency = Column(String(10), default="USD")
+    status = Column(String(50), default="pending")  # pending, completed, failed, refunded
+    
+    transaction_id = Column(String(255), unique=True, nullable=True)
+    payment_method = Column(String(50), nullable=True)  # razorpay, stripe, wallet
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class Message(Base):
