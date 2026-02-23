@@ -1,2 +1,0 @@
-PatientID,PredictionProbability,RiskCategory,PercentileRank,CohortMean,CohortStdDev
-1,0.6189650425941448,High,55.73770491803278,0.52665690170985,0.2991013993519135
