@@ -4,7 +4,7 @@ import shutil
 import uuid
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Form
+from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Form, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator # APM
 from sqlalchemy.orm import Session
@@ -48,6 +48,49 @@ app.add_middleware(
 
 # Initialize APM
 Instrumentator().instrument(app).expose(app)
+
+
+# ============================================================
+# WebSocket Connection Manager
+# ============================================================
+
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: dict[str, List[WebSocket]] = {}
+
+    async def connect(self, websocket: WebSocket, room_id: str):
+        await websocket.accept()
+        if room_id not in self.active_connections:
+            self.active_connections[room_id] = []
+        self.active_connections[room_id].append(websocket)
+
+    def disconnect(self, websocket: WebSocket, room_id: str):
+        if room_id in self.active_connections:
+            self.active_connections[room_id].remove(websocket)
+
+    async def send_personal_message(self, message: str, websocket: WebSocket):
+        await websocket.send_text(message)
+
+    async def broadcast(self, message: str, room_id: str):
+        if room_id in self.active_connections:
+            for connection in self.active_connections[room_id]:
+                await connection.send_text(message)
+
+
+manager = ConnectionManager()
+
+
+@app.websocket("/ws/chat/{consultation_id}")
+async def websocket_endpoint(websocket: WebSocket, consultation_id: str):
+    await manager.connect(websocket, consultation_id)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            # In a production app, we would save the message to DB here
+            await manager.broadcast(f"{data}", consultation_id)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket, consultation_id)
 
 
 # ============================================================

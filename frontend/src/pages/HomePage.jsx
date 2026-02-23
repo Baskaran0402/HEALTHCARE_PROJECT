@@ -113,6 +113,28 @@ const HomePage = () => {
                 </motion.button>
               </div>
 
+              {/* Connectivity Buttons */}
+              <div className="action-buttons" style={{ marginTop: '1rem', borderTop: '1px border-slate-100', paddingTop: '1rem' }}>
+                <motion.button
+                  className="medical-button login-button"
+                  onClick={() => navigate('/login')}
+                  style={{ background: '#1e40af', border: 'none', color: 'white' }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Login / Sign Up
+                </motion.button>
+                <motion.button
+                  className="medical-button search-button"
+                  onClick={() => navigate('/find-doctors')}
+                  style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#475569' }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Find a Doctor
+                </motion.button>
+              </div>
+
               <div className="disclaimer">
                 <h4>⚠️ Medical Disclaimer</h4>
                 <ul>
