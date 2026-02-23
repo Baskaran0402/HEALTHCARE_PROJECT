@@ -15,6 +15,10 @@ class PatientBase(BaseModel):
     gender: str = Field(..., pattern="^(Male|Female)$")
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
 
 
 class PatientCreate(PatientBase):
@@ -253,6 +257,16 @@ class DoctorBase(BaseModel):
     medical_license_number: str = Field(..., min_length=1, max_length=50)
     specialization: str = Field(..., min_length=1, max_length=100)
     sub_specializations: List[str] = []
+    
+    # Location
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    postal_code: Optional[str] = None
+    country: str = "India"
+
     hospital_affiliation: Optional[str] = None
     clinic_address: Optional[str] = None
     years_of_experience: Optional[int] = Field(None, ge=0)

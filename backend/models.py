@@ -37,6 +37,12 @@ class Patient(Base):
     age = Column(Integer, nullable=False)
     gender = Column(String(10), nullable=False)  # Male/Female
 
+    # Location
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    address = Column(Text, nullable=True)
+    city = Column(String(100), nullable=True)
+
     # Contact (optional)
     email = Column(String(255), unique=True, nullable=True)
     phone = Column(String(20), nullable=True)
@@ -67,6 +73,15 @@ class Doctor(Base):
     specialization = Column(String(100), nullable=False)
     sub_specializations = Column(JSON, default=list)  # TEXT[] equivalent
 
+    # Location
+    latitude = Column(Float, nullable=True)
+    longitude = Column(Float, nullable=True)
+    address = Column(Text, nullable=True)
+    city = Column(String(100), nullable=True)
+    state = Column(String(100), nullable=True)
+    postal_code = Column(String(20), nullable=True)
+    country = Column(String(100), default="India")
+
     hospital_affiliation = Column(String(200), nullable=True)
     clinic_address = Column(Text, nullable=True)
     years_of_experience = Column(Integer, nullable=True)
@@ -89,7 +104,7 @@ class Doctor(Base):
     # Relationships
     user = relationship("User", back_populates="doctor_profile")
     consultations = relationship("DoctorConsultation", back_populates="doctor")
-    verified_documents = relationship("PatientDocument", back_populates="verifier")
+    verified_documents = relationship("PatientDocument", foreign_keys="[PatientDocument.verified_by]", back_populates="verifier")
 
 
 class PatientDocument(Base):

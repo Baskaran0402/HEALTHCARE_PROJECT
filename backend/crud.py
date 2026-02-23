@@ -22,14 +22,7 @@ def get_patients(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_patient(db: Session, patient: schemas.PatientCreate):
-    db_patient = models.Patient(
-        name=patient.name,
-        medical_record_number=patient.medical_record_number,
-        age=patient.age,
-        gender=patient.gender,
-        email=patient.email,
-        phone=patient.phone,
-    )
+    db_patient = models.Patient(**patient.model_dump())
     db.add(db_patient)
     db.commit()
     db.refresh(db_patient)
@@ -222,6 +215,50 @@ def search_doctors(db: Session, specialization: Optional[str] = None, name: Opti
     if name:
         query = query.filter(models.Doctor.name.ilike(f"%{name}%"))
     return query.all()
+
+
+def search_nearby_doctors(
+    db: Session, 
+    lat: float, 
+    lng: float, 
+    radius_km: float = 10.0,
+    specialization: Optional[str] = None
+):
+    # This query uses Haversine formula for distance calculation in SQL
+    # It calculates the distance between (lat, lng) and doctor's coordinates
+    
+    # 6371 is the earth radius in KM
+    distance_clause = f"""
+        (6371 * acos(
+            cos(radians({lat})) * cos(radians(latitude)) * 
+            cos(radians(longitude) - radians({lng})) + 
+            sin(radians({lat})) * sin(radians(latitude))
+        ))
+    """
+    
+    query_str = f"""
+        SELECT *, {distance_clause} AS distance
+        FROM doctors
+        WHERE is_verified = TRUE 
+        AND is_available = TRUE
+        AND latitude IS NOT NULL 
+        AND longitude IS NOT NULL
+    """
+    
+    if specialization:
+        query_str += f" AND specialization ILIKE '%{specialization}%'"
+        
+    query_str += f" AND {distance_clause} <= {radius_km}"
+    query_str += " ORDER BY distance ASC"
+    
+    result = db.execute(models.text(query_str))
+    # Convert result proxy to list of dicts/models
+    doctors = []
+    for row in result:
+        # Note: mapping sqlalchemy Row to models.Doctor would be better
+        # but for simplicity we return the rows
+        doctors.append(row)
+    return doctors
 
 
 def update_doctor(db: Session, doctor_id: str, update: schemas.DoctorUpdate):

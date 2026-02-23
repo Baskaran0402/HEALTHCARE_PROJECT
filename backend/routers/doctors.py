@@ -23,6 +23,19 @@ def register_doctor(
     return crud.create_doctor(db=db, doctor=doctor_create)
 
 
+@router.get("/nearby", response_model=List[schemas.DoctorResponse])
+def get_nearby_doctors(
+    lat: float, 
+    lng: float, 
+    radius: float = 10.0, 
+    specialization: Optional[str] = None,
+    db: Session = Depends(get_db)
+):
+    return crud.search_nearby_doctors(
+        db, lat=lat, lng=lng, radius_km=radius, specialization=specialization
+    )
+
+
 @router.get("/search", response_model=List[schemas.DoctorResponse])
 def search_doctors(
     specialization: Optional[str] = None, 
