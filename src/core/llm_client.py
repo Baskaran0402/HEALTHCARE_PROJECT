@@ -24,8 +24,6 @@ class GeminiClient:
         # 🔥 Ordered fallback list - Groq models
         self.models = [
             "llama-3.3-70b-versatile",  # Latest, most capable
-            "llama-3.1-70b-versatile",  # Fallback
-            "mixtral-8x7b-32768",  # Alternative
             "llama-3.1-8b-instant",  # Fastest fallback
         ]
 

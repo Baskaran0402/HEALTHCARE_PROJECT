@@ -46,6 +46,7 @@ class MedicalRecordBase(BaseModel):
     bilirubin_total: Optional[float] = None
     alt: Optional[float] = None
     ast: Optional[float] = None
+    hdl_cholesterol: Optional[float] = Field(None, ge=20.0, le=120.0)
 
     hypertension: bool = False
     diabetes: bool = False
@@ -57,6 +58,11 @@ class MedicalRecordBase(BaseModel):
     breathlessness: bool = False
     fatigue: bool = False
     edema: bool = False
+    
+    mri_image_path: Optional[str] = None
+    
+    medication_history: Optional[List[str]] = []
+    family_history: Optional[Dict[str, bool]] = {}
 
 
 class MedicalRecordCreate(MedicalRecordBase):
@@ -119,6 +125,8 @@ class HealthAssessmentCreate(BaseModel):
     doctor_report: Optional[str] = None
     soap_json: Optional[Dict[str, Any]] = None
     conversation_summary: Optional[str] = None
+    cross_intelligence_insights: Optional[List[Dict[str, Any]]] = None
+    billing_codes: Optional[Dict[str, Any]] = None
 
 
 class HealthAssessmentResponse(HealthAssessmentCreate):
@@ -192,3 +200,175 @@ class AppointmentCreate(BaseModel):
 class AppointmentResponse(AppointmentCreate):
     id: int
     created_at: datetime
+
+
+# ============================================================
+# Auth & User Schemas
+# ============================================================
+
+
+class UserBase(BaseModel):
+    username: str = Field(..., min_length=3, max_length=50)
+    email: EmailStr
+    role: str = Field(..., pattern="^(admin|doctor|patient)$")
+
+
+class UserCreate(UserBase):
+    password: str = Field(..., min_length=8)
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+    role: Optional[str] = None
+
+
+class UserResponse(UserBase):
+    id: str
+    is_active: bool
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# ============================================================
+# Doctor Schemas
+# ============================================================
+
+
+class DoctorBase(BaseModel):
+    name: str = Field(..., min_length=1, max_length=200)
+    email: EmailStr
+    phone: Optional[str] = None
+    medical_license_number: str = Field(..., min_length=1, max_length=50)
+    specialization: str = Field(..., min_length=1, max_length=100)
+    sub_specializations: List[str] = []
+    hospital_affiliation: Optional[str] = None
+    clinic_address: Optional[str] = None
+    years_of_experience: Optional[int] = Field(None, ge=0)
+    qualifications: List[str] = []
+    consultation_fee: Optional[float] = Field(None, ge=0)
+    availability_schedule: Dict[str, Any] = {}
+    bio: Optional[str] = None
+
+
+class DoctorCreate(DoctorBase):
+    user_id: str
+
+
+class DoctorUpdate(BaseModel):
+    name: Optional[str] = None
+    phone: Optional[str] = None
+    specialization: Optional[str] = None
+    sub_specializations: Optional[List[str]] = None
+    hospital_affiliation: Optional[str] = None
+    clinic_address: Optional[str] = None
+    years_of_experience: Optional[int] = None
+    qualifications: Optional[List[str]] = None
+    consultation_fee: Optional[float] = None
+    availability_schedule: Optional[Dict[str, Any]] = None
+    bio: Optional[str] = None
+    is_available: Optional[bool] = None
+
+
+class DoctorResponse(DoctorBase):
+    id: str
+    user_id: str
+    license_verified: bool
+    rating: float
+    total_consultations: int
+    is_available: bool
+    is_verified: bool
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+# ============================================================
+# Doctor Consultation Schemas
+# ============================================================
+
+
+class DoctorConsultationBase(BaseModel):
+    doctor_id: str
+    patient_id: str
+    consultation_type: str = Field(..., pattern="^(video|audio|chat|in-person)$")
+    symptoms: Optional[str] = None
+
+
+class DoctorConsultationCreate(DoctorConsultationBase):
+    ai_assessment_id: Optional[str] = None
+
+
+class DoctorConsultationUpdate(BaseModel):
+    status: Optional[str] = Field(None, pattern="^(pending|accepted|in-progress|completed|cancelled)$")
+    scheduled_for: Optional[datetime] = None
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+    diagnosis: Optional[str] = None
+    prescription: Optional[Dict[str, Any]] = None
+    notes: Optional[str] = None
+    consultation_fee: Optional[float] = None
+    payment_status: Optional[str] = None
+    rating: Optional[int] = Field(None, ge=1, le=5)
+    patient_feedback: Optional[str] = None
+
+
+class DoctorConsultationResponse(DoctorConsultationBase):
+    id: str
+    status: str
+    requested_at: datetime
+    scheduled_for: Optional[datetime] = None
+    started_at: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
+    ai_assessment_id: Optional[str] = None
+    diagnosis: Optional[str] = None
+    prescription: Optional[Dict[str, Any]] = None
+    notes: Optional[str] = None
+    consultation_fee: Optional[float] = None
+    payment_status: str
+    rating: Optional[int] = None
+    patient_feedback: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+# ============================================================
+# Messaging Schemas
+# ============================================================
+
+
+class MessageBase(BaseModel):
+    consultation_id: str
+    sender_id: str
+    sender_type: str = Field(..., pattern="^(patient|doctor)$")
+    message_type: str = Field("text", pattern="^(text|image|file|voice)$")
+    content: Optional[str] = None
+    file_url: Optional[str] = None
+
+
+class MessageCreate(MessageBase):
+    pass
+
+
+class MessageResponse(MessageBase):
+    id: str
+    is_read: bool
+    read_at: Optional[datetime] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

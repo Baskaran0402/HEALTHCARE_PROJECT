@@ -26,12 +26,22 @@ const ConsultationPage = () => {
     blood_glucose: '',
     hba1c: '',
     cholesterol: '',
+    hdl_cholesterol: '', // New
     creatinine: '',
     
     // Medical History
     hypertension: false,
     diabetes: false,
     heart_disease: false,
+    
+    // Family History
+    family_hypertension: false,
+    family_diabetes: false,
+    family_heart_disease: false,
+    
+    // Medications
+    medication_list: '',
+
     smoking_status: 'never',
     
     // Symptoms
@@ -97,9 +107,16 @@ const ConsultationPage = () => {
           hba1c: parseFloat(formData.hba1c) || null,
           cholesterol: parseFloat(formData.cholesterol) || null,
           creatinine: parseFloat(formData.creatinine) || null,
+          hdl_cholesterol: parseFloat(formData.hdl_cholesterol) || null,
           hypertension: formData.hypertension,
           diabetes: formData.diabetes,
           heart_disease: formData.heart_disease,
+          medication_history: formData.medication_list ? formData.medication_list.split(',').map(s=>s.trim()) : [],
+          family_history: {
+            hypertension: formData.family_hypertension,
+            diabetes: formData.family_diabetes,
+            heart_disease: formData.family_heart_disease
+          },
           smoking_status: formData.smoking_status,
           chest_pain: formData.chest_pain,
           breathlessness: formData.breathlessness,
@@ -322,6 +339,18 @@ const ConsultationPage = () => {
                     />
                   </div>
                   <div className="form-group">
+                    <label>HDL Cholesterol (mg/dL)</label>
+                    <input
+                      type="number"
+                      name="hdl_cholesterol"
+                      value={formData.hdl_cholesterol}
+                      onChange={handleChange}
+                      className="medical-input"
+                      min="20"
+                      max="120"
+                    />
+                  </div>
+                  <div className="form-group">
                     <label>Creatinine (mg/dL)</label>
                     <input
                       type="number"
@@ -404,6 +433,56 @@ const ConsultationPage = () => {
                     />
                     <span>Swelling (Edema)</span>
                   </label>
+                </div>
+              </div>
+              
+              {/* Family History */}
+              <div className="form-section">
+                <h3 className="section-title">Family History</h3>
+                <div className="checkbox-grid">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="family_hypertension"
+                      checked={formData.family_hypertension}
+                      onChange={handleChange}
+                    />
+                    <span>Family History of Hypertension</span>
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="family_diabetes"
+                      checked={formData.family_diabetes}
+                      onChange={handleChange}
+                    />
+                    <span>Family History of Diabetes</span>
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      name="family_heart_disease"
+                      checked={formData.family_heart_disease}
+                      onChange={handleChange}
+                    />
+                    <span>Family History of Heart Disease</span>
+                  </label>
+                </div>
+              </div>
+
+               {/* Medications */}
+               <div className="form-section">
+                <h3 className="section-title">Current Medications</h3>
+                <div className="form-group full-width">
+                  <label>List current medications (comma separated)</label>
+                  <textarea
+                    name="medication_list"
+                    value={formData.medication_list}
+                    onChange={handleChange}
+                    className="medical-input"
+                    placeholder="e.g. Aspirin, Metformin, Lisinopril"
+                    rows="3"
+                  />
                 </div>
               </div>
 

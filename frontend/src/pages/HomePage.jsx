@@ -101,6 +101,16 @@ const HomePage = () => {
                 >
                   View Demo
                 </motion.button>
+
+                <motion.button
+                  className="medical-button trial-button"
+                  onClick={() => navigate('/brain-tumor')}
+                  style={{ background: 'linear-gradient(to right, #8b5cf6, #7c3aed)', color: 'white' }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Brain MRI Trial (Alpha)
+                </motion.button>
               </div>
 
               <div className="disclaimer">

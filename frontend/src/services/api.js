@@ -34,6 +34,12 @@ export const healthAPI = {
     return response.data;
   },
 
+  // Get patient assessments
+  getPatientAssessments: async (patientId) => {
+    const response = await api.get(`/api/patients/${patientId}/assessments`);
+    return response.data;
+  },
+
   // Create consultation
   createConsultation: async (consultationData) => {
     const response = await api.post("/api/consultations", consultationData);

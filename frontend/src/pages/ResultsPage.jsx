@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion' // eslint-disable-line no-unused-vars
-import { AlertCircle, CheckCircle, Home, Shield, FileText, Activity } from 'lucide-react'
+import { AlertCircle, CheckCircle, Home, Shield, FileText, Activity, CreditCard } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useState } from 'react'
@@ -146,6 +146,70 @@ const ResultsPage = () => {
               </div>
             </div>
 
+            {/* 5. Automated Medical Billing (ICD-10 / CPT) */}
+            {assessment.billing_codes && (
+              <div className="medical-card report-section billing-section">
+                <h2 className="section-header">
+                  <CreditCard size={20} style={{ marginRight: '8px' }} />
+                  Automated Medical Billing (Suggested)
+                </h2>
+                <div className="billing-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+                  <div className="billing-card">
+                    <h3 style={{ fontSize: '1rem', color: '#64748b', marginBottom: '1rem' }}>ICD-10 (Diagnosis)</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      {assessment.billing_codes.icd10.map((code, idx) => (
+                        <div key={idx} style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                           <span style={{ fontWeight: 800, color: '#0f172a', marginRight: '8px' }}>{code.code}</span>
+                           <span style={{ fontSize: '0.875rem', color: '#475569' }}>{code.description}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="billing-card">
+                    <h3 style={{ fontSize: '1rem', color: '#64748b', marginBottom: '1rem' }}>CPT (Procedures)</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      {assessment.billing_codes.cpt.map((code, idx) => (
+                        <div key={idx} style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                           <span style={{ fontWeight: 800, color: '#3b82f6', marginRight: '8px' }}>{code.code}</span>
+                           <span style={{ fontSize: '0.875rem', color: '#475569' }}>{code.description}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <p style={{ marginTop: '1.5rem', fontSize: '0.75rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                  Coder Note: These codes are AI-suggested based on detected clinical patterns and require final certification by a licensed medical coder.
+                </p>
+              </div>
+            )}
+
+            {/* 5. Hybrid Intelligence (Cross-Disease Insights) */}
+            {assessment.cross_intelligence_insights && assessment.cross_intelligence_insights.length > 0 && (
+              <div className="medical-card report-section hybrid-intelligence-section">
+                <h2 className="section-header">Cross-Disease Hybrid Intelligence</h2>
+                <div className="insights-container">
+                  {assessment.cross_intelligence_insights.map((insight, idx) => (
+                    <div key={idx} className={`hybrid-insight-card ${insight.severity.toLowerCase()}`}>
+                       <div className="insight-top">
+                          <CheckCircle className="insight-icon" size={20} />
+                          <h3>{insight.title}</h3>
+                       </div>
+                       <p className="insight-finding"><strong>Clinical Finding:</strong> {insight.finding}</p>
+                       <p className="insight-interpretation"><strong>Multimodal Interpretation:</strong> {insight.interpretation}</p>
+                       <div className="insight-recommendations">
+                         <strong>Recommendations:</strong>
+                         <ul>
+                           {insight.recommendations.map((rec, i) => (
+                             <li key={i}>{rec}</li>
+                           ))}
+                         </ul>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* 5. Clinical Safety & Data Disclaimer */}
             <div className="clinical-disclaimer-box">
               <AlertCircle size={20} className="warning-icon" />
@@ -230,9 +294,13 @@ const ResultsPage = () => {
             </div>
 
             <div className="actions">
-              <button className="medical-button" onClick={() => navigate('/')}>
+              <button className="medical-button" onClick={() => navigate(`/dashboard/${result.patient?.id}`)}>
+                <Activity size={18} />
+                <span>View Dashboard</span>
+              </button>
+              <button className="medical-button secondary" onClick={() => navigate('/')}>
                 <Home size={18} />
-                <span>Return to Dashboard</span>
+                <span>Home</span>
               </button>
             </div>
           </motion.div>

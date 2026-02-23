@@ -1,16 +1,33 @@
 import uuid
 
-from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from backend.database import Base
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    username = Column(String(50), unique=True, nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    role = Column(String(20), nullable=False)  # admin, doctor, patient
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Relationships
+    patient_profile = relationship("Patient", back_populates="user", uselist=False)
+    doctor_profile = relationship("Doctor", back_populates="user", uselist=False)
+
+
 class Patient(Base):
     __tablename__ = "patients"
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=True)
 
     # Patient Identification
     name = Column(String(200), nullable=False)
@@ -29,8 +46,104 @@ class Patient(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
+    user = relationship("User", back_populates="patient_profile")
     consultations = relationship("Consultation", back_populates="patient", cascade="all, delete-orphan")
     medical_records = relationship("MedicalRecord", back_populates="patient", cascade="all, delete-orphan")
+    human_consultations = relationship("DoctorConsultation", back_populates="patient")
+
+
+class Doctor(Base):
+    __tablename__ = "doctors"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    name = Column(String(200), nullable=False)
+    email = Column(String(255), unique=True, nullable=False)
+    phone = Column(String(20), nullable=True)
+    medical_license_number = Column(String(50), unique=True, nullable=False)
+    license_verified = Column(Boolean, default=False)
+
+    specialization = Column(String(100), nullable=False)
+    sub_specializations = Column(JSON, default=list)  # TEXT[] equivalent
+
+    hospital_affiliation = Column(String(200), nullable=True)
+    clinic_address = Column(Text, nullable=True)
+    years_of_experience = Column(Integer, nullable=True)
+    qualifications = Column(JSON, default=list)  # TEXT[] equivalent
+
+    consultation_fee = Column(Numeric(10, 2), nullable=True)
+    availability_schedule = Column(JSON, default=dict)
+
+    profile_photo = Column(String(500), nullable=True)
+    bio = Column(Text, nullable=True)
+    rating = Column(Float, default=0.0)
+    total_consultations = Column(Integer, default=0)
+
+    is_available = Column(Boolean, default=True)
+    is_verified = Column(Boolean, default=False)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    # Relationships
+    user = relationship("User", back_populates="doctor_profile")
+    consultations = relationship("DoctorConsultation", back_populates="doctor")
+
+
+class DoctorConsultation(Base):
+    __tablename__ = "doctor_consultations"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    patient_id = Column(String, ForeignKey("patients.id"), nullable=False)
+    doctor_id = Column(String, ForeignKey("doctors.id"), nullable=False)
+    consultation_type = Column(String(50), nullable=False)  # video, audio, chat, in-person
+
+    status = Column(String(50), default="pending")  # pending, accepted, in-progress, completed, cancelled
+
+    requested_at = Column(DateTime(timezone=True), server_default=func.now())
+    scheduled_for = Column(DateTime(timezone=True), nullable=True)
+    started_at = Column(DateTime(timezone=True), nullable=True)
+    completed_at = Column(DateTime(timezone=True), nullable=True)
+
+    ai_assessment_id = Column(String, ForeignKey("health_assessments.id"), nullable=True)
+
+    symptoms = Column(Text, nullable=True)
+    diagnosis = Column(Text, nullable=True)
+    prescription = Column(JSON, nullable=True)
+    notes = Column(Text, nullable=True)
+
+    consultation_fee = Column(Numeric(10, 2), nullable=True)
+    payment_status = Column(String(50), default="pending")
+
+    rating = Column(Integer, nullable=True)
+    patient_feedback = Column(Text, nullable=True)
+
+    # Relationships
+    patient = relationship("Patient", back_populates="human_consultations")
+    doctor = relationship("Doctor", back_populates="consultations")
+    ai_assessment = relationship("HealthAssessment")
+    messages = relationship("Message", back_populates="consultation", cascade="all, delete-orphan")
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    consultation_id = Column(String, ForeignKey("doctor_consultations.id"), nullable=False)
+    sender_id = Column(String, nullable=False)
+    sender_type = Column(String(20), nullable=False)  # patient or doctor
+
+    message_type = Column(String(20), default="text")  # text, image, file, voice
+    content = Column(Text, nullable=True)
+    file_url = Column(String(500), nullable=True)
+
+    is_read = Column(Boolean, default=False)
+    read_at = Column(DateTime(timezone=True), nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Relationships
+    consultation = relationship("DoctorConsultation", back_populates="messages")
 
 
 class Consultation(Base):
@@ -75,6 +188,7 @@ class MedicalRecord(Base):
     bilirubin_total = Column(Float, nullable=True)
     alt = Column(Float, nullable=True)
     ast = Column(Float, nullable=True)
+    hdl_cholesterol = Column(Float, nullable=True)  # Added for Risk Calculators
 
     # Medical History
     hypertension = Column(Boolean, default=False)
@@ -89,6 +203,12 @@ class MedicalRecord(Base):
     breathlessness = Column(Boolean, default=False)
     fatigue = Column(Boolean, default=False)
     edema = Column(Boolean, default=False)
+    
+    mri_image_path = Column(String(500), nullable=True)
+
+    # Expanded Clinical Features
+    medication_history = Column(JSON, default=list)
+    family_history = Column(JSON, default=dict)
 
     # Timestamps
     recorded_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -116,6 +236,8 @@ class HealthAssessment(Base):
     doctor_report = Column(Text, nullable=True)
     soap_json = Column(JSON, nullable=True)
     conversation_summary = Column(Text, nullable=True)
+    cross_intelligence_insights = Column(JSON, nullable=True)
+    billing_codes = Column(JSON, nullable=True)
 
     # Timestamps
     assessed_at = Column(DateTime(timezone=True), server_default=func.now())
