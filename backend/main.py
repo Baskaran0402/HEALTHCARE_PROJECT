@@ -12,7 +12,7 @@ from starlette.responses import Response, StreamingResponse
 
 from backend import crud, models, schemas  # noqa: F401
 from backend.database import Base, engine, get_db
-from backend.routers import analytics, chat, auth as auth_router, doctors, human_consultations, messages, documents
+from backend.routers import analytics, chat, auth as auth_router, doctors, human_consultations, messages, documents, organizations
 from backend.services import HealthAnalysisService
 from backend.utils.pdf_generator import PDFReportGenerator
 from src.agents.heart_agent import generate_shap_plot
@@ -35,6 +35,7 @@ app.include_router(doctors.router)
 app.include_router(human_consultations.router)
 app.include_router(messages.router)
 app.include_router(documents.router)
+app.include_router(organizations.router)
 app.include_router(analytics.router)
 app.include_router(chat.router)
 

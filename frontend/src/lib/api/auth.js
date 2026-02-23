@@ -1,15 +1,11 @@
 import apiClient from './client';
 
 export const authService = {
-  login: async (username, password) => {
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-    
-    const response = await apiClient.post('/api/auth/login', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+  login: async (email, password, organizationId = null) => {
+    const response = await apiClient.post('/api/auth/login', {
+      email,
+      password,
+      organization_id: organizationId
     });
     return response.data;
   },
@@ -23,4 +19,13 @@ export const authService = {
     const response = await apiClient.get('/api/auth/me');
     return response.data;
   },
+
+  logout: async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      await apiClient.post(`/api/auth/logout?refresh_token=${refreshToken}`);
+    }
+    localStorage.clear();
+    window.location.href = '/login';
+  }
 };

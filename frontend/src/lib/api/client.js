@@ -19,13 +19,33 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle errors
+// Response interceptor to handle errors and refresh tokens
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem('refreshToken');
+      
+      if (refreshToken) {
+        try {
+          const response = await axios.post(`${apiClient.defaults.baseURL}/api/auth/refresh?refresh_token=${refreshToken}`);
+          const { access_token } = response.data;
+          
+          localStorage.setItem('token', access_token);
+          originalRequest.headers.Authorization = `Bearer ${access_token}`;
+          
+          return apiClient(originalRequest);
+        } catch (refreshError) {
+          localStorage.clear();
+          window.location.href = '/login?session_expired=true';
+        }
+      } else {
+        localStorage.clear();
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

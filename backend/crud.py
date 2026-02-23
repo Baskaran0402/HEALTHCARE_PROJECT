@@ -162,6 +162,32 @@ def create_audit_log(db: Session, log: schemas.AuditLogCreate):
 # ============================================================
 
 
+# ============================================================
+# Organization CRUD
+# ============================================================
+
+
+def create_organization(db: Session, org: schemas.OrganizationCreate):
+    db_org = models.Organization(**org.model_dump())
+    db.add(db_org)
+    db.commit()
+    db.refresh(db_org)
+    return db_org
+
+
+def get_organization(db: Session, org_id: str):
+    return db.query(models.Organization).filter(models.Organization.id == org_id).first()
+
+
+def get_organization_by_domain(db: Session, domain: str):
+    return db.query(models.Organization).filter(models.Organization.email_domain == domain).first()
+
+
+# ============================================================
+# User CRUD
+# ============================================================
+
+
 def get_user(db: Session, user_id: str):
     return db.query(models.User).filter(models.User.id == user_id).first()
 
@@ -175,16 +201,54 @@ def get_user_by_email(db: Session, email: str):
 
 
 def create_user(db: Session, user: schemas.UserCreate, hashed_password: str):
+    user_data = user.model_dump(exclude={"password"})
     db_user = models.User(
-        username=user.username,
-        email=user.email,
-        role=user.role,
+        **user_data,
         hashed_password=hashed_password,
+        # Default approval based on role for simplicity in demo
+        # Patients are auto-approved, doctors/staff need admin review
+        is_approved=True if user.role == "patient" else False
     )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def update_user_login(db: Session, user_id: str):
+    db_user = get_user(db, user_id)
+    if db_user:
+        db_user.last_login = datetime.utcnow()
+        db_user.login_count += 1
+        db.commit()
+
+
+# ============================================================
+# Session CRUD
+# ============================================================
+
+
+def create_session(db: Session, session_data: dict):
+    db_session = models.UserSession(**session_data)
+    db.add(db_session)
+    db.commit()
+    db.refresh(db_session)
+    return db_session
+
+
+def get_session_by_refresh_token(db: Session, refresh_token: str):
+    return db.query(models.UserSession).filter(
+        models.UserSession.refresh_token == refresh_token,
+        models.UserSession.is_active == True,
+        models.UserSession.expires_at > datetime.utcnow()
+    ).first()
+
+
+def revoke_session(db: Session, refresh_token: str):
+    session = db.query(models.UserSession).filter(models.UserSession.refresh_token == refresh_token).first()
+    if session:
+        session.is_active = False
+        db.commit()
 
 
 # ============================================================
@@ -360,3 +424,11 @@ def mark_message_as_read(db: Session, message_id: str):
         db.commit()
         db.refresh(db_message)
     return db_message
+
+
+def create_audit_log(db: Session, audit_log: schemas.AuditLogCreate):
+    db_audit_log = models.AuditLog(**audit_log.model_dump())
+    db.add(db_audit_log)
+    db.commit()
+    db.refresh(db_audit_log)
+    return db_audit_log

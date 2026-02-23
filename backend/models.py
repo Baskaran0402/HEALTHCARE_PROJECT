@@ -7,20 +7,99 @@ from sqlalchemy.sql import func
 from backend.database import Base
 
 
+class Organization(Base):
+    __tablename__ = "organizations"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String(200), unique=True, nullable=False)
+    organization_type = Column(String(50), nullable=False)  # hospital, clinic, diagnostic, research, etc.
+    
+    email_domain = Column(String(100), nullable=True)  # e.g., svce.ac.in
+    subdomain = Column(String(100), unique=True, nullable=True)
+    
+    admin_email = Column(String(255), nullable=False)
+    contact_phone = Column(String(20), nullable=True)
+    address = Column(Text, nullable=True)
+    
+    logo_url = Column(String(500), nullable=True)
+    primary_color = Column(String(7), nullable=True)  # hex
+    
+    is_verified = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    # Relationships
+    users = relationship("User", back_populates="organization")
+
+
 class User(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    organization_id = Column(String, ForeignKey("organizations.id"), nullable=True)
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
-    role = Column(String(20), nullable=False)  # admin, doctor, patient
+    
+    # role: super_admin, org_admin, doctor, nurse, patient, researcher
+    role = Column(String(50), nullable=False) 
+    
+    first_name = Column(String(100), nullable=True)
+    last_name = Column(String(100), nullable=True)
+    phone = Column(String(20), nullable=True)
+    
     is_active = Column(Boolean, default=True)
+    is_approved = Column(Boolean, default=False)
+    approved_by = Column(String, nullable=True)
+    approved_at = Column(DateTime(timezone=True), nullable=True)
+    
+    two_factor_enabled = Column(Boolean, default=False)
+    two_factor_secret = Column(String(500), nullable=True)
+    
+    last_login = Column(DateTime(timezone=True), nullable=True)
+    login_count = Column(Integer, default=0)
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
+    organization = relationship("Organization", back_populates="users")
     patient_profile = relationship("Patient", back_populates="user", uselist=False)
     doctor_profile = relationship("Doctor", back_populates="user", uselist=False)
+    sessions = relationship("UserSession", back_populates="user", cascade="all, delete-orphan")
+
+
+class UserSession(Base):
+    __tablename__ = "user_sessions"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    user_id = Column(String, ForeignKey("users.id"), nullable=False)
+    
+    access_token = Column(String(500), nullable=False, unique=True)
+    refresh_token = Column(String(500), nullable=False, unique=True)
+    
+    device_info = Column(JSON, nullable=True)
+    ip_address = Column(String(45), nullable=True)
+    user_agent = Column(Text, nullable=True)
+    
+    is_active = Column(Boolean, default=True)
+    expires_at = Column(DateTime(timezone=True), nullable=False)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    
+    user = relationship("User", back_populates="sessions")
+
+
+class LoginAttempt(Base):
+    __tablename__ = "login_attempts"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    email = Column(String(255), nullable=False)
+    ip_address = Column(String(45), nullable=True)
+    success = Column(Boolean, default=False)
+    failure_reason = Column(String(255), nullable=True)
+    attempted_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class Patient(Base):
