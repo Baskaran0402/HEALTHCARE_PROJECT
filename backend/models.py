@@ -50,6 +50,7 @@ class Patient(Base):
     consultations = relationship("Consultation", back_populates="patient", cascade="all, delete-orphan")
     medical_records = relationship("MedicalRecord", back_populates="patient", cascade="all, delete-orphan")
     human_consultations = relationship("DoctorConsultation", back_populates="patient")
+    documents = relationship("PatientDocument", back_populates="patient", cascade="all, delete-orphan")
 
 
 class Doctor(Base):
@@ -88,6 +89,63 @@ class Doctor(Base):
     # Relationships
     user = relationship("User", back_populates="doctor_profile")
     consultations = relationship("DoctorConsultation", back_populates="doctor")
+    verified_documents = relationship("PatientDocument", back_populates="verifier")
+
+
+class PatientDocument(Base):
+    __tablename__ = "patient_documents"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    patient_id = Column(String, ForeignKey("patients.id", ondelete="CASCADE"), nullable=False)
+
+    document_type = Column(String(50), nullable=False)  # lab_report, radiology, prescription, etc.
+    title = Column(String(200), nullable=False)
+    description = Column(Text, nullable=True)
+
+    file_name = Column(String(255), nullable=False)
+    file_path = Column(String(500), nullable=False)
+    file_size = Column(Integer, nullable=True)  # in bytes
+    file_type = Column(String(50), nullable=True)  # MIME type
+
+    thumbnail_path = Column(String(500), nullable=True)
+
+    is_encrypted = Column(Boolean, default=True)
+    encryption_key = Column(String(500), nullable=True)  # encrypted with master key
+
+    tags = Column(JSON, default=list)  # TEXT[] equivalent
+
+    uploaded_by = Column(String, nullable=True)  # user_id who uploaded
+    uploaded_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    shared_with_doctor_id = Column(String, ForeignKey("doctors.id"), nullable=True)
+    shared_at = Column(DateTime(timezone=True), nullable=True)
+    share_expires_at = Column(DateTime(timezone=True), nullable=True)
+
+    parsed_data = Column(JSON, nullable=True)  # extracted lab values, OCR text, etc.
+
+    is_verified = Column(Boolean, default=False)
+    verified_by = Column(String, ForeignKey("doctors.id"), nullable=True)
+    verified_at = Column(DateTime(timezone=True), nullable=True)
+
+    # Relationships
+    patient = relationship("Patient", back_populates="documents")
+    shared_doctor = relationship("Doctor", foreign_keys=[shared_with_doctor_id])
+    verifier = relationship("Doctor", foreign_keys=[verified_by], back_populates="verified_documents")
+    access_logs = relationship("DocumentAccessLog", back_populates="document", cascade="all, delete-orphan")
+
+
+class DocumentAccessLog(Base):
+    __tablename__ = "document_access_logs"
+
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
+    document_id = Column(String, ForeignKey("patient_documents.id"), nullable=False)
+    accessed_by = Column(String, nullable=False)
+    access_type = Column(String(50), nullable=True)  # view, download, share, delete
+    ip_address = Column(String(45), nullable=True)
+    accessed_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Relationships
+    document = relationship("PatientDocument", back_populates="access_logs")
 
 
 class DoctorConsultation(Base):

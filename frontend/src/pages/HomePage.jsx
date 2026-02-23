@@ -133,6 +133,15 @@ const HomePage = () => {
                 >
                   Find a Doctor
                 </motion.button>
+                <motion.button
+                  className="medical-button records-button"
+                  onClick={() => navigate('/records/demo-patient')}
+                  style={{ background: '#f8fafc', border: '1px solid #e2e8f0', color: '#475569' }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  My Medical Records
+                </motion.button>
               </div>
 
               <div className="disclaimer">

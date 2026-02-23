@@ -372,3 +372,68 @@ class MessageResponse(MessageBase):
 
     class Config:
         from_attributes = True
+
+
+# ============================================================
+# Document Schemas
+# ============================================================
+
+
+class DocumentBase(BaseModel):
+    document_type: str = Field(..., pattern="^(lab_report|radiology|prescription|discharge|insurance|vaccination|other)$")
+    title: str = Field(..., min_length=1, max_length=200)
+    description: Optional[str] = None
+    tags: List[str] = []
+
+
+class DocumentCreate(DocumentBase):
+    patient_id: str
+
+
+class DocumentUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    document_type: Optional[str] = None
+    tags: Optional[List[str]] = None
+    is_verified: Optional[bool] = None
+    shared_with_doctor_id: Optional[str] = None
+    share_expires_at: Optional[datetime] = None
+
+
+class DocumentResponse(DocumentBase):
+    id: str
+    patient_id: str
+    file_name: str
+    file_size: int
+    file_type: str
+    thumbnail_path: Optional[str] = None
+    is_encrypted: bool
+    uploaded_by: Optional[str] = None
+    uploaded_at: datetime
+    shared_with_doctor_id: Optional[str] = None
+    shared_at: Optional[datetime] = None
+    share_expires_at: Optional[datetime] = None
+    parsed_data: Optional[Dict[str, Any]] = None
+    is_verified: bool
+    verified_by: Optional[str] = None
+    verified_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+class DocumentShareRequest(BaseModel):
+    doctor_id: str
+    expires_in_hours: int = 24
+
+
+class DocumentAccessLogResponse(BaseModel):
+    id: str
+    document_id: str
+    accessed_by: str
+    access_type: str
+    ip_address: Optional[str] = None
+    accessed_at: datetime
+
+    class Config:
+        from_attributes = True
