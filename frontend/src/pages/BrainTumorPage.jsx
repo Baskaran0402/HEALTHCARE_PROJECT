@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import { motion as Motion, AnimatePresence } from "framer-motion";
 import { 
   Upload, 
   Brain, 
@@ -175,7 +175,7 @@ const BrainTumorPage = () => {
         <section className="results-panel">
           <AnimatePresence mode="wait">
             {!result && !loading && !error && (
-              <motion.div 
+              <Motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 className="empty-state"
@@ -186,11 +186,11 @@ const BrainTumorPage = () => {
                 </div>
                 <h3>System Ready</h3>
                 <p>Upload MRI scan to generate hybrid diagnostic report</p>
-              </motion.div>
+              </Motion.div>
             )}
 
             {error && (
-              <motion.div 
+              <Motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="error-state"
@@ -199,11 +199,11 @@ const BrainTumorPage = () => {
                 <h3>Analysis Failed</h3>
                 <p>{error}</p>
                 <button onClick={() => setError(null)} className="retry-btn">Clear Error</button>
-              </motion.div>
+              </Motion.div>
             )}
 
             {result && (
-              <motion.div 
+              <Motion.div 
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 className="diagnosis-report"
@@ -322,7 +322,7 @@ const BrainTumorPage = () => {
                 <footer className="disclaimer">
                    <p>Disclaimer: This is an experimental clinical decision support tool. All findings must be reviewed by a board-certified radiologist or neurologist.</p>
                 </footer>
-              </motion.div>
+              </Motion.div>
             )}
           </AnimatePresence>
         </section>

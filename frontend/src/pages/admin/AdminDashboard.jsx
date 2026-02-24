@@ -51,8 +51,8 @@ const AdminDashboard = () => {
       setPendingApprovals(pendingData);
       setAllUsers(usersData);
       setAllOrgs(orgsData);
-    } catch (err) {
-      console.error('Failed to fetch admin data', err);
+    } catch {
+      console.error('Failed to fetch admin data');
     } finally {
       setLoading(false);
     }
@@ -65,7 +65,7 @@ const AdminDashboard = () => {
       // Refresh stats
       const newStats = await adminService.getSystemStats();
       setStats(newStats);
-    } catch (err) {
+    } catch {
       alert('Failed to approve user');
     }
   };
@@ -76,7 +76,7 @@ const AdminDashboard = () => {
         await adminService.rejectUser(userId);
         setPendingApprovals(prev => prev.filter(u => u.id !== userId));
       }
-    } catch (err) {
+    } catch {
       alert('Failed to reject user');
     }
   };
@@ -330,7 +330,7 @@ const HealthStat = ({ label, value, suffix = '%', inverse = false }) => (
   </div>
 );
 
-const ApprovalItem = ({ id, name, role, time, onApprove, onReject }) => (
+const ApprovalItem = ({ name, role, time, onApprove, onReject }) => (
   <div className="approval-item">
     <div className="ai-info">
        <p className="ai-name">{name}</p>

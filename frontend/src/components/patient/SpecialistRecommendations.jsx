@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { doctorService } from '../../lib/api/doctors';
 import { Star, MapPin, Clock, ArrowRight, ShieldCheck, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 

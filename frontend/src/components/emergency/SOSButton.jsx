@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AlertTriangle, MapPin, Phone, Navigation, Loader2, CheckCircle2, ShieldAlert } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 const SOSButton = ({ patientId }) => {
     const [status, setStatus] = useState('idle'); // idle, active, locating, resolved
@@ -49,7 +49,7 @@ const SOSButton = ({ patientId }) => {
         <div className="sos-component">
             <AnimatePresence mode="wait">
                 {status === 'idle' && (
-                    <motion.button
+                    <Motion.button
                         key="idle"
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -63,11 +63,11 @@ const SOSButton = ({ patientId }) => {
                            <ShieldAlert size={32} />
                            <span>SOS PANIC</span>
                         </div>
-                    </motion.button>
+                    </Motion.button>
                 )}
 
                 {(status === 'locating' || status === 'active') && (
-                    <motion.div
+                    <Motion.div
                         key="active"
                         initial={{ y: 100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -128,7 +128,7 @@ const SOSButton = ({ patientId }) => {
                                 </button>
                             </div>
                         )}
-                    </motion.div>
+                    </Motion.div>
                 )}
             </AnimatePresence>
 

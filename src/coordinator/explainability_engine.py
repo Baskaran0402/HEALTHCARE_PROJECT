@@ -5,12 +5,13 @@ def explain_risk(disease, patient, agent_result=None):
 
     if disease == "Brain Tumor Detection":
         if agent_result and agent_result.get("prediction") == "Brain Tumor":
-             explanations.append(f"AI Detected potential tumor features in {agent_result.get('lobe_location', 'Brain MRI')}.")
-             explanations.append("High-intensity regions in the scan suggest abnormal tissue structure.")
+            msg = f"AI Detected potential tumor features in {agent_result.get('lobe_location', 'Brain MRI')}."
+            explanations.append(msg)
+            explanations.append("High-intensity regions in the scan suggest abnormal tissue structure.")
         elif agent_result and agent_result.get("prediction") == "Healthy":
-             explanations.append("No significant tumor features detected in the MRI scan.")
+            explanations.append("No significant tumor features detected in the MRI scan.")
         else:
-             explanations.append("Analysis based on deep learning pattern recognition of MRI scan.")
+            explanations.append("Analysis based on deep learning pattern recognition of MRI scan.")
 
     elif disease == "Diabetes":
         if safe_patient.get("hba1c", 0) >= 6.5:

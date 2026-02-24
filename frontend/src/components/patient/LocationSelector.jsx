@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MapPin, Navigation, Search, CheckCircle } from 'lucide-react';
 
 const LocationSelector = ({ onLocationSelected }) => {

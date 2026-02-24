@@ -21,8 +21,8 @@ const DoctorDashboard = () => {
           const cons = await consultationService.getDoctorConsultations(dr.id);
           setConsultations(cons);
         }
-      } catch (err) {
-        console.error('Failed to fetch dashboard data', err);
+      } catch {
+        console.error('Failed to fetch dashboard data');
       } finally {
         setLoading(false);
       }
@@ -34,7 +34,7 @@ const DoctorDashboard = () => {
     try {
       await consultationService.updateStatus(id, status);
       setConsultations(consultations.map(c => c.id === id ? { ...c, status } : c));
-    } catch (err) {
+    } catch {
       alert('Failed to update status');
     }
   };

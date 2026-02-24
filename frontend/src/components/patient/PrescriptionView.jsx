@@ -1,6 +1,6 @@
 import React from 'react';
-import { FileText, Download, Share2, ShieldCheck, Printer, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { FileText, Download, ShieldCheck, Printer, Clock } from 'lucide-react';
+import { motion as Motion } from 'framer-motion';
 
 const PrescriptionView = ({ prescription }) => {
     if (!prescription) return null;
@@ -12,7 +12,7 @@ const PrescriptionView = ({ prescription }) => {
     });
 
     return (
-        <motion.div 
+        <Motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             className="enterprise-card h-full flex flex-col"
@@ -99,7 +99,7 @@ const PrescriptionView = ({ prescription }) => {
                     </div>
                 </div>
             </div>
-        </motion.div>
+        </Motion.div>
     );
 };
 

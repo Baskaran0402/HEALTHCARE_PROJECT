@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { doctorService } from '../../lib/api/doctors';
 import { consultationService } from '../../lib/api/consultations';
 import LocationSelector from '../../components/patient/LocationSelector';
@@ -17,21 +17,21 @@ const FindDoctors = () => {
   // Mock patient risk for demo purposes
   const patientRisk = 'Heart Disease'; 
 
-  const fetchDoctors = async () => {
+  const fetchDoctors = useCallback(async () => {
     setLoading(true);
     try {
       const data = await doctorService.searchDoctors({ specialization });
       setDoctors(data);
-    } catch (err) {
-      console.error('Failed to fetch doctors', err);
+    } catch (error) {
+      console.error('Failed to fetch doctors', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [specialization]);
 
   useEffect(() => {
     fetchDoctors();
-  }, []);
+  }, [fetchDoctors]);
 
   const handleRequest = async (doctorId) => {
     try {
@@ -44,7 +44,7 @@ const FindDoctors = () => {
       });
       setRequestSent(true);
       setTimeout(() => setRequestSent(false), 3000);
-    } catch (err) {
+    } catch {
       alert('Failed to send request');
     }
   };
