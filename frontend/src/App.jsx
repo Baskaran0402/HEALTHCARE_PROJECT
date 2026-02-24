@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import HomePage from './pages/HomePage'
 import ConsultationPage from './pages/ConsultationPage'
@@ -11,32 +12,55 @@ import './App.css'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import DoctorDashboard from './pages/doctor/Dashboard'
+import AdminDashboard from './pages/admin/AdminDashboard'
 import FindDoctors from './pages/patient/FindDoctors'
 
 import TelemedicineDashboard from './components/patient/TelemedicineDashboard'
 import PatientRecords from './pages/patient/Records'
-import PatientDashboard from './pages/PatientDashboard'
 
 function App() {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(JSON.parse(localStorage.getItem('user')));
+    };
+    window.addEventListener('storage', handleStorageChange);
+    // Custom event to trigger update in same window
+    window.addEventListener('authChange', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authChange', handleStorageChange);
+    };
+  }, []);
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/demo" element={<DemoPage />} />
-        <Route path="/consultation" element={<ConsultationPage />} />
-        <Route path="/find-doctors" element={<FindDoctors />} />
-        <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
-        <Route path="/patient/dashboard" element={<TelemedicineDashboard user={user} />} />
-        <Route path="/records/:patientId" element={<PatientRecords />} />
-        <Route path="/results" element={<ResultsPage />} />
-        <Route path="/dashboard/:patientId" element={<PatientDashboard />} />
-        <Route path="/brain-tumor" element={<BrainTumorPage />} />
-      </Routes>
-      <KiraChat />
+      <div className="app-main">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/demo" element={<DemoPage />} />
+          
+          {/* Clinical Contexts */}
+          <Route path="/consultation" element={<ConsultationPage />} />
+          <Route path="/results" element={<ResultsPage />} />
+          <Route path="/brain-tumor" element={<BrainTumorPage />} />
+          
+          {/* Dashboard Contexts */}
+          <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/patient/dashboard" element={<TelemedicineDashboard user={user} />} />
+          <Route path="/find-doctors" element={<FindDoctors />} />
+          <Route path="/records/:patientId" element={<PatientRecords />} />
+          
+          {/* Legacy/Redirects Mapping */}
+          <Route path="/dashboard/:patientId" element={<TelemedicineDashboard user={user} />} />
+        </Routes>
+        <KiraChat />
+      </div>
     </Router>
   )
 }

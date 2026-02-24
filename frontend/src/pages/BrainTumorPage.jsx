@@ -13,8 +13,9 @@ import {
   Zap,
   Eye
 } from "lucide-react";
-import axios from "axios";
+import apiClient from "../lib/api/client";
 import Anatomy3DViewer from "../components/Anatomy3DViewer";
+import Navbar from "../components/Navbar";
 import "./BrainTumorPage.css";
 
 const BrainTumorPage = () => {
@@ -64,8 +65,8 @@ const BrainTumorPage = () => {
     
     try {
       // Step 1: Upload and Analyze
-      const response = await axios.post(
-        `http://localhost:8000/api/analyze/brain-tumor?patient_name=${encodeURIComponent(patientData.name)}&age=${patientData.age}&gender=${patientData.gender}`,
+      const response = await apiClient.post(
+        `/api/analyze/brain-tumor?patient_name=${encodeURIComponent(patientData.name)}&age=${patientData.age}&gender=${patientData.gender}`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -81,6 +82,7 @@ const BrainTumorPage = () => {
 
   return (
     <div className="brain-tumor-container">
+      <Navbar />
       <header className="page-header">
         <div className="header-badge">Experimental Alpha</div>
         <h1>Advanced Neural Diagnostic Trial</h1>

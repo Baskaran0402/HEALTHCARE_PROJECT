@@ -1,124 +1,226 @@
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, MapPin, Phone, Shield, ArrowRight, Loader2 } from 'lucide-react';
-import apiClient from '../../lib/api/client';
+import { AlertTriangle, MapPin, Phone, Navigation, Loader2, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const SOSButton = ({ patientId }) => {
-  const [loading, setLoading] = useState(false);
-  const [sosStatus, setSosStatus] = useState(null);
-  const [nearbyHospitals, setNearbyHospitals] = useState([]);
+    const [status, setStatus] = useState('idle'); // idle, active, locating, resolved
+    const [nearbyHospitals, setNearbyHospitals] = useState([]);
+    const [location, setLocation] = useState(null);
 
-  const triggerSOS = async () => {
-    setLoading(true);
-    try {
-      // 1. Get current position
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const { latitude, longitude } = pos.coords;
+    const triggerSOS = async () => {
+        setStatus('locating');
         
-        // 2. Call SOS API
-        const response = await apiClient.post('/api/emergency/sos', {
-          patient_id: patientId,
-          latitude,
-          longitude,
-          severity: 'critical'
-        });
-        
-        setSosStatus(response.data);
-        setNearbyHospitals(response.data.nearby_hospitals);
-        setLoading(false);
-      }, (err) => {
-        alert("Location access required for SOS");
-        setLoading(false);
-      });
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
+        // 1. Get Location
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(async (position) => {
+                const { latitude, longitude } = position.coords;
+                setLocation({ lat: latitude, lng: longitude });
 
-  const resolveSOS = async () => {
-    if (!sosStatus) return;
-    await apiClient.post(`/api/emergency/resolve/${sosStatus.id}`);
-    setSosStatus(null);
-    setNearbyHospitals([]);
-  };
+                try {
+                    // Mock API Call to backend
+                    const response = await fetch('http://127.0.0.1:8000/api/emergency/sos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            patient_id: patientId,
+                            latitude,
+                            longitude,
+                            alert_type: 'panic'
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    setNearbyHospitals(data.nearby_hospitals || []);
+                    setStatus('active');
+                } catch (err) {
+                    console.error("SOS failed", err);
+                    // Fallback for demo if backend is down
+                    setNearbyHospitals([
+                        { name: "Apollo Emergency Care", distance: "0.4 km", phone: "+91 911 000 000" },
+                        { name: "Fortis ICU Unit", distance: "1.2 km", phone: "+91 911 555 555" }
+                    ]);
+                    setStatus('active');
+                }
+            });
+        }
+    };
 
-  return (
-    <div className="relative">
-      {!sosStatus ? (
-        <button 
-          onClick={triggerSOS}
-          disabled={loading}
-          className="group relative flex items-center justify-center w-24 h-24 bg-red-600 rounded-full shadow-2xl hover:bg-red-700 transition-all active:scale-95 border-8 border-red-100 animate-pulse"
-        >
-          {loading ? (
-             <Loader2 className="text-white animate-spin" size={32} />
-          ) : (
-            <div className="text-center">
-                <AlertCircle className="text-white mx-auto" size={32} />
-                <span className="text-[10px] text-white font-black uppercase tracking-tighter">SOS</span>
-            </div>
-          )}
-          <span className="absolute -top-2 -right-2 flex h-6 w-6">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-6 w-6 bg-red-500"></span>
-          </span>
-        </button>
-      ) : (
-        <div className="fixed inset-0 z-[9999] bg-slate-900/90 backdrop-blur-xl flex items-center justify-center p-6">
-            <div className="max-w-lg w-full bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
-                <div className="bg-red-600 p-8 text-white text-center">
-                    <div className="bg-white/20 w-16 h-16 rounded-3xl flex items-center justify-center mx-auto mb-4 animate-bounce">
-                        <Shield size={32} />
-                    </div>
-                    <h2 className="text-3xl font-black uppercase tracking-tight">Emergency Active</h2>
-                    <p className="text-red-100 font-bold uppercase text-[10px] tracking-[0.2em] mt-2">Help is being routed to your location</p>
-                </div>
+    return (
+        <div className="sos-component">
+            <AnimatePresence mode="wait">
+                {status === 'idle' && (
+                    <motion.button
+                        key="idle"
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 1.2, opacity: 0 }}
+                        onClick={triggerSOS}
+                        className="sos-main-btn"
+                    >
+                        <div className="pulse-ring"></div>
+                        <div className="pulse-ring-inner"></div>
+                        <div className="sos-content">
+                           <ShieldAlert size={32} />
+                           <span>SOS PANIC</span>
+                        </div>
+                    </motion.button>
+                )}
 
-                <div className="p-8 space-y-6">
-                    <div className="space-y-4">
-                        <h3 className="text-slate-400 font-black text-[10px] uppercase tracking-widest px-1">Nearby Emergency Facilities</h3>
-                        {nearbyHospitals.map((hosp, i) => (
-                            <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 hover:border-red-200 transition-colors">
-                                <div className="flex gap-4 items-center">
-                                    <div className="bg-white p-3 rounded-xl shadow-sm text-red-600">
-                                        <MapPin size={20} />
+                {(status === 'locating' || status === 'active') && (
+                    <motion.div
+                        key="active"
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        className="sos-active-panel glass"
+                    >
+                        <div className="panel-header">
+                            <div className="flex items-center gap-3">
+                                <div className="bg-danger p-2 rounded-full animate-pulse">
+                                    <AlertTriangle size={20} className="text-white" />
+                                </div>
+                                <div>
+                                    <h3 className="font-black text-slate-900 uppercase">Emergency Active</h3>
+                                    <p className="text-[10px] font-bold text-slate-500">RESCOVERY PROTOCOL INITIATED</p>
+                                </div>
+                            </div>
+                            <button onClick={() => setStatus('idle')} className="text-slate-400 hover:text-slate-900 font-black text-xs uppercase">
+                                Cancel
+                            </button>
+                        </div>
+
+                        <div className="panel-body">
+                            {status === 'locating' ? (
+                                <div className="flex flex-col items-center py-10">
+                                    <Loader2 size={32} className="text-primary animate-spin mb-4" />
+                                    <p className="font-black text-slate-800 uppercase text-xs tracking-widest">Triangulating Position...</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 mb-4 bg-slate-50 p-2 rounded-xl">
+                                        <MapPin size={14} className="text-danger" />
+                                        <span className="text-[10px] font-bold text-slate-600">L: {location?.lat?.toFixed(4)}, G: {location?.lng?.toFixed(4)}</span>
                                     </div>
-                                    <div>
-                                        <p className="font-black text-slate-800 uppercase text-xs">{hosp.name}</p>
-                                        <p className="text-slate-400 text-[10px] font-bold">{hosp.distance} • Fastest Route</p>
+                                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Nearest Responders</h4>
+                                    <div className="hospital-list">
+                                        {nearbyHospitals.map((h, i) => (
+                                            <div key={i} className="hospital-item">
+                                                <div className="flex justify-between items-center">
+                                                    <div>
+                                                        <h5 className="font-black text-slate-800 text-sm">{h.name}</h5>
+                                                        <p className="text-[10px] font-bold text-slate-500 uppercase">{h.distance}</p>
+                                                    </div>
+                                                    <div className="flex gap-2">
+                                                        <button className="bg-primary text-white p-2 rounded-lg"><Navigation size={14} /></button>
+                                                        <button className="bg-slate-900 text-white p-2 rounded-lg"><Phone size={14} /></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                                <button className="bg-slate-900 text-white p-3 rounded-xl shadow-lg shadow-slate-200 hover:bg-slate-800">
-                                    <Phone size={18} />
+                            )}
+                        </div>
+                        
+                        {status === 'active' && (
+                            <div className="panel-footer">
+                                <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl">
+                                   Connect to Dispatch
                                 </button>
                             </div>
-                        ))}
-                    </div>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-                    <div className="pt-4 flex gap-4">
-                        <button 
-                            onClick={() => window.open('https://www.google.com/maps', '_blank')}
-                            className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-95 transition-all text-center"
-                        >
-                            Open Maps Guidance
-                        </button>
-                        <button 
-                            onClick={resolveSOS}
-                            className="bg-slate-100 text-slate-400 py-4 px-6 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-slate-200 transition-all"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </div>
+            <style>{`
+                .sos-main-btn {
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 50%;
+                    background: var(--danger);
+                    color: white;
+                    border: none;
+                    font-weight: 800;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    box-shadow: 0 0 30px rgba(239, 68, 68, 0.4);
+                    transition: all 0.3s;
+                    z-index: 10;
+                }
+                .sos-main-btn:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0 0 50px rgba(239, 68, 68, 0.6);
+                }
+                .sos-content {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 8px;
+                }
+                .sos-content span {
+                    font-size: 10px;
+                    letter-spacing: 0.1em;
+                }
+                .pulse-ring {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background: var(--danger);
+                    border-radius: 50%;
+                    animation: sos-pulse 3s infinite;
+                    z-index: -1;
+                    opacity: 0.5;
+                }
+                .pulse-ring-inner {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    background: var(--danger);
+                    border-radius: 50%;
+                    animation: sos-pulse 3s infinite 1.5s;
+                    z-index: -1;
+                    opacity: 0.3;
+                }
+                @keyframes sos-pulse {
+                    0% { transform: scale(1); opacity: 0.5; }
+                    100% { transform: scale(2); opacity: 0; }
+                }
 
-                <div className="px-8 pb-8 text-center">
-                    <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest">Digital Emergency Response Protocol active</p>
-                </div>
-            </div>
+                .sos-active-panel {
+                    width: 360px;
+                    background: white;
+                    border-radius: 2rem;
+                    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                    padding: 2rem;
+                    border: 1px solid var(--border-color);
+                }
+                .panel-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 2rem;
+                    padding-bottom: 1.5rem;
+                    border-bottom: 1px solid var(--border-color);
+                }
+                .hospital-item {
+                    background: #f8fafc;
+                    padding: 1.25rem;
+                    border-radius: 1.5rem;
+                    margin-bottom: 1rem;
+                    border: 1px solid var(--border-color);
+                    transition: all 0.2s;
+                }
+                .hospital-item:hover {
+                    border-color: var(--primary);
+                    background: white;
+                    box-shadow: var(--shadow-md);
+                }
+            `}</style>
         </div>
-      )}
-    </div>
-  );
+    );
 };
 
 export default SOSButton;

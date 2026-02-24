@@ -1,88 +1,106 @@
 import React from 'react';
-import { FileText, Download, ShieldCheck, Calendar, User, Pill } from 'lucide-react';
+import { FileText, Download, Share2, ShieldCheck, Printer, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const PrescriptionView = ({ prescription }) => {
-  if (!prescription) return null;
+    if (!prescription) return null;
 
-  return (
-    <div className="bg-white rounded-[2rem] border-2 border-slate-50 shadow-xl overflow-hidden max-w-2xl mx-auto my-8 animate-in slide-in-from-bottom-8 duration-500">
-      <div className="bg-slate-900 p-10 text-white flex justify-between items-start">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <ShieldCheck size={18} />
-            </div>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Verified Digital Prescription</span>
-          </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter">Medical Rx</h2>
-          <p className="text-slate-400 text-xs font-bold mt-1">ID: {prescription.id?.substring(0,8).toUpperCase()}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-xs font-black uppercase text-slate-500 tracking-widest mb-1">Date Issued</p>
-          <p className="font-bold text-lg">{new Date(prescription.created_at).toLocaleDateString()}</p>
-        </div>
-      </div>
+    const formattedDate = new Date(prescription.created_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
 
-      <div className="p-10 space-y-8">
-        <div className="grid grid-cols-2 gap-8 border-b border-slate-50 pb-8">
-            <div className="space-y-1">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Issuing Specialist</p>
-                <div className="flex items-center gap-2">
-                    <User size={14} className="text-blue-600" />
-                    <p className="font-black text-slate-800 uppercase">Dr. {prescription.doctor_name || "Assigned Specialist"}</p>
+    return (
+        <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="enterprise-card h-full flex flex-col"
+            style={{ padding: '0', overflow: 'hidden' }}
+        >
+            {/* Header / Meta */}
+            <div className="bg-slate-50 border-b border-slate-100 p-6 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                    <div className="bg-primary text-white p-2 rounded-xl">
+                        <FileText size={20} />
+                    </div>
+                    <div>
+                        <h4 className="font-black text-slate-800 text-sm uppercase tracking-tight">Digital Prescription</h4>
+                        <p className="text-[10px] font-bold text-slate-500">{prescription.id} • Issued {formattedDate}</p>
+                    </div>
+                </div>
+                <div className="flex gap-2">
+                    <button className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-400">
+                        <Printer size={16} />
+                    </button>
+                    <button className="p-2 hover:bg-slate-200 rounded-lg transition-colors text-slate-400">
+                        <Download size={16} />
+                    </button>
                 </div>
             </div>
-            <div className="space-y-1">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Clinical Context</p>
-                <div className="flex items-center gap-2">
-                    <FileText size={14} className="text-slate-400" />
-                    <p className="font-bold text-slate-600">Post-Consultation Protocol</p>
-                </div>
-            </div>
-        </div>
 
-        <div className="space-y-6">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Prescribed Medication</h3>
-            <div className="space-y-4">
-                {prescription.medicines?.map((med, i) => (
-                    <div key={i} className="flex items-center justify-between p-6 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-all">
-                        <div className="flex gap-4 items-center">
-                            <div className="bg-white p-3 rounded-xl shadow-sm text-blue-600 group-hover:scale-110 transition-transform">
-                                <Pill size={24} />
+            {/* Scrollable Content */}
+            <div className="p-8 flex-1 overflow-y-auto space-y-8">
+                {/* Doctor Note */}
+                <div className="bg-primary-light p-5 rounded-2xl border border-blue-100 flex gap-4">
+                    <div className="text-primary mt-1">
+                        <Clock size={20} />
+                    </div>
+                    <div>
+                        <p className="text-xs font-black text-primary uppercase mb-1">Physician's Clinical Guidance</p>
+                        <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                            {prescription.notes}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Medicine List */}
+                <div className="space-y-4">
+                    <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Prescribed Medications</h5>
+                    <div className="space-y-3">
+                        {prescription.medicines.map((med, idx) => (
+                            <div key={idx} className="bg-white border border-slate-100 p-4 rounded-2xl flex justify-between items-center shadow-sm hover:border-primary/30 transition-colors">
+                                <div className="flex gap-4 items-center">
+                                    <div className="w-2 h-10 bg-primary/20 rounded-full"></div>
+                                    <div>
+                                        <h6 className="font-black text-slate-800 text-md">{med.name}</h6>
+                                        <p className="text-xs font-bold text-slate-500 uppercase">{med.dosage} • {med.duration}</p>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <span className="bg-slate-100 px-3 py-1 rounded-full text-[10px] font-black text-slate-600 uppercase">
+                                        {med.frequency}
+                                    </span>
+                                </div>
                             </div>
-                            <div>
-                                <p className="font-black text-slate-900 uppercase text-sm tracking-tight">{med.name}</p>
-                                <p className="text-slate-500 text-xs font-bold">{med.dosage} • {med.frequency}</p>
-                            </div>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Duration</p>
-                            <p className="font-black text-blue-600">{med.duration}</p>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Security Section */}
+                <div className="pt-6 border-t border-slate-100">
+                    <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl">
+                        <ShieldCheck className="text-success" size={24} />
+                        <div>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Cryptographic Attestation</p>
+                            <code className="text-[9px] text-slate-500 font-mono break-all opacity-60">
+                                {prescription.digital_signature}
+                            </code>
                         </div>
                     </div>
-                ))}
+                    <div className="mt-4 flex justify-between items-end">
+                        <div className="text-left">
+                            <p className="text-[10px] font-black text-slate-400 uppercase">Authorized Clinician</p>
+                            <p className="text-sm font-black text-slate-800">Dr. {prescription.doctor_name}</p>
+                        </div>
+                        <div className="text-right italic font-serif text-slate-400 opacity-50 text-xl">
+                            {prescription.doctor_name}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        {prescription.notes && (
-            <div className="bg-amber-50 p-6 rounded-2xl border border-amber-100 italic text-slate-600 text-sm font-medium leading-relaxed">
-                <p className="font-black uppercase text-[10px] tracking-widest text-amber-600 mb-2 not-italic">Doctor's Notes</p>
-                "{prescription.notes}"
-            </div>
-        )}
-
-        <div className="pt-8 border-t border-slate-100 flex justify-between items-center">
-            <div className="text-[10px] text-slate-400 font-bold max-w-xs">
-                This document is electronically signed and legally valid. Verification hash: {prescription.digital_signature?.substring(0,20)}...
-            </div>
-            <button className="bg-slate-900 text-white px-8 py-4 rounded-xl font-black uppercase text-xs tracking-widest flex items-center gap-2 hover:bg-blue-600 transition-all shadow-xl shadow-slate-200 active:scale-95">
-                <Download size={18} />
-                Export PDF
-            </button>
-        </div>
-      </div>
-    </div>
-  );
+        </motion.div>
+    );
 };
 
 export default PrescriptionView;

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import DocumentUpload from '../../components/patient/DocumentUpload';
 import DocumentList from '../../components/patient/DocumentList';
 import { ShieldCheck, Lock, Activity } from 'lucide-react';
+import Navbar from '../../components/Navbar';
 
 const PatientRecords = () => {
     // In a real app, this would be the logged-in user's profile ID
@@ -14,7 +15,9 @@ const PatientRecords = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 p-6">
+        <div className="records-page-wrapper">
+            <Navbar />
+            <div className="min-h-screen bg-slate-50 p-6 pt-32">
             <div className="max-w-6xl mx-auto space-y-8">
                 <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-200">
                     <div>
@@ -61,6 +64,7 @@ const PatientRecords = () => {
                     <div className="lg:col-span-2">
                         <DocumentList patientId={patientId || 'default_patient'} refreshTrigger={refreshTrigger} />
                     </div>
+                </div>
                 </div>
             </div>
         </div>

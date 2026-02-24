@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion' // eslint-disable-line no-unused-vars
 import { healthAPI } from '../services/api'
 import './ConsultationPage.css'
+import Navbar from '../components/Navbar'
 
 const ConsultationPage = () => {
   const location = useLocation()
@@ -166,6 +167,7 @@ const ConsultationPage = () => {
 
   return (
     <div className="consultation-page">
+      <Navbar />
 
       <div className="content-overlay">
         <div className="consultation-container">
