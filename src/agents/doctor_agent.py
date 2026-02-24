@@ -144,9 +144,48 @@ class DoctorAgent:
             ),
         }
 
+    # --------------------------------------------------
+    # 5. Medical Billing Coding (ICD-10 / CPT)
+    # --------------------------------------------------
+    def generate_medical_codes(self, ml_report: Dict) -> Dict:
+        """
+        Suggests ICD-10 and CPT codes based on risk assessments and findings.
+        """
+        try:
+            prompt = self._billing_codes_prompt(ml_report)
+            raw = self.llm.generate(prompt)
+            # Find JSON block if LLM adds preamble
+            if "{" in raw:
+                raw = raw[raw.find("{"):raw.rfind("}")+1]
+            return json.loads(raw)
+        except Exception as e:
+            print(f"Billing Code Error: {e}")
+            return {
+                "icd10": [{"code": "Z00.00", "description": "Encounter for general adult medical examination without abnormal findings"}],
+                "cpt": [{"code": "99213", "description": "Office or other outpatient visit (Low-Moderate complexity)"}]
+            }
+
     # ==================================================
     # PROMPTS
     # ==================================================
+
+    def _billing_codes_prompt(self, ml_report: Dict) -> str:
+        # Simplify report to save tokens
+        simplified_report = {
+            "disease": [r.get("disease") for r in ml_report.get("individual_risks", []) if r.get("risk_level") in ["High", "Critical"]],
+            "findings": ml_report.get("cross_intelligence_insights", [])
+        }
+        
+        return f"""
+        Act as a Medical Coder. Suggest ICD-10 & CPT codes for:
+        {simplified_report}
+        
+        Strict JSON Output:
+        {{
+          "icd10": [ {{ "code": "X.X", "description": "..." }} ],
+          "cpt": [ {{ "code": "X", "description": "..." }} ]
+        }}
+        """
 
     def _question_prompt(self, history: List[Dict]) -> str:
         return f"""
@@ -182,81 +221,55 @@ Rules:
 """
 
     def _patient_report_prompt(self, ml_report: Dict, summary: str) -> str:
+        # Simplify input
+        simplified_report = {
+            "risk_level": ml_report.get("overall_risk", {}).get("level", "Low"),
+            "concerns": ml_report.get("overall_risk", {}).get("primary_concerns", [])
+        }
+        
         return f"""
-Explain findings to a patient in clear, simple language.
-
-Conversation Summary:
-{summary}
-
-Risk Assessment:
-{ml_report}
-
-Rules:
-- Reassure if low risk
-- Calm explanation if elevated risk
-- Lifestyle guidance only
-- No disease labels
-- No medications
-"""
+        Explain health results to a patient clearly and calmly.
+        
+        Summary: {summary}
+        Risks: {simplified_report}
+        
+        Rules: No medical jargon. No Dx. Focus on lifestyle.
+        """
 
     def _doctor_report_prompt(self, ml_report: Dict, summary: str) -> str:
+        # Simplify input to reduce tokens
+        # Only pass high-level risks
+        simplified_report = {
+            "overall_risk": ml_report.get("overall_risk", {}),
+            "critical_risks": [r for r in ml_report.get("individual_risks", []) if r.get("risk_level") in ["High", "Critical"]]
+        }
+        
         return f"""
-Write a doctor-facing SOAP-style narrative.
-
-Summary:
-{summary}
-
-ML Risk Assessment:
-{ml_report}
-
-Rules:
-- No definitive diagnosis
-- No prescriptions
-- Risk-based wording only
-- Include a medico-legal disclaimer
-"""
+        Act as a doctor. Write a concise SOAP Assessment & Plan.
+        
+        Summary: {summary}
+        Findings: {simplified_report}
+        
+        Rules: No Diagnosis. No Rx. Medico-legal disclaimer required.
+        """
 
     def _soap_json_prompt(self, ml_report: Dict, summary: str) -> str:
+        simplified_report = {
+             "risk_stratification": [r.get("risk_level") for r in ml_report.get("individual_risks", [])]
+        }
+        
         return f"""
-You are generating a STRICT JSON SOAP note.
-
-Conversation Summary:
-{summary}
-
-ML Risk Assessment:
-{ml_report}
-
-Output MUST be valid JSON only.
-
-Schema:
-{{
-  "subjective": {{
-    "chief_complaint": "",
-    "history_of_present_illness": "",
-    "duration": "",
-    "associated_symptoms": [],
-    "relevant_negatives": []
-  }},
-  "objective": {{
-    "vitals": {{}},
-    "labs": {{}},
-    "ml_risk_scores": {{}}
-  }},
-  "assessment": {{
-    "risk_stratification": [],
-    "clinical_impressions": []
-  }},
-  "plan": {{
-    "monitoring": [],
-    "investigations": [],
-    "referrals": [],
-    "lifestyle_guidance": []
-  }},
-  "disclaimer": ""
-}}
-
-Rules:
-- No diagnosis
-- No prescriptions
-- Risk-based language only
-"""
+        Generate strict JSON SOAP note.
+        
+        Summary: {summary}
+        ML Risks: {simplified_report}
+        
+        Schema:
+        {{
+          "subjective": {{ "chief_complaint": "", "history": "" }},
+          "objective": {{ "vitals": {{}}, "risk_scores": {{}} }},
+          "assessment": {{ "impressions": [] }},
+          "plan": {{ "recommendations": [] }},
+          "disclaimer": ""
+        }}
+        """

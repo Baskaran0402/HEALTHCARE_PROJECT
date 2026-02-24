@@ -35,6 +35,9 @@ class PatientState:
         self.breathlessness = None
         self.fatigue = None
         self.edema = None
+        
+        # Imaging
+        self.mri_image_path = None
 
     def to_dict(self):
         return self.__dict__

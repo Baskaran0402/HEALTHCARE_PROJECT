@@ -5,6 +5,7 @@ from src.agents.doctor_agent import DoctorAgent
 from src.coordinator.executor import run_selected_agents
 from src.coordinator.patient_state import PatientState
 from src.core.llm_client import GeminiClient
+from backend.risk_calculators import calculate_framingham_risk
 
 
 class HealthAnalysisService:
@@ -80,6 +81,33 @@ class HealthAnalysisService:
         # 5. Run ML risk assessment
         ml_report = run_selected_agents(patient_state)
 
+        # 5.1 Calculate Clinical Benchmarks (Framingham)
+        framingham_result = calculate_framingham_risk(
+            gender=request.patient_data.gender,
+            age=request.patient_data.age,
+            total_cholesterol=request.medical_data.cholesterol or 200,
+            hdl_cholesterol=request.medical_data.hdl_cholesterol or 50,
+            systolic_bp=request.medical_data.blood_pressure or 120,
+            smoker=request.medical_data.smoking_status == "current",
+            diabetes=request.medical_data.diabetes,
+            on_hypertension_treatment=request.medical_data.hypertension # Proxy using diagnosis
+        )
+        
+        # Add to ml_report for LLM context
+        ml_report["clinical_benchmarks"] = {
+            "framingham_risk_score": framingham_result
+        }
+        
+        # Add to individual risks for frontend display
+        ml_report["individual_risks"].append({
+            "disease": "Framingham CHD Risk",
+            "risk_score": framingham_result["score"],
+            "risk_level": framingham_result["risk_category"],
+            "why": [f"10-Year Heart Disease Risk Estimate: {framingham_result['risk_percent']}"],
+            "clinical_impression": f"Patient has a {framingham_result['risk_category']} 10-year risk of Coronary Heart Disease based on Framingham Point Score ({framingham_result['score']}).",
+            "guidelines": ["Initiate lifestyle modifications" if framingham_result["risk_category"] != "Low" else "Maintain healthy lifestyle"]
+        })
+
         # 6. Generate comprehensive reports with enhanced explainability
         from src.agents.enhanced_report_generator import (
             generate_comprehensive_doctor_report,
@@ -108,6 +136,9 @@ class HealthAnalysisService:
             conversation_summary = self.doctor_agent.summarize_case(request.conversation_history)
 
         soap_json = self.doctor_agent.generate_soap_json(ml_report=ml_report, conversation_summary=conversation_summary)
+        
+        # New: Generate Medical Billing Codes
+        billing_codes = self.doctor_agent.generate_medical_codes(ml_report=ml_report)
 
         # 7. Create health assessment
         assessment_data = schemas.HealthAssessmentCreate(
@@ -120,6 +151,8 @@ class HealthAnalysisService:
             doctor_report=llm_reports.get("doctor_report"),
             soap_json=soap_json,
             conversation_summary=conversation_summary,
+            cross_intelligence_insights=ml_report.get("cross_intelligence_insights", []),
+            billing_codes=billing_codes
         )
         assessment = crud.create_health_assessment(self.db, assessment_data)
 
@@ -188,6 +221,9 @@ class HealthAnalysisService:
         # Symptoms
         patient_state.chest_pain = request.medical_data.chest_pain
         patient_state.breathlessness = request.medical_data.breathlessness
+        
+        # Imaging
+        patient_state.mri_image_path = request.medical_data.mri_image_path
         patient_state.fatigue = request.medical_data.fatigue
         patient_state.edema = request.medical_data.edema
 

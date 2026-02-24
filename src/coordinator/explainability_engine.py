@@ -1,9 +1,18 @@
-def explain_risk(disease, patient):
+def explain_risk(disease, patient, agent_result=None):
     # Ensure no None values exist for numerical comparisons
     safe_patient = {k: (v if v is not None else 0) for k, v in patient.items()}
     explanations = []
 
-    if disease == "Diabetes":
+    if disease == "Brain Tumor Detection":
+        if agent_result and agent_result.get("prediction") == "Brain Tumor":
+             explanations.append(f"AI Detected potential tumor features in {agent_result.get('lobe_location', 'Brain MRI')}.")
+             explanations.append("High-intensity regions in the scan suggest abnormal tissue structure.")
+        elif agent_result and agent_result.get("prediction") == "Healthy":
+             explanations.append("No significant tumor features detected in the MRI scan.")
+        else:
+             explanations.append("Analysis based on deep learning pattern recognition of MRI scan.")
+
+    elif disease == "Diabetes":
         if safe_patient.get("hba1c", 0) >= 6.5:
             explanations.append("Elevated HbA1c suggests poor long-term glucose control.")
         if safe_patient.get("blood_glucose", 0) >= 200:
