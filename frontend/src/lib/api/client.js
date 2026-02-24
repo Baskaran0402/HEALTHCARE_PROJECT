@@ -38,7 +38,7 @@ apiClient.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${access_token}`;
           
           return apiClient(originalRequest);
-        } catch (refreshError) {
+        } catch {
           localStorage.clear();
           window.location.href = '/login?session_expired=true';
         }

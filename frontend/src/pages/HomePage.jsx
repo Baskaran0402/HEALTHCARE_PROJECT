@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion as Motion } from 'framer-motion'
 import { 
   Brain, 
   Heart, 
@@ -40,7 +40,7 @@ const HomePage = () => {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-container">
-          <motion.div 
+          <Motion.div 
             className="hero-content"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -72,10 +72,10 @@ const HomePage = () => {
               </div>
               <span>HIPAA Compliant & SOC2 Type II Certified</span>
             </div>
-          </motion.div>
+          </Motion.div>
 
           {/* Hero Visual */}
-          <motion.div 
+          <Motion.div 
             className="hero-visual"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -103,7 +103,7 @@ const HomePage = () => {
                   <h3>0.04 Low</h3>
                </div>
             </div>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
@@ -114,7 +114,7 @@ const HomePage = () => {
           <p className="section-subtitle">A unified platform for patients, doctors, and institutions.</p>
         </div>
 
-        <motion.div 
+        <Motion.div 
           className="services-grid"
           variants={containerVariants}
           initial="hidden"
@@ -122,7 +122,7 @@ const HomePage = () => {
           viewport={{ once: true }}
         >
           {/* Predictive AI */}
-          <motion.div variants={itemVariants} className="service-card-premium" onClick={() => navigate('/consultation')}>
+          <Motion.div variants={itemVariants} className="service-card-premium" onClick={() => navigate('/consultation')}>
             <div className="sc-icon blue">
               <Brain size={24} />
             </div>
@@ -131,10 +131,10 @@ const HomePage = () => {
             <div className="sc-footer">
                <span>Launch Assessment</span> <ChevronRight size={16} />
             </div>
-          </motion.div>
+          </Motion.div>
 
           {/* Telemedicine */}
-          <motion.div variants={itemVariants} className="service-card-premium" onClick={() => navigate('/patient/dashboard')}>
+          <Motion.div variants={itemVariants} className="service-card-premium" onClick={() => navigate('/patient/dashboard')}>
             <div className="sc-icon indigo">
               <Video size={24} />
             </div>
@@ -143,10 +143,10 @@ const HomePage = () => {
             <div className="sc-footer">
                <span>Open Portal</span> <ChevronRight size={16} />
             </div>
-          </motion.div>
+          </Motion.div>
 
           {/* Emergency SOS */}
-          <motion.div variants={itemVariants} className="service-card-premium critical">
+          <Motion.div variants={itemVariants} className="service-card-premium critical">
             <div className="sc-icon red">
               <AlertCircle size={24} />
             </div>
@@ -155,10 +155,10 @@ const HomePage = () => {
             <div className="sc-footer">
                <span>Panic Protocol</span> <ChevronRight size={16} />
             </div>
-          </motion.div>
+          </Motion.div>
 
           {/* Brain MRI */}
-          <motion.div variants={itemVariants} className="service-card-premium" onClick={() => navigate('/brain-tumor')}>
+          <Motion.div variants={itemVariants} className="service-card-premium" onClick={() => navigate('/brain-tumor')}>
             <div className="sc-icon purple">
               <Brain size={24} />
             </div>
@@ -167,8 +167,8 @@ const HomePage = () => {
             <div className="sc-footer">
                <span>Open Radiology</span> <ChevronRight size={16} />
             </div>
-          </motion.div>
-        </motion.div>
+          </Motion.div>
+        </Motion.div>
       </section>
 
       {/* Trust & Safety Section */}

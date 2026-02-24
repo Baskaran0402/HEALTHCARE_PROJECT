@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Calendar, 
   Video, 
@@ -20,7 +20,7 @@ import {
   Plus,
   ArrowRight
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import PrescriptionView from './PrescriptionView';
 import SOSButton from '../emergency/SOSButton';
@@ -28,7 +28,7 @@ import './TelemedicineDashboard.css';
 
 const TelemedicineDashboard = ({ user }) => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [notifications, setNotifications] = useState(2);
+  const [notifications] = useState(2);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
@@ -137,7 +137,7 @@ const TelemedicineDashboard = ({ user }) => {
         {/* Dashboard Content */}
         <div className="content-container">
           <AnimatePresence mode="wait">
-            <motion.div 
+            <Motion.div 
               key={activeTab}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -227,7 +227,7 @@ const TelemedicineDashboard = ({ user }) => {
                    </div>
                 </div>
               )}
-            </motion.div>
+            </Motion.div>
           </AnimatePresence>
         </div>
       </main>

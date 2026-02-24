@@ -21,7 +21,7 @@ const BrainModel = ({ highlightLobe }) => {
 
   const activeColor = lobeColors[highlightLobe] || lobeColors.Default;
 
-  useFrame((state) => {
+  useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.005;
     }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FileText, Download, Trash2, Share2, Shield, Calendar, Tag, Lock } from 'lucide-react';
 import { documentService } from '../../lib/api/documents';
 
@@ -6,25 +6,25 @@ const DocumentList = ({ patientId, refreshTrigger }) => {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchDocs = async () => {
+  const fetchDocs = useCallback(async () => {
     try {
       const data = await documentService.getPatientDocuments(patientId);
       setDocuments(data);
-    } catch (err) {
-      console.error('Failed to fetch documents', err);
+    } catch (error) {
+      console.error('Failed to fetch documents', error);
     } finally {
       setLoading(false);
     }
-  };
+  }, [patientId]);
 
   useEffect(() => {
     fetchDocs();
-  }, [patientId, refreshTrigger]);
+  }, [fetchDocs, refreshTrigger]);
 
   const handleDownload = async (doc) => {
     try {
       await documentService.download(doc.id, doc.file_name);
-    } catch (err) {
+    } catch {
       alert('Download failed');
     }
   };
@@ -34,7 +34,7 @@ const DocumentList = ({ patientId, refreshTrigger }) => {
     try {
       await documentService.delete(id);
       setDocuments(documents.filter(d => d.id !== id));
-    } catch (err) {
+    } catch {
       alert('Delete failed');
     }
   };
