@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional, List, Dict, Any
+from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -208,7 +208,7 @@ def create_user(db: Session, user: schemas.UserCreate, hashed_password: str):
         hashed_password=hashed_password,
         # Default approval based on role for simplicity in demo
         # Patients are auto-approved, doctors/staff need admin review
-        is_approved=True if user.role == "patient" else False
+        is_approved=True if user.role == "patient" else False,
     )
     db.add(db_user)
     db.commit()
@@ -238,11 +238,15 @@ def create_session(db: Session, session_data: dict):
 
 
 def get_session_by_refresh_token(db: Session, refresh_token: str):
-    return db.query(models.UserSession).filter(
-        models.UserSession.refresh_token == refresh_token,
-        models.UserSession.is_active == True,
-        models.UserSession.expires_at > datetime.utcnow()
-    ).first()
+    return (
+        db.query(models.UserSession)
+        .filter(
+            models.UserSession.refresh_token == refresh_token,
+            models.UserSession.is_active.is_(True),
+            models.UserSession.expires_at > datetime.utcnow(),
+        )
+        .first()
+    )
 
 
 def revoke_session(db: Session, refresh_token: str):
@@ -274,7 +278,7 @@ def get_doctor_by_user_id(db: Session, user_id: str):
 
 
 def search_doctors(db: Session, specialization: Optional[str] = None, name: Optional[str] = None):
-    query = db.query(models.Doctor).filter(models.Doctor.is_verified == True)
+    query = db.query(models.Doctor).filter(models.Doctor.is_verified.is_(True))
     if specialization:
         query = query.filter(models.Doctor.specialization.ilike(f"%{specialization}%"))
     if name:
@@ -283,39 +287,35 @@ def search_doctors(db: Session, specialization: Optional[str] = None, name: Opti
 
 
 def search_nearby_doctors(
-    db: Session, 
-    lat: float, 
-    lng: float, 
-    radius_km: float = 10.0,
-    specialization: Optional[str] = None
+    db: Session, lat: float, lng: float, radius_km: float = 10.0, specialization: Optional[str] = None
 ):
     # This query uses Haversine formula for distance calculation in SQL
     # It calculates the distance between (lat, lng) and doctor's coordinates
-    
+
     # 6371 is the earth radius in KM
     distance_clause = f"""
         (6371 * acos(
-            cos(radians({lat})) * cos(radians(latitude)) * 
-            cos(radians(longitude) - radians({lng})) + 
+            cos(radians({lat})) * cos(radians(latitude)) *
+            cos(radians(longitude) - radians({lng})) +
             sin(radians({lat})) * sin(radians(latitude))
         ))
     """
-    
+
     query_str = f"""
         SELECT *, {distance_clause} AS distance
         FROM doctors
-        WHERE is_verified = TRUE 
+        WHERE is_verified = TRUE
         AND is_available = TRUE
-        AND latitude IS NOT NULL 
+        AND latitude IS NOT NULL
         AND longitude IS NOT NULL
     """
-    
+
     if specialization:
         query_str += f" AND specialization ILIKE '%{specialization}%'"
-        
+
     query_str += f" AND {distance_clause} <= {radius_km}"
     query_str += " ORDER BY distance ASC"
-    
+
     result = db.execute(models.text(query_str))
     # Convert result proxy to list of dicts/models
     doctors = []
@@ -354,16 +354,10 @@ def create_doctor_consultation(db: Session, consultation: schemas.DoctorConsulta
 
 
 def get_doctor_consultation(db: Session, consultation_id: str):
-    return (
-        db.query(models.DoctorConsultation)
-        .filter(models.DoctorConsultation.id == consultation_id)
-        .first()
-    )
+    return db.query(models.DoctorConsultation).filter(models.DoctorConsultation.id == consultation_id).first()
 
 
-def update_doctor_consultation(
-    db: Session, consultation_id: str, update: schemas.DoctorConsultationUpdate
-):
+def update_doctor_consultation(db: Session, consultation_id: str, update: schemas.DoctorConsultationUpdate):
     db_consultation = get_doctor_consultation(db, consultation_id)
     if db_consultation is None:
         return None
@@ -466,17 +460,11 @@ def create_payment(db: Session, payment: schemas.PaymentCreate):
     db_payment = models.Payment(**payment.model_dump())
     db.add(db_payment)
     # Update consultation status if payment succeeds
-    consultation = db.query(models.DoctorConsultation).filter(models.DoctorConsultation.id == payment.consultation_id).first()
+    consultation = (
+        db.query(models.DoctorConsultation).filter(models.DoctorConsultation.id == payment.consultation_id).first()
+    )
     if consultation:
         consultation.payment_status = "completed"
     db.commit()
     db.refresh(db_payment)
     return db_payment
-
-
-def create_audit_log(db: Session, audit_log: schemas.AuditLogCreate):
-    db_audit_log = models.AuditLog(**audit_log.model_dump())
-    db.add(db_audit_log)
-    db.commit()
-    db.refresh(db_audit_log)
-    return db_audit_log

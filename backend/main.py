@@ -1,18 +1,32 @@
-from typing import List, Optional
 import os
 import shutil
 import uuid
+from typing import List
 
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException, status, File, UploadFile, Form, WebSocket, WebSocketDisconnect
+from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
-from prometheus_fastapi_instrumentator import Instrumentator # APM
+from prometheus_fastapi_instrumentator import Instrumentator  # APM
 from sqlalchemy.orm import Session
 from starlette.responses import Response, StreamingResponse
 
 from backend import crud, models, schemas  # noqa: F401
 from backend.database import Base, engine, get_db
-from backend.routers import analytics, chat, auth as auth_router, doctors, human_consultations, messages, documents, organizations, emergency, payments, admin
+from backend.routers import (
+    admin,
+    analytics,
+)
+from backend.routers import auth as auth_router
+from backend.routers import (
+    chat,
+    doctors,
+    documents,
+    emergency,
+    human_consultations,
+    messages,
+    organizations,
+    payments,
+)
 from backend.services import HealthAnalysisService
 from backend.utils.pdf_generator import PDFReportGenerator
 from src.agents.heart_agent import generate_shap_plot

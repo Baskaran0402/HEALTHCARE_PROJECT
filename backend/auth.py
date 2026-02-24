@@ -2,12 +2,12 @@ import os
 from datetime import datetime, timedelta
 from typing import Optional
 
-from jose import JWTError, jwt
-from passlib.context import CryptContext
+from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 from sqlalchemy.orm import Session
-from dotenv import load_dotenv
 
 from backend import models, schemas
 from backend.database import get_db
@@ -54,8 +54,7 @@ def validate_organization_email(email: str, organization_domain: Optional[str] =
     domain = organization_domain or "svce.ac.in"
     if not email.endswith(f"@{domain}"):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Email must belong to the @{domain} domain."
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Email must belong to the @{domain} domain."
         )
 
 
@@ -70,14 +69,10 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
         user_id: str = payload.get("sub")
         if user_id is None or payload.get("type") != "access":
             raise credentials_exception
-        token_data = schemas.TokenData(
-            user_id=user_id, 
-            role=payload.get("role"),
-            organization_id=payload.get("org_id")
-        )
+        token_data = schemas.TokenData(user_id=user_id, role=payload.get("role"), organization_id=payload.get("org_id"))
     except JWTError:
         raise credentials_exception
-    
+
     user = db.query(models.User).filter(models.User.id == token_data.user_id).first()
     if user is None:
         raise credentials_exception
@@ -88,10 +83,7 @@ def get_current_active_user(current_user: models.User = Depends(get_current_user
     if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Account is deactivated")
     if not current_user.is_approved:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
-            detail="Account pending administrator approval"
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account pending administrator approval")
     return current_user
 
 
@@ -103,4 +95,5 @@ def check_role(roles: list):
                 detail="You do not have permission to access this resource",
             )
         return current_user
+
     return role_checker

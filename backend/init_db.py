@@ -4,7 +4,19 @@ Creates all tables in PostgreSQL database.
 """
 
 from backend.database import Base, engine
-from backend.models import User, Patient, Doctor, DoctorConsultation, Message, PatientDocument, DocumentAccessLog, Consultation, HealthAssessment, MedicalRecord, AuditLog # noqa: F401
+from backend.models import (  # noqa: F401
+    AuditLog,
+    Consultation,
+    Doctor,
+    DoctorConsultation,
+    DocumentAccessLog,
+    HealthAssessment,
+    MedicalRecord,
+    Message,
+    Patient,
+    PatientDocument,
+    User,
+)
 
 
 def init_db():

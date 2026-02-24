@@ -13,22 +13,22 @@ class Organization(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(200), unique=True, nullable=False)
     organization_type = Column(String(50), nullable=False)  # hospital, clinic, diagnostic, research, etc.
-    
+
     email_domain = Column(String(100), nullable=True)  # e.g., svce.ac.in
     subdomain = Column(String(100), unique=True, nullable=True)
-    
+
     admin_email = Column(String(255), nullable=False)
     contact_phone = Column(String(20), nullable=True)
     address = Column(Text, nullable=True)
-    
+
     logo_url = Column(String(500), nullable=True)
     primary_color = Column(String(7), nullable=True)  # hex
-    
+
     is_verified = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
-    
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     # Relationships
     users = relationship("User", back_populates="organization")
 
@@ -41,25 +41,25 @@ class User(Base):
     username = Column(String(50), unique=True, nullable=False)
     email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
-    
+
     # role: super_admin, org_admin, doctor, nurse, patient, researcher
-    role = Column(String(50), nullable=False) 
-    
+    role = Column(String(50), nullable=False)
+
     first_name = Column(String(100), nullable=True)
     last_name = Column(String(100), nullable=True)
     phone = Column(String(20), nullable=True)
-    
+
     is_active = Column(Boolean, default=True)
     is_approved = Column(Boolean, default=False)
     approved_by = Column(String, nullable=True)
     approved_at = Column(DateTime(timezone=True), nullable=True)
-    
+
     two_factor_enabled = Column(Boolean, default=False)
     two_factor_secret = Column(String(500), nullable=True)
-    
+
     last_login = Column(DateTime(timezone=True), nullable=True)
     login_count = Column(Integer, default=0)
-    
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -75,19 +75,19 @@ class UserSession(Base):
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     user_id = Column(String, ForeignKey("users.id"), nullable=False)
-    
+
     access_token = Column(String(500), nullable=False, unique=True)
     refresh_token = Column(String(500), nullable=False, unique=True)
-    
+
     device_info = Column(JSON, nullable=True)
     ip_address = Column(String(45), nullable=True)
     user_agent = Column(Text, nullable=True)
-    
+
     is_active = Column(Boolean, default=True)
     expires_at = Column(DateTime(timezone=True), nullable=False)
-    
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     user = relationship("User", back_populates="sessions")
 
 
@@ -183,7 +183,9 @@ class Doctor(Base):
     # Relationships
     user = relationship("User", back_populates="doctor_profile")
     consultations = relationship("DoctorConsultation", back_populates="doctor")
-    verified_documents = relationship("PatientDocument", foreign_keys="[PatientDocument.verified_by]", back_populates="verifier")
+    verified_documents = relationship(
+        "PatientDocument", foreign_keys="[PatientDocument.verified_by]", back_populates="verifier"
+    )
 
 
 class PatientDocument(Base):
@@ -290,9 +292,9 @@ class Prescription(Base):
     medicines = Column(JSON, nullable=False)  # List of {name, dosage, frequency, duration}
     notes = Column(Text, nullable=True)
     digital_signature = Column(Text, nullable=True)  # Base64 or hash
-    
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     consultation = relationship("DoctorConsultation", back_populates="prescriptions")
 
 
@@ -301,16 +303,16 @@ class SOSAlert(Base):
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     patient_id = Column(String, ForeignKey("patients.id"), nullable=False)
-    
+
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     status = Column(String(50), default="active")  # active, responded, resolved
-    
+
     severity = Column(String(20), default="critical")
     detected_condition = Column(String(100), nullable=True)
-    
+
     nearby_hospitals = Column(JSON, default=list)  # Snapshotted nearest facilities
-    
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     resolved_at = Column(DateTime(timezone=True), nullable=True)
 
@@ -322,14 +324,14 @@ class Payment(Base):
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     consultation_id = Column(String, ForeignKey("doctor_consultations.id"), nullable=False)
-    
+
     amount = Column(Numeric(10, 2), nullable=False)
     currency = Column(String(10), default="USD")
     status = Column(String(50), default="pending")  # pending, completed, failed, refunded
-    
+
     transaction_id = Column(String(255), unique=True, nullable=True)
     payment_method = Column(String(50), nullable=True)  # razorpay, stripe, wallet
-    
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
@@ -411,7 +413,7 @@ class MedicalRecord(Base):
     breathlessness = Column(Boolean, default=False)
     fatigue = Column(Boolean, default=False)
     edema = Column(Boolean, default=False)
-    
+
     mri_image_path = Column(String(500), nullable=True)
 
     # Expanded Clinical Features

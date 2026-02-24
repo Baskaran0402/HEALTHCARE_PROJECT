@@ -156,13 +156,18 @@ class DoctorAgent:
             raw = self.llm.generate(prompt)
             # Find JSON block if LLM adds preamble
             if "{" in raw:
-                raw = raw[raw.find("{"):raw.rfind("}")+1]
+                raw = raw[raw.find("{") : raw.rfind("}") + 1]
             return json.loads(raw)
         except Exception as e:
             print(f"Billing Code Error: {e}")
             return {
-                "icd10": [{"code": "Z00.00", "description": "Encounter for general adult medical examination without abnormal findings"}],
-                "cpt": [{"code": "99213", "description": "Office or other outpatient visit (Low-Moderate complexity)"}]
+                "icd10": [
+                    {
+                        "code": "Z00.00",
+                        "description": "Encounter for general adult medical examination without abnormal findings",
+                    }
+                ],
+                "cpt": [{"code": "99213", "description": "Office or other outpatient visit (Low-Moderate complexity)"}],
             }
 
     # ==================================================
@@ -172,14 +177,18 @@ class DoctorAgent:
     def _billing_codes_prompt(self, ml_report: Dict) -> str:
         # Simplify report to save tokens
         simplified_report = {
-            "disease": [r.get("disease") for r in ml_report.get("individual_risks", []) if r.get("risk_level") in ["High", "Critical"]],
-            "findings": ml_report.get("cross_intelligence_insights", [])
+            "disease": [
+                r.get("disease")
+                for r in ml_report.get("individual_risks", [])
+                if r.get("risk_level") in ["High", "Critical"]
+            ],
+            "findings": ml_report.get("cross_intelligence_insights", []),
         }
-        
+
         return f"""
         Act as a Medical Coder. Suggest ICD-10 & CPT codes for:
         {simplified_report}
-        
+
         Strict JSON Output:
         {{
           "icd10": [ {{ "code": "X.X", "description": "..." }} ],
@@ -224,15 +233,15 @@ Rules:
         # Simplify input
         simplified_report = {
             "risk_level": ml_report.get("overall_risk", {}).get("level", "Low"),
-            "concerns": ml_report.get("overall_risk", {}).get("primary_concerns", [])
+            "concerns": ml_report.get("overall_risk", {}).get("primary_concerns", []),
         }
-        
+
         return f"""
         Explain health results to a patient clearly and calmly.
-        
+
         Summary: {summary}
         Risks: {simplified_report}
-        
+
         Rules: No medical jargon. No Dx. Focus on lifestyle.
         """
 
@@ -241,29 +250,31 @@ Rules:
         # Only pass high-level risks
         simplified_report = {
             "overall_risk": ml_report.get("overall_risk", {}),
-            "critical_risks": [r for r in ml_report.get("individual_risks", []) if r.get("risk_level") in ["High", "Critical"]]
+            "critical_risks": [
+                r for r in ml_report.get("individual_risks", []) if r.get("risk_level") in ["High", "Critical"]
+            ],
         }
-        
+
         return f"""
         Act as a doctor. Write a concise SOAP Assessment & Plan.
-        
+
         Summary: {summary}
         Findings: {simplified_report}
-        
+
         Rules: No Diagnosis. No Rx. Medico-legal disclaimer required.
         """
 
     def _soap_json_prompt(self, ml_report: Dict, summary: str) -> str:
         simplified_report = {
-             "risk_stratification": [r.get("risk_level") for r in ml_report.get("individual_risks", [])]
+            "risk_stratification": [r.get("risk_level") for r in ml_report.get("individual_risks", [])]
         }
-        
+
         return f"""
         Generate strict JSON SOAP note.
-        
+
         Summary: {summary}
         ML Risks: {simplified_report}
-        
+
         Schema:
         {{
           "subjective": {{ "chief_complaint": "", "history": "" }},

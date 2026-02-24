@@ -62,9 +62,9 @@ class MedicalRecordBase(BaseModel):
     breathlessness: bool = False
     fatigue: bool = False
     edema: bool = False
-    
+
     mri_image_path: Optional[str] = None
-    
+
     medication_history: Optional[List[str]] = []
     family_history: Optional[Dict[str, bool]] = {}
 
@@ -297,7 +297,7 @@ class DoctorBase(BaseModel):
     medical_license_number: str = Field(..., min_length=1, max_length=50)
     specialization: str = Field(..., min_length=1, max_length=100)
     sub_specializations: List[str] = []
-    
+
     # Location
     latitude: Optional[float] = None
     longitude: Optional[float] = None
@@ -436,7 +436,9 @@ class MessageResponse(MessageBase):
 
 
 class DocumentBase(BaseModel):
-    document_type: str = Field(..., pattern="^(lab_report|radiology|prescription|discharge|insurance|vaccination|other)$")
+    document_type: str = Field(
+        ..., pattern="^(lab_report|radiology|prescription|discharge|insurance|vaccination|other)$"
+    )
     title: str = Field(..., min_length=1, max_length=200)
     description: Optional[str] = None
     tags: List[str] = []
@@ -495,15 +497,6 @@ class DocumentAccessLogResponse(BaseModel):
         from_attributes = True
 
 
-class AuditLogCreate(BaseModel):
-    event_type: str
-    entity_type: str
-    entity_id: str
-    user_role: Optional[str] = None
-    ip_address: Optional[str] = None
-    event_data: Optional[Dict[str, Any]] = None
-
-
 class AuditLogResponse(AuditLogCreate):
     id: str
     created_at: datetime
@@ -516,22 +509,25 @@ class AuditLogResponse(AuditLogCreate):
 # Prescription Schemas
 # ============================================================
 
+
 class PrescriptionBase(BaseModel):
     consultation_id: str
     medicines: List[Dict[str, Any]]
     notes: Optional[str] = None
     digital_signature: Optional[str] = None
 
+
 class PrescriptionCreate(PrescriptionBase):
     doctor_id: str
     patient_id: str
+
 
 class PrescriptionResponse(PrescriptionBase):
     id: str
     doctor_id: str
     patient_id: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
 
@@ -540,6 +536,7 @@ class PrescriptionResponse(PrescriptionBase):
 # Emergency SOS Schemas
 # ============================================================
 
+
 class SOSAlertBase(BaseModel):
     patient_id: str
     latitude: float
@@ -547,8 +544,10 @@ class SOSAlertBase(BaseModel):
     severity: str = "critical"
     detected_condition: Optional[str] = None
 
+
 class SOSAlertCreate(SOSAlertBase):
     nearby_hospitals: List[Dict[str, Any]] = []
+
 
 class SOSAlertResponse(SOSAlertBase):
     id: str
@@ -556,7 +555,7 @@ class SOSAlertResponse(SOSAlertBase):
     nearby_hospitals: List[Dict[str, Any]]
     created_at: datetime
     resolved_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
 
@@ -565,20 +564,23 @@ class SOSAlertResponse(SOSAlertBase):
 # Payment Schemas
 # ============================================================
 
+
 class PaymentBase(BaseModel):
     consultation_id: str
     amount: float
     currency: str = "USD"
     payment_method: Optional[str] = None
 
+
 class PaymentCreate(PaymentBase):
     transaction_id: Optional[str] = None
+
 
 class PaymentResponse(PaymentBase):
     id: str
     status: str
     transaction_id: Optional[str]
     created_at: datetime
-    
+
     class Config:
         from_attributes = True

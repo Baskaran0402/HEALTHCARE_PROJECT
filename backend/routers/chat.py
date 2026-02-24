@@ -1,8 +1,10 @@
+import logging
 from datetime import datetime
+
 from fastapi import APIRouter, HTTPException
+
 from backend import schemas
 from src.agents.kira_agent import KiraAgent
-import logging
 
 router = APIRouter(prefix="/api/chat", tags=["Kira Chat"])
 agent = KiraAgent()
