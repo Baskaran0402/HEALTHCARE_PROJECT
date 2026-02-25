@@ -5,7 +5,6 @@ Reads metrics from classification reports and evaluates them
 
 import os
 import json
-import numpy as np
 
 # Key metrics to verify
 def interpret_metrics():
