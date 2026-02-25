@@ -431,6 +431,8 @@ def _generate_investigation_recommendations(individual_risks: list) -> str:
                 investigations.append("• Liver function tests, hepatitis panel, liver ultrasound")
             if "Stroke" in disease:
                 investigations.append("• Carotid ultrasound, brain MRI/CT, lipid panel")
+            if "Brain Tumor" in disease:
+                investigations.append("• Contrast-enhanced MRI, neurosurgical consultation, neurological examination")
 
     if not investigations:
         investigations.append("• Routine health screening labs as per age and risk factors")

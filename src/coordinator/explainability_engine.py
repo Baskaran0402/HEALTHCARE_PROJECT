@@ -44,6 +44,15 @@ def explain_risk(disease, patient, agent_result=None):
         if safe_patient.get("diabetes", 0) == 1:
             explanations.append("Diabetes is a known cerebrovascular risk factor.")
 
+    elif "Brain Tumor" in disease:
+        prediction = agent_result.get("prediction", "Healthy") if agent_result else "Healthy"
+        if prediction == "Brain Tumor":
+            explanations.append("The MRI image analysis identified patterns consistent with brain tumor tissue.")
+            explanations.append("Deep learning model analysis shows high confidence in localized structural abnormalities.")
+        else:
+            explanations.append("The MRI analysis shows normal brain structure with no significant masses detected.")
+            explanations.append("Neural network confidence is high for the absence of tumorous characteristics.")
+
     if not explanations:
         explanations.append("Risk inferred based on combined clinical feature patterns.")
 

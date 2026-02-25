@@ -413,6 +413,7 @@ class MedicalRecord(Base):
     breathlessness = Column(Boolean, default=False)
     fatigue = Column(Boolean, default=False)
     edema = Column(Boolean, default=False)
+    mri_image_path = Column(String, nullable=True)
 
     mri_image_path = Column(String(500), nullable=True)
 

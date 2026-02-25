@@ -24,4 +24,10 @@ GUIDELINES = {
         "Lifestyle modification",
         "Neurology consultation for high-risk cases",
     ],
+    "Brain Tumor Detection": [
+        "Immediate referral to a neurologist or neurosurgeon",
+        "Contrast-enhanced MRI for better visualization",
+        "Biopsy or surgical consultation may be necessary",
+        "Supportive care for symptoms like headaches or seizures",
+    ],
 }

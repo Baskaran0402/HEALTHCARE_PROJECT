@@ -35,9 +35,14 @@ class PatientState:
         self.breathlessness = None
         self.fatigue = None
         self.edema = None
+        self.mri_image_path = None
 
         # Imaging
         self.mri_image_path = None
 
     def to_dict(self):
-        return self.__dict__
+        """
+        Convert to dictionary, stripping None values to allow
+        adapters to use their defined defaults.
+        """
+        return {k: v for k, v in self.__dict__.items() if v is not None}

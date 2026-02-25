@@ -235,5 +235,6 @@ class HealthAnalysisService:
         patient_state.mri_image_path = request.medical_data.mri_image_path
         patient_state.fatigue = request.medical_data.fatigue
         patient_state.edema = request.medical_data.edema
+        patient_state.mri_image_path = request.medical_data.mri_image_path
 
         return patient_state
