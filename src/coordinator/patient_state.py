@@ -35,8 +35,6 @@ class PatientState:
         self.breathlessness = None
         self.fatigue = None
         self.edema = None
-        self.mri_image_path = None
-
         # Imaging
         self.mri_image_path = None
 
