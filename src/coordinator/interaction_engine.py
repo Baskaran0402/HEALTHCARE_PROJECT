@@ -18,6 +18,6 @@ INTERACTION_WARNINGS = {
     "Stroke": {"Oral Contraceptives": "May increase thrombotic risk in susceptible individuals."},
     "Brain Tumor Detection": {
         "Certain anticoagulants": "May increase risk of intratumoral hemorrhage.",
-        "Systemic corticosteroids": "Should be used cautiously and monitored for dosage tapering."
+        "Systemic corticosteroids": "Should be used cautiously and monitored for dosage tapering.",
     },
 }

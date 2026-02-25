@@ -1,5 +1,6 @@
-import os
 import base64
+import os
+
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
@@ -12,6 +13,7 @@ load_dotenv()
 _SECRET_KEY = os.getenv("ENCRYPTION_SECRET", "dev-secret-key-change-in-production")
 _SALT = os.getenv("ENCRYPTION_SALT", "default-salt")
 
+
 def _generate_key(secret: str, salt: str) -> bytes:
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
@@ -21,13 +23,16 @@ def _generate_key(secret: str, salt: str) -> bytes:
     )
     return base64.urlsafe_b64encode(kdf.derive(secret.encode()))
 
+
 FERNET_KEY = _generate_key(_SECRET_KEY, _SALT)
 cipher_suite = Fernet(FERNET_KEY)
+
 
 def encrypt_data(data: str) -> str:
     if not data:
         return data
     return cipher_suite.encrypt(data.encode()).decode()
+
 
 def decrypt_data(encrypted_data: str) -> str:
     if not encrypted_data:
@@ -35,4 +40,4 @@ def decrypt_data(encrypted_data: str) -> str:
     try:
         return cipher_suite.decrypt(encrypted_data.encode()).decode()
     except Exception:
-        return encrypted_data # Fallback for unencrypted data if any
+        return encrypted_data  # Fallback for unencrypted data if any

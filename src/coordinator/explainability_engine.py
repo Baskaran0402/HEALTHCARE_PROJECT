@@ -48,7 +48,9 @@ def explain_risk(disease, patient, agent_result=None):
         prediction = agent_result.get("prediction", "Healthy") if agent_result else "Healthy"
         if prediction == "Brain Tumor":
             explanations.append("The MRI image analysis identified patterns consistent with brain tumor tissue.")
-            explanations.append("Deep learning model analysis shows high confidence in localized structural abnormalities.")
+            explanations.append(
+                "Deep learning model analysis shows high confidence in localized structural abnormalities."
+            )
         else:
             explanations.append("The MRI analysis shows normal brain structure with no significant masses detected.")
             explanations.append("Neural network confidence is high for the absence of tumorous characteristics.")

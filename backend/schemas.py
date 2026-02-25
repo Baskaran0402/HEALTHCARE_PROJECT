@@ -64,8 +64,6 @@ class MedicalRecordBase(BaseModel):
     edema: bool = False
     mri_image_path: Optional[str] = None
 
-    mri_image_path: Optional[str] = None
-
     medication_history: Optional[List[str]] = []
     family_history: Optional[Dict[str, bool]] = {}
 

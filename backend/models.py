@@ -4,11 +4,14 @@ from sqlalchemy import JSON, Boolean, Column, DateTime, Float, ForeignKey, Integ
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.types import TypeDecorator
+
 from backend.database import Base
-from backend.encryption import encrypt_data, decrypt_data
+from backend.encryption import decrypt_data, encrypt_data
+
 
 class EncryptedString(TypeDecorator):
     """Custom type for storing encrypted strings in the database"""
+
     impl = String
     cache_ok = True
 
@@ -21,18 +24,6 @@ class EncryptedString(TypeDecorator):
         if value is None:
             return value
         return decrypt_data(value)
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    username = Column(String(100), unique=True, nullable=False)
-    email = Column(String(255), unique=True, nullable=False)
-    hashed_password = Column(String(255), nullable=False)
-    full_name = Column(String(255), nullable=True)
-    role = Column(String(20), default="Doctor")  # Doctor, Admin
-    is_active = Column(Boolean, default=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class Organization(Base):
