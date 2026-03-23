@@ -119,13 +119,13 @@ const FindDoctors = () => {
           
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 mb-4 md:mb-10 border-b border-[#e8ede9] pb-8">
              <div className="text-center lg:text-left w-full lg:w-auto">
-                <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-[Syne]">
+                <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-syne">
                   REGISTRY DISCOVERY
                 </p>
-                <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-2">
+                <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-2">
                   Specialist <span className="text-[#0fd68c]">Nodes.</span>
                 </h1>
-                <p className="text-[#0a0a0f]/40 text-sm font-bold font-[DM_Sans] max-w-lg mx-auto lg:mx-0">
+                <p className="text-[#0a0a0f]/40 text-sm font-bold font-dm max-w-lg mx-auto lg:mx-0">
                    Schedule institutional consultations with clinical specialists across the decentralized network.
                 </p>
              </div>

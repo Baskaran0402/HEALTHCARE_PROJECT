@@ -127,12 +127,12 @@ const ResultsPage = () => {
              <div className="space-y-4">
                 <div className="flex items-center gap-3">
                    <ClinicalBadge variant="success">PROTOCOL FINALIZED</ClinicalBadge>
-                   <span className="text-[10px] font-black text-[#0a0a0f]/20 uppercase tracking-[0.2em] font-[Syne]">ID: REF_{result.consultation?.id?.split('-')[0].toUpperCase()}</span>
+                   <span className="text-[10px] font-black text-[#0a0a0f]/20 uppercase tracking-[0.2em] font-syne">ID: REF_{result.consultation?.id?.split('-')[0].toUpperCase()}</span>
                 </div>
-                <h1 className="font-[Syne] font-black text-4xl md:text-6xl text-[#0a0a0f] tracking-[-0.04em] leading-tight">
+                <h1 className="font-syne font-black text-4xl md:text-6xl text-[#0a0a0f] tracking-[-0.04em] leading-tight">
                   Diagnostic <span className="text-[#0fd68c]">Transcript.</span>
                 </h1>
-                <p className="text-[#0a0a0f]/45 text-sm md:text-lg max-w-2xl font-[DM_Sans] leading-relaxed">
+                <p className="text-[#0a0a0f]/45 text-sm md:text-lg max-w-2xl font-dm leading-relaxed">
                    Unified synthesis of clinical indicators, neural stratification, and risk assessment vectors from the AruviAI core.
                 </p>
              </div>
@@ -140,16 +140,15 @@ const ResultsPage = () => {
            
            <div className="flex items-center gap-3 w-full md:w-auto">
               {!isMobile && (
-                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all text-sm shadow-subtle cursor-pointer" style={{ border: '1px solid #e2e8f0' }}>
+                <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-all text-sm shadow-subtle cursor-pointer">
                   <Printer size={18} />
                   <span>Print</span>
                 </button>
               )}
-              <button 
+              <button
                 onClick={handleDownload}
                 disabled={loadingPdf}
-                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 gradient-brand text-white rounded-xl font-bold hover:opacity-90 transition-all text-sm shadow-glow disabled:opacity-50 cursor-pointer"
-                style={{ border: 'none' }}
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 px-8 py-3 gradient-brand text-white rounded-xl font-bold hover:opacity-90 transition-all text-sm shadow-glow disabled:opacity-50 cursor-pointer border-none"
               >
                 {loadingPdf ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
                 <span>Deploy Report</span>
@@ -293,11 +292,10 @@ const ResultsPage = () => {
                            <h4 className="text-lg md:text-xl font-black text-slate-900 font-display tracking-tight">Logic Decryption Required</h4>
                            <p className="text-xs md:text-sm text-slate-500 max-w-md font-medium leading-relaxed">Process raw biometric weights through the SHAP engine to visualize human-readable diagnostic reasoning.</p>
                         </div>
-                        <button 
+                        <button
                           onClick={fetchSHAP}
                           disabled={loadingShap}
                           className="px-8 md:px-10 py-3 md:py-4 bg-white border border-slate-200 text-slate-900 rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-slate-50 transition-all shadow-subtle flex items-center gap-3 disabled:opacity-50 cursor-pointer"
-                          style={{ border: '1px solid #e2e8f0' }}
                         >
                            {loadingShap ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} className="text-teal-600" />}
                            <span>Analyze Logic Strata</span>
@@ -386,7 +384,7 @@ const ResultsPage = () => {
                    <p className="text-[11px] md:text-xs text-slate-500 font-medium leading-[1.8] mb-6 md:mb-8">
                       High-precision volumetric MRI segmentation and sub-millimeter feature mapping integrated for the V5.0 cycle.
                    </p>
-                   <button onClick={() => navigate('/brain-tumor')} className="w-full py-3 bg-white border border-slate-200 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-teal-600 hover:border-teal-200 transition-all shadow-subtle cursor-pointer" style={{ border: '1px solid #e2e8f0' }}>Initialize Experimental Link</button>
+                   <button onClick={() => navigate('/brain-tumor')} className="w-full py-3 bg-white border border-slate-200 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-teal-600 hover:border-teal-200 transition-all shadow-subtle cursor-pointer">Initialize Experimental Link</button>
                 </ClinicalCard>
               </motion.div>
            </div>

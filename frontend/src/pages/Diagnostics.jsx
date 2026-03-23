@@ -21,8 +21,8 @@ const DiagnosticModule = ({ icon: Icon, title, description, path, color, badge, 
           {badge && <ClinicalBadge variant="primary" className="text-[9px] md:text-[10px]">{badge}</ClinicalBadge>}
         </div>
         
-        <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-3 md:mb-4 font-[Syne] tracking-tight">{title}</h3>
-        <p className="text-slate-500 text-sm md:text-base font-medium mb-8 md:mb-10 leading-relaxed line-clamp-3">
+        <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-3 md:mb-4 font-syne tracking-tight">{title}</h3>
+        <p className="text-slate-500 text-sm md:text-base font-medium mb-8 md:mb-10 leading-relaxed line-clamp-3 font-dm">
           {description}
         </p>
         
@@ -56,13 +56,13 @@ export default function Diagnostics() {
           className="space-y-12 md:space-y-16 pb-20 pt-6 md:pt-10"
         >
           <motion.div variants={item} className="mb-6 md:mb-10 text-center lg:text-left">
-             <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-[Syne]">
+             <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-syne">
                PLATFORM INTELLIGENCE
              </p>
-             <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-3">
+             <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-3">
                Diagnostic <span className="text-[#0fd68c]">Modules.</span>
              </h1>
-             <p className="text-[#0a0a0f]/45 text-sm md:text-base font-[DM_Sans] max-w-2xl leading-relaxed lg:mx-0 mx-auto">
+             <p className="text-[#0a0a0f]/45 text-sm md:text-base font-dm max-w-2xl leading-relaxed lg:mx-0 mx-auto">
                 Select an advanced AI diagnostic protocol to begin clinical assessment. Our engines are optimized for high-precision anatomical mapping and multi-disease stratification.
              </p>
           </motion.div>
@@ -104,10 +104,10 @@ export default function Diagnostics() {
               <div>
                  <div className="flex items-center justify-center lg:justify-start gap-4 mb-6 md:mb-8 text-teal-400">
                     <Zap size={24} className="animate-pulse" />
-                    <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Institutional Grade Layer</span>
+                    <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em] font-syne">Institutional Grade Layer</span>
                  </div>
-                 <h2 className="text-2xl md:text-5xl font-black mb-6 md:mb-8 font-[Syne] leading-[1.1] tracking-tight text-center lg:text-left">Secure Multi-Disease Cross-Intelligence.</h2>
-                 <p className="text-slate-400 text-sm md:text-xl font-medium leading-relaxed max-w-xl text-center lg:text-left mx-auto lg:mx-0">
+                 <h2 className="text-2xl md:text-5xl font-black mb-6 md:mb-8 font-syne leading-[1.1] tracking-tight text-center lg:text-left">Secure Multi-Disease Cross-Intelligence.</h2>
+                 <p className="text-slate-400 text-sm md:text-xl font-medium leading-relaxed max-w-xl text-center lg:text-left mx-auto lg:mx-0 font-dm">
                     Our platform simultaneously stratifies risk across 6+ clinical dimensions while maintaining strict HIPAA-compliant E2EE silos for all patient datasets.
                  </p>
               </div>

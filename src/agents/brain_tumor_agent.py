@@ -188,12 +188,13 @@ class BrainTumorAgent:
 
     def _get_risk_level(self, prediction, confidence):
         if prediction == "Healthy":
-            return "Low"
-        if confidence > 0.8:
+            if confidence > 0.95:
+                return "Low"
+            return "Moderate"  # Even if healthy, low confidence MRI needs follow-up
+
+        if confidence > 0.7:
             return "Critical"
-        if confidence > 0.5:
-            return "Moderate"
-        return "Low"
+        return "Moderate"
 
     def _get_functional_risks(self, lobe):
         risks = {
@@ -209,9 +210,17 @@ class BrainTumorAgent:
         return ["General intracranial pressure increase", "Neurological deficit"]
 
 
+# Global instance for singleton pattern
+_brain_tumor_agent_instance = None
+
+
 def brain_tumor_risk(patient_dict):
+    global _brain_tumor_agent_instance
     image_path = patient_dict.get("mri_image_path")
     if not image_path:
         return {"error": "No MRI image path provided"}
-    agent = BrainTumorAgent()
-    return agent.predict(image_path)
+
+    if _brain_tumor_agent_instance is None:
+        _brain_tumor_agent_instance = BrainTumorAgent()
+
+    return _brain_tumor_agent_instance.predict(image_path)

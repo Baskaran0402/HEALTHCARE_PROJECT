@@ -28,7 +28,7 @@ export const ToastProvider = ({ children }) => {
               initial={{ opacity: 0, x: 20, scale: 0.9 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className={`pointer-events-auto min-w-[320px] max-w-md bg-white rounded-2xl shadow-2xl border p-4 flex items-center gap-4 ${
+              className={`pointer-events-auto w-[calc(100vw-64px)] sm:w-auto sm:min-w-[320px] max-w-md bg-white rounded-2xl shadow-2xl border p-4 flex items-center gap-4 ${
                 toast.type === 'success' ? 'border-emerald-100 shadow-emerald-500/5' :
                 toast.type === 'error' ? 'border-red-100 shadow-red-500/5' :
                 toast.type === 'warning' ? 'border-amber-100 shadow-amber-500/5' :

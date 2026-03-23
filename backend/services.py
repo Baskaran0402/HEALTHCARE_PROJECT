@@ -220,43 +220,46 @@ class HealthAnalysisService:
         )
 
     def _convert_to_patient_state(self, request: schemas.AnalyzeHealthRequest) -> PatientState:
-        """Convert API request to PatientState for ML pipeline"""
+        """
+        Convert API request to PatientState for ML pipeline.
+        Applies safe fallback defaults ONLY for the ML model's requirement if values are missing,
+        ensuring the diagnostic pipeline continues functioning even with sparse data.
+        """
         patient_state = PatientState()
 
         # Demographics
         patient_state.age = request.patient_data.age
         patient_state.gender = 1 if request.patient_data.gender == "Male" else 0
 
-        # Vitals
-        patient_state.bmi = request.medical_data.bmi
-        patient_state.blood_pressure = request.medical_data.blood_pressure
+        # Vitals (Safe fallback defaults for ML agents)
+        patient_state.bmi = request.medical_data.bmi or 22.5
+        patient_state.blood_pressure = request.medical_data.blood_pressure or 120
 
-        # Labs
-        patient_state.blood_glucose = request.medical_data.blood_glucose
-        patient_state.hba1c = request.medical_data.hba1c
-        patient_state.cholesterol = request.medical_data.cholesterol
-        patient_state.creatinine = request.medical_data.creatinine
-        patient_state.urea = request.medical_data.urea
-        patient_state.bilirubin_total = request.medical_data.bilirubin_total
-        patient_state.alt = request.medical_data.alt
-        patient_state.ast = request.medical_data.ast
+        # Labs (Safe fallback defaults for ML agents)
+        patient_state.blood_glucose = request.medical_data.blood_glucose or 100.0
+        patient_state.hba1c = request.medical_data.hba1c or 5.4
+        patient_state.cholesterol = request.medical_data.cholesterol or 190.0
+        patient_state.creatinine = request.medical_data.creatinine or 1.0
+        patient_state.urea = request.medical_data.urea or 30.0
+        patient_state.bilirubin_total = request.medical_data.bilirubin_total or 0.8
+        patient_state.alt = request.medical_data.alt or 25.0
+        patient_state.ast = request.medical_data.ast or 25.0
 
-        # Medical History
-        patient_state.hypertension = int(request.medical_data.hypertension)
-        patient_state.diabetes = int(request.medical_data.diabetes)
-        patient_state.heart_disease = int(request.medical_data.heart_disease)
+        # Medical History (Default to False/0 if missing)
+        patient_state.hypertension = int(request.medical_data.hypertension) if request.medical_data.hypertension is not None else 0
+        patient_state.diabetes = int(request.medical_data.diabetes) if request.medical_data.diabetes is not None else 0
+        patient_state.heart_disease = int(request.medical_data.heart_disease) if request.medical_data.heart_disease is not None else 0
 
         # Lifestyle
-        patient_state.smoking_raw = request.medical_data.smoking_status
+        patient_state.smoking_raw = request.medical_data.smoking_status or "never"
 
         # Symptoms
         patient_state.chest_pain = request.medical_data.chest_pain
         patient_state.breathlessness = request.medical_data.breathlessness
-
-        # Imaging
-        patient_state.mri_image_path = request.medical_data.mri_image_path
         patient_state.fatigue = request.medical_data.fatigue
         patient_state.edema = request.medical_data.edema
+
+        # Imaging
         patient_state.mri_image_path = request.medical_data.mri_image_path
 
         return patient_state

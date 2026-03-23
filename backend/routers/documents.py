@@ -32,6 +32,16 @@ async def upload_document(
     if file.size > 10 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="File too large (max 10MB)")
 
+    # 1.5 Authorization: Check if current_user can upload for this patient
+    is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
+    is_patient_owner = (current_user.id == patient_id) or (
+        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == patient_id
+    )
+    is_assigned_doctor = current_user.role == "doctor" # Temporary broad doctor access for upload
+
+    if not (is_admin or is_patient_owner or is_assigned_doctor):
+        raise HTTPException(status_code=403, detail="Not authorized to upload documents for this patient")
+
     # 2. Security: Encryption
     file_key = generate_file_key()
     content = await file.read()
@@ -83,7 +93,26 @@ async def upload_document(
 def get_patient_documents(
     patient_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_active_user)
 ):
-    # Authorization check needed here (patient themselves or their doctor)
+    # Authorization check
+    is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
+    is_patient_owner = (current_user.id == patient_id) or (
+        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == patient_id
+    )
+
+    # If it's a doctor, they can only see documents explicitly shared with them
+    # OR if they have a privileged role (handled by is_admin)
+    if not (is_admin or is_patient_owner):
+        if current_user.role == "doctor":
+            doctor_id = current_user.doctor_profile.id if current_user.doctor_profile else current_user.id
+            docs = db.query(models.PatientDocument).filter(
+                models.PatientDocument.patient_id == patient_id,
+                models.PatientDocument.shared_with_doctor_id == doctor_id,
+                (models.PatientDocument.share_expires_at == None) | (models.PatientDocument.share_expires_at > datetime.now())
+            ).all()
+            return docs
+
+        raise HTTPException(status_code=403, detail="Not authorized to access these documents")
+
     docs = db.query(models.PatientDocument).filter(models.PatientDocument.patient_id == patient_id).all()
     return docs
 
@@ -95,6 +124,24 @@ def get_document(
     doc = db.query(models.PatientDocument).filter(models.PatientDocument.id == document_id).first()
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
+
+    # Authorization check
+    is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
+    is_patient_owner = (current_user.id == doc.patient_id) or (
+        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+    )
+
+    # Check if explicitly shared with this doctor
+    is_shared = False
+    if current_user.role == "doctor":
+        doctor_id = current_user.doctor_profile.id if current_user.doctor_profile else current_user.id
+        if doc.shared_with_doctor_id == doctor_id or doc.uploaded_by == current_user.id:
+            if doc.share_expires_at is None or doc.share_expires_at > datetime.now():
+                is_shared = True
+
+    if not (is_admin or is_patient_owner or is_shared):
+        raise HTTPException(status_code=403, detail="Not authorized to access this document")
+
     return doc
 
 
@@ -105,6 +152,22 @@ async def download_document(
     doc = db.query(models.PatientDocument).filter(models.PatientDocument.id == document_id).first()
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
+
+    # Authorization check
+    is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
+    is_patient_owner = (current_user.id == doc.patient_id) or (
+        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+    )
+
+    is_shared = False
+    if current_user.role == "doctor":
+        doctor_id = current_user.doctor_profile.id if current_user.doctor_profile else current_user.id
+        if doc.shared_with_doctor_id == doctor_id or doc.uploaded_by == current_user.id:
+            if doc.share_expires_at is None or doc.share_expires_at > datetime.now():
+                is_shared = True
+
+    if not (is_admin or is_patient_owner or is_shared):
+        raise HTTPException(status_code=403, detail="Not authorized to download this document")
 
     abs_path = os.path.join(STORAGE_BASE_DIR, doc.file_path)
     if not os.path.exists(abs_path):
@@ -138,7 +201,14 @@ def delete_document(
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
 
-    # Authorization: Usually only the owner (patient) can delete
+    # Authorization: Usually only the owner (patient) or privileged roles can delete
+    is_privileged = current_user.role in ["admin", "super_admin", "org_admin"]  # More restricted for deletion
+    is_patient = (current_user.id == doc.patient_id) or (
+        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+    )
+
+    if not (is_privileged or is_patient):
+        raise HTTPException(status_code=403, detail="Not authorized to delete this document")
 
     # Delete from storage
     abs_path = os.path.join(STORAGE_BASE_DIR, doc.file_path)
@@ -160,6 +230,15 @@ def share_document(
     doc = db.query(models.PatientDocument).filter(models.PatientDocument.id == document_id).first()
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
+
+    # Authorization: only the patient themselves or privileged roles
+    is_privileged = current_user.role in ["doctor", "admin", "super_admin", "institution", "org_admin"]
+    is_patient = (current_user.id == doc.patient_id) or (
+        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+    )
+
+    if not (is_privileged or is_patient):
+        raise HTTPException(status_code=403, detail="Not authorized to share this document")
 
     doc.shared_with_doctor_id = share_req.doctor_id
     doc.shared_at = datetime.now()

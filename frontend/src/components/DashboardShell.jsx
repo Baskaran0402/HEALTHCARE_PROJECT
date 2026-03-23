@@ -146,8 +146,8 @@ export function DashboardShell({ children, user }) {
               
               <div className="relative group hidden md:block">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#718096]" size={18} />
-                <input 
-                  className="bg-[#F0F6FE] border-none rounded-2xl py-2.5 pl-12 pr-4 text-sm font-medium text-[#000650] placeholder:text-[#718096]/50 w-80 focus:ring-2 focus:ring-[#000DB5]/10 outline-none transition-all"
+                <input
+                  className="bg-[#F0F6FE] border-none rounded-2xl py-2.5 pl-12 pr-4 text-sm font-medium text-[#000650] placeholder:text-[#718096]/50 w-full md:w-80 focus:ring-2 focus:ring-[#000DB5]/10 outline-none transition-all"
                   placeholder="Query medical records..."
                 />
               </div>

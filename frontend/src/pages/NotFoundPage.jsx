@@ -8,22 +8,12 @@ const NotFoundPage = () => {
     <main className="min-h-screen bg-white flex items-center justify-center relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div
-          className="absolute inset-0 opacity-30"
-          style={{ background: 'var(--mesh-gradient)' }}
-        />
+        <div className="absolute inset-0 opacity-30 bg-[var(--mesh-gradient)]" />
         <div className="absolute top-[-25%] right-[-15%] w-[800px] h-[800px] rounded-full blur-[120px] bg-teal-500/10" />
-        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[100px] bg-blue-500/5" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[100px] bg-blue-50/5" />
 
         {/* Grid */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: 'linear-gradient(hsl(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)',
-            backgroundSize: '4rem 4rem',
-            maskImage: 'radial-gradient(ellipse at center, black, transparent 80%)',
-          }}
-        />
+        <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(hsl(var(--primary))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary))_1px,transparent_1px)] bg-[length:4rem_4rem] [mask-image:radial-gradient(ellipse_at_center,black,transparent_80%)]" />
       </div>
 
       <div className="relative z-10 text-center px-6 max-w-2xl mx-auto">
@@ -59,7 +49,7 @@ const NotFoundPage = () => {
             </span>
           </div>
 
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 font-display tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 font-syne tracking-tight">
             This diagnostic pathway{' '}
             <span className="text-teal-600 italic">doesn't exist.</span>
           </h2>

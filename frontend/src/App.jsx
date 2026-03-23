@@ -60,11 +60,11 @@ const Unauthorized = () => (
       <div className="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-sm border border-red-100">
         <p className="text-4xl">🔒</p>
       </div>
-      <h1 className="font-[Syne] font-black text-3xl text-[#0a0a0f] mb-4 tracking-tight">Access Restricted</h1>
-      <p className="text-[#0a0a0f]/40 text-sm mb-10 leading-relaxed font-[DM_Sans]">
+      <h1 className="font-syne font-black text-3xl text-[#0a0a0f] mb-4 tracking-tight">Access Restricted</h1>
+      <p className="text-[#0a0a0f]/40 text-sm mb-10 leading-relaxed font-dm">
         Institutional credentials unauthorized for this clinical node.
       </p>
-      <a href="/dashboard" className="inline-block bg-[#0fd68c] text-[#060d0a] font-[Syne] font-bold px-8 py-3.5 rounded-xl text-xs uppercase tracking-widest hover:bg-[#0ab876] transition-all">
+      <a href="/dashboard" className="inline-block bg-[#0fd68c] text-[#060d0a] font-syne font-bold px-8 py-3.5 rounded-xl text-xs uppercase tracking-widest hover:bg-[#0ab876] transition-all">
         Return to Portal
       </a>
     </div>

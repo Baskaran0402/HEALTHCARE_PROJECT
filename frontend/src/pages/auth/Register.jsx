@@ -57,9 +57,9 @@ const Register = () => {
                          <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-lg">
                            <ShieldCheck size={20} />
                          </div>
-                         <span className="text-xl font-black font-display text-slate-900 tracking-tight">AruviAI.</span>
+                         <span className="text-xl font-black font-syne text-slate-900 tracking-tight">AruviAI.</span>
                       </div>
-                      <h1 className="text-5xl md:text-6xl font-black font-display text-slate-900 tracking-tighter leading-tight">
+                      <h1 className="text-5xl md:text-6xl font-black font-syne text-slate-900 tracking-tighter leading-tight">
                         Institutional <br /> <span className="text-teal-600">Onboarding.</span>
                       </h1>
                       <p className="text-slate-400 font-medium text-sm leading-relaxed max-w-md">
@@ -92,7 +92,7 @@ const Register = () => {
                       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                         <div>
                           <ClinicalBadge variant="neutral">New Subject Registration</ClinicalBadge>
-                          <h2 className="text-3xl font-black font-display text-slate-900 mt-4 tracking-tight">Identity Details</h2>
+                          <h2 className="text-3xl font-black font-syne text-slate-900 mt-4 tracking-tight">Identity Details</h2>
                         </div>
                         <div className="px-5 py-2.5 rounded-2xl bg-slate-50 border border-slate-100 flex items-center gap-3">
                            <div className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
@@ -157,11 +157,11 @@ const Register = () => {
                                onChange={handleChange}
                                required
                              />
-                              <div style={{marginBottom:'24px', gridColumn: 'span 2'}}>
-                                <label style={{color: 'rgba(10,10,15,0.45)', fontSize:'0.7rem', fontWeight: 700, textTransform:'uppercase',letterSpacing:'0.12em',display:'block',marginBottom:'12px', fontFamily: 'Syne'}}>
+                              <div className="mb-6 col-span-2">
+                                <label className="text-[#0a0a0f]/45 text-[0.7rem] font-bold uppercase tracking-[0.12em] block mb-3 font-syne">
                                   I am joining as
                                 </label>
-                                <div style={{display:'flex',flexDirection:'column',gap:'10px'}}>
+                                <div className="flex flex-col gap-[10px]">
                                   {[
                                     {
                                       value: 'patient',
@@ -195,27 +195,24 @@ const Register = () => {
                                       note: 'Master credentials detected'
                                     }] : [])
                                   ].map(r => (
-                                    <div key={r.value} onClick={() => setFormData({...formData, role: r.value})} style={{
-                                      display:'flex',alignItems:'center',gap:'12px',
-                                      padding:'14px 18px',borderRadius:'16px',cursor:'pointer',
-                                      border: formData.role === r.value ? `2px solid ${r.color}` : '2px solid #e8ede9',
-                                      background: formData.role === r.value ? `${r.color}08` : 'white',
-                                      transition:'all 0.2s',
-                                      position: 'relative'
-                                    }}>
-                                      <span style={{fontSize:'1.4rem',flexShrink:0}}>{r.icon}</span>
-                                      <div style={{flex:1}}>
-                                        <p style={{color: formData.role === r.value ? r.color : '#0a0a0f',fontFamily:'Syne',fontWeight:700,fontSize:'0.9rem',margin:0}}>{r.label}</p>
-                                        <p style={{color:'rgba(10,10,15,0.45)',fontSize:'0.75rem',margin:'2px 0 0'}}>{r.desc}</p>
-                                        {r.note && <p style={{color:`${r.color}`,fontSize:'0.65rem',fontWeight:600,margin:'4px 0 0', opacity: 0.8}}>⚠ {r.note}</p>}
+                                    <div key={r.value} onClick={() => setFormData({...formData, role: r.value})}
+                                      className={`flex items-center gap-3 p-[14px_18px] rounded-2xl cursor-pointer border-2 transition-all relative ${
+                                        formData.role === r.value ? 'bg-[#0fd68c]/5' : 'bg-white border-[#e8ede9]'
+                                      }`}
+                                      style={{ borderColor: formData.role === r.value ? r.color : '#e8ede9', backgroundColor: formData.role === r.value ? `${r.color}08` : 'white' }}
+                                    >
+                                      <span className="text-[1.4rem] shrink-0">{r.icon}</span>
+                                      <div className="flex-1">
+                                        <p className="font-syne font-bold text-[0.9rem] m-0" style={{ color: formData.role === r.value ? r.color : '#0a0a0f' }}>{r.label}</p>
+                                        <p className="text-[#0a0a0f]/45 text-[0.75rem] mt-[2px]">{r.desc}</p>
+                                        {r.note && <p className="text-[0.65rem] font-semibold mt-1 opacity-80" style={{ color: r.color }}>⚠ {r.note}</p>}
                                       </div>
-                                      <div style={{
-                                        width:'20px',height:'20px',borderRadius:'50%',flexShrink:0,
-                                        border: formData.role === r.value ? `2px solid ${r.color}` : '2px solid #e8ede9',
-                                        background: formData.role === r.value ? r.color : 'transparent',
-                                        display:'flex',alignItems:'center',justifyContent:'center'
-                                      }}>
-                                        {formData.role === r.value && <span style={{color:'white',fontSize:'0.65rem',fontWeight:'bold'}}>✓</span>}
+                                      <div className={`w-5 h-5 rounded-full shrink-0 border-2 flex items-center justify-center transition-all ${
+                                        formData.role === r.value ? '' : 'border-[#e8ede9] bg-transparent'
+                                      }`}
+                                      style={{ borderColor: formData.role === r.value ? r.color : '#e8ede9', backgroundColor: formData.role === r.value ? r.color : 'transparent' }}
+                                      >
+                                        {formData.role === r.value && <span className="text-white text-[0.65rem] font-bold">✓</span>}
                                       </div>
                                     </div>
                                   ))}

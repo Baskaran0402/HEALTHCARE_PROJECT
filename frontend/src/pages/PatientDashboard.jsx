@@ -53,7 +53,7 @@ const PatientDashboard = () => {
         <div className="w-24 h-24 rounded-[2.5rem] bg-red-50 flex items-center justify-center mx-auto mb-10 text-red-500 shadow-sm border border-red-100">
            <AlertCircle size={44} />
         </div>
-        <h2 className="font-[Syne] font-black text-4xl text-slate-800 mb-6 tracking-tight">Record Not Found.</h2>
+        <h2 className="font-syne font-black text-4xl text-slate-800 mb-6 tracking-tight">Record Not Found.</h2>
         <p className="text-slate-400 text-sm mb-12 max-w-sm mx-auto font-medium leading-relaxed uppercase tracking-widest">The requested clinical transcript could not be located across authorized institutional nodes.</p>
         <button className="h-14 px-10 bg-slate-900 text-teal-400 font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-teal-600 hover:text-white transition-all shadow-premium" onClick={() => navigate('/')}>Return to Hub</button>
       </div>
@@ -136,7 +136,7 @@ const PatientDashboard = () => {
                         <h3 className="font-black text-lg text-slate-800 uppercase tracking-tight">Systemic Risk Trend</h3>
                       </div>
                   </div>
-                  <div className="h-[300px] w-full" style={{ minHeight: '300px' }}>
+                  <div className="h-[300px] w-full min-h-[300px]">
                       <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                           <LineChart data={chartData}>
                               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />

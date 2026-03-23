@@ -82,14 +82,14 @@ export function AuthGate({ onAuthSuccess }) {
                <div className="w-10 h-10 rounded-xl bg-violet-600 flex items-center justify-center text-white shadow-xl shadow-violet-600/20">
                   <Activity size={24} />
                </div>
-               <span className="text-2xl font-bold tracking-tighter font-display">AruviAI</span>
+               <span className="text-2xl font-bold tracking-tighter font-syne">AruviAI</span>
             </div>
 
             <div className="mb-10">
-               <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2 font-display">
+               <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-2 font-syne">
                   {isLogin ? "Welcome back." : "Initialize Account."}
                </h1>
-               <p className="text-gray-500 font-medium">
+               <p className="text-gray-500 font-medium font-dm">
                   {isLogin ? "Authenticate your node and resume stratified diagnostics." : "Join the decentralized clinical intelligence protocol."}
                </p>
             </div>
@@ -185,10 +185,7 @@ export function AuthGate({ onAuthSuccess }) {
          <div className="absolute inset-0 z-0">
             <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-violet-100 rounded-full blur-[120px] opacity-40" />
             <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-100 rounded-full blur-[120px] opacity-40" />
-            <div className="absolute inset-0 opacity-[0.03]" style={{
-               backgroundImage: 'radial-gradient(#4f46e5 1.5px, transparent 0)',
-               backgroundSize: '40px 40px'
-            }} />
+            <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#4f46e5_1.5px,transparent_0)] bg-[length:40px_40px]" />
          </div>
 
          <motion.div 
@@ -204,8 +201,8 @@ export function AuthGate({ onAuthSuccess }) {
                         <Dna size={28} className="animate-pulse" />
                      </div>
                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 font-display italic">Project Overwatch</h3>
-                        <p className="text-xs font-bold text-violet-600 uppercase tracking-[0.2em]">Next-Gen Diagnostic OS</p>
+                        <h3 className="text-xl font-bold text-gray-900 font-syne italic">Project Overwatch</h3>
+                        <p className="text-xs font-bold text-violet-600 uppercase tracking-[0.2em] font-dm">Next-Gen Diagnostic OS</p>
                      </div>
                   </div>
                   <div className="space-y-4">

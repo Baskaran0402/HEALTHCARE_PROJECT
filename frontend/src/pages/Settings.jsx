@@ -35,13 +35,13 @@ export default function Settings() {
           
           {/* Header */}
           <div className="mb-8 md:mb-10 text-center lg:text-left">
-             <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-[Syne]">
+             <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-syne">
                NODE CONFIGURATION
              </p>
-             <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-3">
+             <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-3">
                System <span className="text-[#0fd68c]">Settings.</span>
              </h1>
-             <p className="text-[#0a0a0f]/45 text-sm md:text-base font-[DM_Sans] max-w-lg leading-relaxed lg:mx-0 mx-auto">
+             <p className="text-[#0a0a0f]/45 text-sm md:text-base font-dm max-w-lg leading-relaxed lg:mx-0 mx-auto">
                 Manage your institutional identity, security protocols, and operational preferences across the lattice.
              </p>
           </div>

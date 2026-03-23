@@ -107,7 +107,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F0F6FE]/30 flex font-inter">
+    <div className="min-h-screen bg-[#F0F6FE]/30 flex font-dm">
       {/* Benchling-Style Sidebar */}
       <AnimatePresence mode="wait">
         {(sidebarOpen || !isMobile) && (
@@ -123,8 +123,8 @@ const AdminDashboard = () => {
                   CP
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold tracking-tight font-outfit">AruviAI</h2>
-                  <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-0.5">Admin Protocol</p>
+                  <h2 className="text-xl font-bold tracking-tight font-syne">AruviAI</h2>
+                  <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-0.5 font-dm">Admin Protocol</p>
                 </div>
               </div>
             </div>
@@ -188,8 +188,8 @@ const AdminDashboard = () => {
               
               <div className="relative group hidden md:block">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#718096]" size={18} />
-                <input 
-                  className="bg-[#F0F6FE] border-none rounded-2xl py-2.5 pl-12 pr-4 text-sm font-medium text-[#000650] placeholder:text-[#718096]/50 w-96 focus:ring-2 focus:ring-[#000DB5]/10 outline-none transition-all"
+                <input
+                  className="bg-[#F0F6FE] border-none rounded-2xl py-2.5 pl-12 pr-4 text-sm font-medium text-[#000650] placeholder:text-[#718096]/50 w-full md:w-96 focus:ring-2 focus:ring-[#000DB5]/10 outline-none transition-all"
                   placeholder="Universal entity search..."
                 />
               </div>
@@ -229,11 +229,11 @@ const AdminDashboard = () => {
                       {activeTab === 'governance' && (
                          <>
                             <div className="mb-12 text-center lg:text-left">
-                               <p className="text-[0.65rem] uppercase tracking-[0.2em] text-[#0fd68c] font-bold mb-3 font-[Syne]">System Control</p>
-                               <h1 className="font-[Syne] font-black text-5xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-4">
+                               <p className="text-[0.65rem] uppercase tracking-[0.2em] text-[#0fd68c] font-bold mb-3 font-syne">System Control</p>
+                               <h1 className="font-syne font-black text-5xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-4">
                                   Lattice <span className="text-[#0fd68c]">Governance.</span>
                                </h1>
-                               <p className="text-[#0a0a0f]/45 text-base font-[DM_Sans] max-w-2xl leading-relaxed lg:mx-0 mx-auto">
+                               <p className="text-[#0a0a0f]/45 text-base font-dm max-w-2xl leading-relaxed lg:mx-0 mx-auto">
                                   High-fidelity oversight of global diagnostic nodes, practitioner credentials, and protocol compliance across the network.
                                </p>
                             </div>
@@ -362,8 +362,8 @@ const StatCard = ({ icon, label, value, trend }) => (
     </div>
     <p className="text-[10px] font-bold text-[#718096] uppercase tracking-widest mb-2">{label}</p>
     <div className="flex items-end justify-between">
-       <h2 className="text-4xl font-normal text-[#000650] tracking-tighter leading-none font-outfit">{value.toLocaleString()}</h2>
-       <span className="text-[10px] font-bold bg-[#F0F6FE] text-[#000DB5] px-2 py-1 rounded-lg border border-[#E1EBF9]">{trend}</span>
+       <h2 className="text-4xl font-normal text-[#000650] tracking-tighter leading-none font-syne">{value.toLocaleString()}</h2>
+       <span className="text-[10px] font-bold bg-[#F0F6FE] text-[#000DB5] px-2 py-1 rounded-lg border border-[#E1EBF9] font-dm">{trend}</span>
     </div>
   </div>
 );
@@ -416,8 +416,8 @@ const EntityTable = ({ users }) => (
   <div className="bg-white rounded-[2rem] border border-[#E1EBF9] shadow-sm overflow-hidden">
      <div className="px-10 py-8 border-b border-[#E1EBF9] flex flex-col md:flex-row items-center justify-between gap-6 bg-[#F0F6FE]/30">
         <div>
-           <h3 className="text-3xl font-normal text-[#000650] tracking-tight font-outfit">Personnel Management</h3>
-           <p className="text-[11px] font-bold text-[#718096] uppercase tracking-widest mt-1">Unified System Identity Repository</p>
+           <h3 className="text-3xl font-normal text-[#000650] tracking-tight font-syne">Personnel Management</h3>
+           <p className="text-[11px] font-bold text-[#718096] uppercase tracking-widest mt-1 font-dm">Unified System Identity Repository</p>
         </div>
         <div className="flex items-center gap-4 w-full md:w-auto">
            <div className="relative flex-grow">
@@ -485,8 +485,8 @@ const OrganizationGrid = ({ orgs }) => (
   <div className="space-y-12">
      <div className="flex flex-col md:flex-row items-center justify-between gap-8 mb-16 border-b border-[#E1EBF9] pb-12">
         <div>
-           <h3 className="text-3xl font-normal text-[#000650] tracking-tight font-outfit">Node Network Clusters</h3>
-           <p className="text-[11px] font-bold text-[#718096] uppercase tracking-widest mt-1">Federated Identity Hubs</p>
+           <h3 className="text-3xl font-normal text-[#000650] tracking-tight font-syne">Node Network Clusters</h3>
+           <p className="text-[11px] font-bold text-[#718096] uppercase tracking-widest mt-1 font-dm">Federated Identity Hubs</p>
         </div>
         <button className="btn-pill btn-pill-primary py-3 px-8 flex items-center gap-3">
            <Plus size={20} /> Provision New Hub
@@ -509,7 +509,7 @@ const OrganizationGrid = ({ orgs }) => (
               </div>
               
               <div className="mb-10">
-                 <h4 className="text-2xl font-bold text-[#000650] leading-none mb-3 group-hover:text-[#000DB5] transition-colors font-outfit">{org.name}</h4>
+                 <h4 className="text-2xl font-bold text-[#000650] leading-none mb-3 group-hover:text-[#000DB5] transition-colors font-syne">{org.name}</h4>
                  <div className="flex items-center gap-2">
                     <Database size={14} className="text-[#718096]" />
                     <p className="text-[11px] font-bold text-[#718096]/70 italic tracking-tight">@{org.email_domain}</p>
@@ -536,8 +536,8 @@ const SystemAuditTrail = () => (
   <div className="bg-white rounded-[3rem] border border-[#E1EBF9] shadow-sm p-12 relative overflow-hidden">
      <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8">
         <div>
-           <h3 className="text-3xl font-normal text-[#000650] tracking-tight font-outfit">Cryptographic Audit Ledger</h3>
-           <p className="text-[11px] font-bold text-[#718096] uppercase tracking-widest mt-1">Full-Spectrum System Event Traceability</p>
+           <h3 className="text-3xl font-normal text-[#000650] tracking-tight font-syne">Cryptographic Audit Ledger</h3>
+           <p className="text-[11px] font-bold text-[#718096] uppercase tracking-widest mt-1 font-dm">Full-Spectrum System Event Traceability</p>
         </div>
         <button className="btn-pill btn-pill-secondary py-3 px-8 flex items-center gap-3">
            <RefreshCw size={18} /> Re-verify Identity Sequence

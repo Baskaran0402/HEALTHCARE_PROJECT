@@ -86,10 +86,10 @@ const DoctorDashboard = () => {
            <div className="w-20 h-20 rounded-3xl bg-[#0fd68c]/10 flex items-center justify-center mx-auto text-[#0fd68c] mb-8">
               <Stethoscope size={40} />
            </div>
-           <h1 className="font-[Syne] font-black text-3xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em]">
+           <h1 className="font-syne font-black text-3xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em]">
               Practitioner Node <span className="text-[#0fd68c]">Inactive.</span>
            </h1>
-           <p className="text-[#0a0a0f]/45 font-[DM_Sans] text-sm md:text-base leading-relaxed">
+           <p className="text-[#0a0a0f]/45 font-dm text-sm md:text-base leading-relaxed">
               Professional verification credentials required to activate clinical terminal protocols.
            </p>
            <button className="h-12 px-8 bg-[#0fd68c] text-[#060d0a] font-black text-[10px] md:text-xs uppercase tracking-widest rounded-xl hover:bg-[#0dbb7a] transition-all flex items-center justify-center gap-2 mx-auto border-none cursor-pointer">
@@ -108,12 +108,12 @@ const DoctorDashboard = () => {
             <div className="max-w-2xl">
               <div className="flex items-center gap-2 mb-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0fd68c] animate-pulse" />
-                <p className="text-[0.65rem] uppercase tracking-[0.25em] text-[#0fd68c] font-bold font-[Syne]">
+                <p className="text-[0.65rem] uppercase tracking-[0.25em] text-[#0fd68c] font-bold font-syne">
                   TERMINAL ACTIVE • v4.0.2
                 </p>
               </div>
-              
-              <h1 className="font-[Syne] font-black text-5xl lg:text-7xl text-[#0a0a0f] tracking-[-0.05em] leading-[0.95] mb-8">
+
+              <h1 className="font-syne font-black text-5xl lg:text-7xl text-[#0a0a0f] tracking-[-0.05em] leading-[0.95] mb-8">
                 Welcome back, <br />
                 <span className="text-[#0fd68c]">Dr. {doctor.name.split(' ')[0]}.</span>
               </h1>
@@ -313,7 +313,7 @@ const StatProgress = ({ icon, label, value, color, status, alert }) => (
           )}
        </div>
     </div>
-    <div className="absolute bottom-0 left-0 h-1 transition-all group-hover:h-2 opacity-20" style={{ backgroundColor: color, width: '100%' }} />
+    <div className="absolute bottom-0 left-0 h-1 transition-all group-hover:h-2 opacity-20 w-full" style={{ backgroundColor: color }} />
   </div>
 );
 

@@ -67,7 +67,7 @@ const ReportCard = ({ report, idx, isMobile }) => {
                 <FileText size={22} />
              </div>
              <div>
-                <h3 className="text-lg font-black text-slate-800 group-hover:text-teal-700 transition-colors font-[Syne] leading-tight">{report.title}</h3>
+                <h3 className="text-lg font-black text-slate-800 group-hover:text-teal-700 transition-colors font-syne leading-tight">{report.title}</h3>
                 <div className="flex items-center gap-2 mt-1.5">
                    <Calendar size={12} className="text-slate-300" />
                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{report.date}</span>
@@ -94,10 +94,9 @@ const ReportCard = ({ report, idx, isMobile }) => {
            >
               <ExternalLink size={14} /> Open
            </button>
-           <button 
+           <button
              onClick={handleDownloadStub}
              className="w-11 h-11 flex items-center justify-center text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-xl transition-all border border-slate-100 cursor-pointer bg-white"
-             style={{ border: '1px solid #f1f5f9' }}
            >
               <Download size={18} />
            </button>
@@ -130,7 +129,7 @@ export default function Reports() {
             subtitle="Securely access and distribute verified diagnostic transcripts across the institutional lattice."
             actions={
               <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                <button className="flex-1 sm:flex-none px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-[10px] md:text-xs font-black text-slate-500 hover:text-slate-900 hover:border-teal-500/30 transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer" style={{ border: '1px solid #e2e8f0' }}>
+                <button className="flex-1 sm:flex-none px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-[10px] md:text-xs font-black text-slate-500 hover:text-slate-900 hover:border-teal-500/30 transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer">
                    <Database size={15} /> Data Cluster
                 </button>
                 <button className="flex-1 sm:flex-none px-5 py-2.5 bg-slate-900 text-teal-400 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-teal-600 hover:text-white transition-all flex items-center justify-center gap-2 shadow-premium border-none cursor-pointer">
@@ -180,7 +179,7 @@ export default function Reports() {
                     <ShieldCheck size={28} />
                     <span className="text-[10px] font-black uppercase tracking-[0.4em]">Governance Chain</span>
                  </div>
-                 <h2 className="text-2xl md:text-4xl font-black font-[Syne] tracking-tight text-white leading-tight">Cryptographic Verification.</h2>
+                 <h2 className="text-2xl md:text-4xl font-black font-syne tracking-tight text-white leading-tight">Cryptographic Verification.</h2>
                  <p className="text-slate-400 text-sm md:text-base font-medium max-w-md leading-relaxed mx-auto lg:mx-0">
                     All reports are hashed and signed using institutional private keys, ensuring immutable provenance within the eBpages Professional lattice.
                  </p>

@@ -42,14 +42,14 @@ export function Testimonials() {
   const t = testimonials[active];
 
   return (
-    <section style={{ padding: isMobile ? '60px 0' : '96px 0', background: 'white' }}>
+    <section className={`bg-white ${isMobile ? 'py-[60px]' : 'py-[96px]'}`}>
       <div className="section-container">
         {/* Section header — always centered */}
         <div className="text-center mb-14">
-          <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-[Syne]">
+          <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-syne">
             CLINICAL VALIDATION
           </p>
-          <h2 className="font-[Syne] font-black text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4 section-title">
+          <h2 className="font-syne font-black text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4 section-title">
             Trusted by <span className="text-[#0fd68c]">leading clinicians.</span>
           </h2>
         </div>
@@ -67,22 +67,22 @@ export function Testimonials() {
                 className="bg-[#f7f9f8] rounded-3xl p-8 md:p-14 relative border border-[#e8ede9]"
               >
                 <Quote className="absolute top-6 right-6 md:top-10 md:right-10 w-8 h-8 md:w-12 md:h-12 text-[#0fd68c]/10" />
-                
+
                 <div className="flex gap-1 mb-6 md:mb-8">
                   {[1,2,3,4,5].map(i => <Star key={i} size={14} className="fill-amber-400 text-amber-400" />)}
                 </div>
 
-                <p className="text-xl md:text-3xl font-[Syne] font-medium text-[#0a0a0f] leading-[1.4] mb-8 md:mb-12 tracking-tight">
+                <p className="text-xl md:text-3xl font-syne font-medium text-[#0a0a0f] leading-[1.4] mb-8 md:mb-12 tracking-tight">
                   "{t.text}"
                 </p>
 
                 <div className="flex items-center gap-4 md:gap-5">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-[#0a0a0f] rounded-2xl flex items-center justify-center text-[#0fd68c] font-black font-[Syne] text-base md:text-lg">
+                  <div className="w-12 h-12 md:w-14 md:h-14 bg-[#0a0a0f] rounded-2xl flex items-center justify-center text-[#0fd68c] font-black font-syne text-base md:text-lg">
                     {t.avatar}
                   </div>
                   <div>
-                    <h4 className="font-black font-[Syne] text-[#0a0a0f] text-base md:text-lg leading-tight">{t.name}</h4>
-                    <p className="text-[#0a0a0f]/40 text-[10px] md:text-sm font-[DM_Sans] mt-1">{t.title} • {t.org}</p>
+                    <h4 className="font-black font-syne text-[#0a0a0f] text-base md:text-lg leading-tight">{t.name}</h4>
+                    <p className="text-[#0a0a0f]/40 text-[10px] md:text-sm font-dm mt-1">{t.title} • {t.org}</p>
                   </div>
                 </div>
               </motion.div>
@@ -112,9 +112,9 @@ export function Testimonials() {
             <div className="space-y-8 bg-[#f7f9f8] p-8 rounded-3xl border border-[#e8ede9]">
               {sideStats.map((stat, i) => (
                 <div key={stat.label} className={i < sideStats.length - 1 ? "pb-8 border-b border-[#e8ede9]" : ""}>
-                  <p className="text-4xl font-black font-[Syne] text-[#0a0a0f] tracking-tighter mb-1">{stat.num}</p>
-                  <p className="text-[0.65rem] font-black font-[Syne] text-[#0fd68c] uppercase tracking-widest mb-2">{stat.label}</p>
-                  <p className="text-xs text-[#0a0a0f]/40 font-[DM_Sans] leading-relaxed">{stat.desc}</p>
+                  <p className="text-4xl font-black font-syne text-[#0a0a0f] tracking-tighter mb-1">{stat.num}</p>
+                  <p className="text-[0.65rem] font-black font-syne text-[#0fd68c] uppercase tracking-widest mb-2">{stat.label}</p>
+                  <p className="text-xs text-[#0a0a0f]/40 font-dm leading-relaxed">{stat.desc}</p>
                 </div>
               ))}
             </div>

@@ -9,11 +9,11 @@ export default function InstitutionHome() {
     <div className={`w-full max-w-7xl mx-auto ${isMobile ? 'px-4' : 'px-8'} py-10 md:py-12`}>
 
       <div className="text-center md:text-left mb-10">
-        <p className="text-[11px] md:text-[0.68rem] font-bold uppercase tracking-[0.15em] text-[#f59e0b] mb-2 font-[Syne]">INSTITUTION CONTROL</p>
-        <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.03em] leading-tight mb-2 uppercase">
+        <p className="text-[11px] md:text-[0.68rem] font-bold uppercase tracking-[0.15em] text-[#f59e0b] mb-2 font-syne">INSTITUTION CONTROL</p>
+        <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.03em] leading-tight mb-2 uppercase">
           Facility <span className="text-[#f59e0b]">Overview</span>
         </h1>
-        <p className="text-[#0a0a0f]/40 text-sm font-bold font-[DM_Sans] italic">
+        <p className="text-[#0a0a0f]/45 text-sm font-bold font-dm italic">
           Real-time population health intelligence across your institution.
         </p>
       </div>
@@ -27,9 +27,9 @@ export default function InstitutionHome() {
           {label:'Assessments Today', value:'156',   delta:'23% above average',color:'text-emerald-500'},
         ].map(k => (
           <div key={k.label} className="bg-white p-6 md:p-8 text-center md:text-left hover:bg-slate-50 transition-colors">
-            <p className={`font-[Syne] font-black text-3xl md:text-4xl ${k.color} mb-3 leading-none`}>{k.value}</p>
-            <p className="font-[Syne] font-black text-[11px] md:text-xs text-[#0a0a0f] mb-1 uppercase tracking-tight">{k.label}</p>
-            <p className="text-[9px] md:text-[10px] font-bold text-[#0a0a0f]/40 uppercase tracking-widest leading-none">{k.delta}</p>
+            <p className={`font-syne font-black text-3xl md:text-4xl ${k.color} mb-3 leading-none`}>{k.value}</p>
+            <p className="font-syne font-black text-[11px] md:text-xs text-[#0a0a0f] mb-1 uppercase tracking-tight">{k.label}</p>
+            <p className="text-[9px] md:text-[10px] font-bold text-[#0a0a0f]/40 uppercase tracking-widest leading-none font-dm">{k.delta}</p>
           </div>
         ))}
       </div>

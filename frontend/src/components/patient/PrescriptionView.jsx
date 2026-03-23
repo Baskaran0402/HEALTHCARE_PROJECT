@@ -12,11 +12,10 @@ const PrescriptionView = ({ prescription }) => {
     });
 
     return (
-        <Motion.div 
+        <Motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="enterprise-card h-full flex flex-col"
-            style={{ padding: '0', overflow: 'hidden' }}
+            className="enterprise-card h-full flex flex-col p-0 overflow-hidden"
         >
             {/* Header / Meta */}
             <div className="bg-slate-50 border-b border-slate-100 p-6 flex justify-between items-center">

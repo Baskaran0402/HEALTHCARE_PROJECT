@@ -13,7 +13,7 @@ export function Statistics() {
   const { isMobile } = useBreakpoint();
 
   return (
-    <section style={{ padding: isMobile ? '60px 0' : '96px 0', background: '#0a0a0f' }}>
+    <section className={`bg-[#0a0a0f] ${isMobile ? 'py-[60px]' : 'py-[96px]'}`}>
       <div className="section-container">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-12">
           {stats.map((stat, i) => (
@@ -25,10 +25,10 @@ export function Statistics() {
               transition={{ delay: i * 0.1, duration: 0.5 }}
               className={`text-center py-4 ${i < stats.length - 1 && !isMobile ? 'lg:border-r border-white/5' : ''}`}
             >
-              <p className="text-4xl md:text-5xl font-black font-[Syne] text-[#0fd68c] leading-none mb-3">
+              <p className="text-4xl md:text-5xl font-black font-syne text-[#0fd68c] leading-none mb-3">
                 {stat.number}
               </p>
-              <p className="text-[0.65rem] font-bold text-white/30 uppercase tracking-[0.2em] font-[DM_Sans]">
+              <p className="text-[0.65rem] font-bold text-white/30 uppercase tracking-[0.2em] font-dm">
                 {stat.label}
               </p>
             </motion.div>

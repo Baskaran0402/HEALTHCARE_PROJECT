@@ -49,19 +49,19 @@ export default function Analytics() {
           {/* Header */}
           <motion.div variants={item} className="mb-6 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 text-center md:text-left">
             <div className="w-full md:w-auto">
-              <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-bold mb-2 font-[Syne]">
+              <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-bold mb-2 font-syne">
                 SYSTEM ANALYTICS
               </p>
-              <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-2 uppercase">
+              <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-2 uppercase">
                 Matrix <span className="text-[#0fd68c]">Telemetry.</span>
               </h1>
-              <p className="text-[#0a0a0f]/40 text-xs md:text-sm font-bold font-[DM_Sans] max-w-lg mx-auto md:mx-0">
+              <p className="text-[#0a0a0f]/40 text-xs md:text-sm font-bold font-dm max-w-lg mx-auto md:mx-0">
                  Real-time visualization of clinical throughput and anomaly distribution across the institutional lattice.
               </p>
             </div>
-             
+
              <div className="flex items-center gap-3 w-full md:w-auto">
-                <button className="flex-1 md:flex-none px-6 py-3 bg-white border border-[#e8ede9] rounded-xl text-[10px] md:text-xs font-black text-slate-500 hover:text-slate-900 hover:border-[#0fd68c]/30 transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer" style={{ border: '1px solid #e8ede9' }}>
+                <button className="flex-1 md:flex-none px-6 py-3 bg-white border border-[#e8ede9] rounded-xl text-[10px] md:text-xs font-black text-slate-500 hover:text-slate-900 hover:border-[#0fd68c]/30 transition-all uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer">
                    <Download size={15} /> Export
                 </button>
                 <button className="flex-1 md:flex-none px-6 py-3 bg-slate-950 text-teal-400 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest hover:bg-teal-600 hover:text-white transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-premium">
@@ -199,7 +199,7 @@ export default function Analytics() {
                     <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Matrix Intelligence</span>
                  </div>
                  <h2 className="text-2xl md:text-4xl lg:text-5xl font-black font-display leading-tight tracking-tight uppercase">Advanced Custom Metrics.</h2>
-                 <p className="text-slate-400 text-sm md:text-lg font-bold max-w-xl leading-relaxed font-[DM_Sans]">
+                 <p className="text-slate-400 text-sm md:text-lg font-bold max-w-xl leading-relaxed font-dm">
                     Deploy customized telemetry listeners to track specific pathological biomarkers or institutional efficiency goals in real-time.
                  </p>
               </div>

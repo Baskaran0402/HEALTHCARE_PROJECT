@@ -79,10 +79,13 @@ const BrainTumorPage = () => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const queryParams = `?patient_name=${encodeURIComponent(patientData.name)}&age=${patientData.age}&gender=${patientData.gender}`;
-      const data = await consultationService.analyzeBrainTumor(formData, queryParams);
-      setResult(data); 
-      setFile(null); 
+      formData.append("patient_name", patientData.name);
+      formData.append("age", patientData.age);
+      formData.append("gender", patientData.gender);
+
+      const data = await consultationService.analyzeBrainTumor(formData);
+      setResult(data);
+      setFile(null);
     } catch (err) {
       console.error(err);
       setError(err.message || "Prediction system encountered an error. Please try again.");
@@ -116,13 +119,13 @@ const BrainTumorPage = () => {
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 md:space-y-12 pb-20 pt-6 md:pt-10">
           
           <motion.div variants={item} className="text-center mb-10 md:mb-16">
-            <p className="text-[11px] md:text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-black mb-3 font-[Syne]">
+            <p className="text-[11px] md:text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-black mb-3 font-syne">
               NEURAL DIAGNOSTIC
             </p>
-            <h1 className="font-[Syne] font-black text-2xl md:text-[2.6rem] text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4">
+            <h1 className="font-syne font-black text-2xl md:text-[2.6rem] text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4">
               Brain Tumor <span className="text-[#0fd68c]">Stratification.</span>
             </h1>
-            <p className="text-[#0a0a0f]/45 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-[DM_Sans]">
+            <p className="text-[#0a0a0f]/45 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-dm">
               EfficientNet-B0 optimized for sub-millimeter anatomical feature extraction and lobal localization.
             </p>
           </motion.div>
@@ -133,7 +136,7 @@ const BrainTumorPage = () => {
 
             {/* LEFT: Form panel */}
             <motion.div variants={item} className="bg-white rounded-2xl border border-[#e8ede9] p-6 shadow-sm">
-              <h3 className="font-[Syne] font-black text-sm mb-6 text-[#0a0a0f] uppercase tracking-wider">Subject Profile</h3>
+              <h3 className="font-syne font-black text-sm mb-6 text-[#0a0a0f] uppercase tracking-wider">Subject Profile</h3>
               <div className="space-y-5">
                 <div>
                   <label className="text-[10px] uppercase tracking-widest text-[#0a0a0f]/30 block mb-2 font-black">Clinician / Subject Name</label>
@@ -195,10 +198,10 @@ const BrainTumorPage = () => {
               
               {error && <p className="text-red-500 text-[9px] mt-4 font-black uppercase tracking-widest px-2 py-2 bg-red-50 rounded-lg">{error}</p>}
               
-              <button 
+              <button
                 onClick={runAnalysis}
                 disabled={loading}
-                className="w-full bg-[#0fd68c] text-[#060d0a] font-[Syne] font-black py-4 rounded-xl text-xs uppercase tracking-widest mt-6 hover:bg-[#0ab876] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale shadow-glow cursor-pointer border-none"
+                className="w-full bg-[#0fd68c] text-[#060d0a] font-syne font-black py-4 rounded-xl text-xs uppercase tracking-widest mt-6 hover:bg-[#0ab876] transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:grayscale shadow-glow cursor-pointer border-none"
               >
                 {loading ? <Loader2 className="animate-spin" size={18} /> : null}
                 {loading ? "Establishing Analysis Link..." : "Establish Analysis Link →"}
@@ -219,8 +222,8 @@ const BrainTumorPage = () => {
                     <div className="w-20 h-20 md:w-24 md:h-24 bg-slate-50 rounded-[2.5rem] flex items-center justify-center mb-8">
                       <Brain size={48} className="text-slate-200" />
                     </div>
-                    <h3 className="font-[Syne] font-black text-xl md:text-2xl text-[#0a0a0f] tracking-tight text-slate-800">Awaiting Signal Matrix</h3>
-                    <p className="text-sm text-[#0a0a0f]/40 mt-3 max-w-xs mx-auto font-bold font-[DM_Sans] leading-relaxed">
+                    <h3 className="font-syne font-black text-xl md:text-2xl text-[#0a0a0f] tracking-tight text-slate-800">Awaiting Signal Matrix</h3>
+                    <p className="text-sm text-[#0a0a0f]/40 mt-3 max-w-xs mx-auto font-bold font-dm leading-relaxed">
                       Please initiate subject profile and scan uplink to begin neural stratification.
                     </p>
                   </motion.div>
@@ -236,7 +239,7 @@ const BrainTumorPage = () => {
                     <div className="relative">
                       <div className="w-16 h-16 md:w-20 md:h-20 border-4 border-[#0fd68c]/10 border-t-[#0fd68c] rounded-full animate-spin" />
                     </div>
-                    <p className="font-[Syne] font-black text-lg md:text-xl text-[#0a0a0f] mt-8 tracking-tight">Analyzing Neural Patterns</p>
+                    <p className="font-syne font-black text-lg md:text-xl text-[#0a0a0f] mt-8 tracking-tight">Analyzing Neural Patterns</p>
                     <p className="text-xs md:text-sm text-[#0a0a0f]/40 mt-2 font-black uppercase tracking-widest">Running EfficientNet-B0 inference...</p>
                   </motion.div>
                 )}
@@ -254,7 +257,7 @@ const BrainTumorPage = () => {
                           <span className={`text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest ${tumorResult.risk_level === 'High' || tumorResult.risk_level === 'Critical' ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-[#f0fdf4] text-[#0fd68c] border border-[#0fd68c]/20'}`}>
                             {tumorResult.risk_level} Risk Level Active
                           </span>
-                          <h2 className="font-[Syne] font-black text-2xl md:text-[2rem] text-[#0a0a0f] mt-4 tracking-tighter leading-tight">Artificial Intelligence Transcript</h2>
+                          <h2 className="font-syne font-black text-2xl md:text-[2rem] text-[#0a0a0f] mt-4 tracking-tighter leading-tight">Artificial Intelligence Transcript</h2>
                         </div>
                         <div className="flex gap-2 shrink-0">
                           <button 
@@ -270,20 +273,20 @@ const BrainTumorPage = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                         <div className={`p-6 rounded-2xl border-l-[6px] shadow-sm flex flex-col justify-center ${tumorResult.prediction === 'Brain Tumor' ? 'bg-red-50/30 border-red-500' : 'bg-emerald-50/30 border-emerald-500'}`}>
                            <p className="text-[10px] font-black text-[#0a0a0f]/30 uppercase tracking-widest mb-3">Diagnostic Classifier Output</p>
-                           <h3 className="font-[Syne] font-black text-2xl md:text-3xl text-slate-900 leading-tight">{tumorResult.prediction || "Analysis Finalized"}</h3>
-                           <p className="text-xs md:text-sm text-slate-600 mt-6 leading-relaxed font-bold font-[DM_Sans] italic opacity-80">"{tumorResult.clinical_impression}"</p>
+                           <h3 className="font-syne font-black text-2xl md:text-3xl text-slate-900 leading-tight">{tumorResult.prediction || "Analysis Finalized"}</h3>
+                           <p className="text-xs md:text-sm text-slate-600 mt-6 leading-relaxed font-bold font-dm italic opacity-80">"{tumorResult.clinical_impression}"</p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="bg-slate-50/50 p-6 rounded-2xl border border-[#e8ede9] flex flex-col justify-center">
                             <p className="text-[9px] font-black text-[#0a0a0f]/30 uppercase tracking-widest mb-2">Internal Confidence</p>
-                            <p className="font-[Syne] font-black text-2xl md:text-3xl text-[#0fd68c]">
+                            <p className="font-syne font-black text-2xl md:text-3xl text-[#0fd68c]">
                               {tumorResult.confidence ? (tumorResult.confidence * 100).toFixed(1) : (tumorResult.risk_score || 0).toFixed(1)}%
                             </p>
                           </div>
                           <div className="bg-slate-50/50 p-6 rounded-2xl border border-[#e8ede9] flex flex-col justify-center">
                             <p className="text-[9px] font-black text-[#0a0a0f]/30 uppercase tracking-widest mb-2">Relative Risk Velocity</p>
-                            <p className={`font-[Syne] font-black text-2xl md:text-3xl ${tumorResult.risk_score > 70 ? 'text-red-500' : 'text-[#0fd68c]'}`}>{(tumorResult.risk_score || 0).toFixed(1)}%</p>
+                            <p className={`font-syne font-black text-2xl md:text-3xl ${tumorResult.risk_score > 70 ? 'text-red-500' : 'text-[#0fd68c]'}`}>{(tumorResult.risk_score || 0).toFixed(1)}%</p>
                           </div>
                         </div>
                       </div>
@@ -291,7 +294,7 @@ const BrainTumorPage = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                        <div className="bg-white rounded-2xl border border-[#e8ede9] p-6 shadow-subtle">
-                          <h4 className="font-[Syne] font-black text-[10px] uppercase tracking-[0.2em] text-[#0a0a0f]/40 mb-6 border-b border-slate-50 pb-3">Neural Attention Mapping (Grad-CAM)</h4>
+                          <h4 className="font-syne font-black text-[10px] uppercase tracking-[0.2em] text-[#0a0a0f]/40 mb-6 border-b border-slate-50 pb-3">Neural Attention Mapping (Grad-CAM)</h4>
                           <div className="aspect-square bg-slate-950 rounded-xl overflow-hidden relative border border-slate-900 shadow-inner group transition-all hover:border-[#0fd68c]/30">
                              {tumorResult.visual_explanation ? (
                                 <img src={`data:image/png;base64,${tumorResult.visual_explanation}`} alt="Grad-CAM" className="w-full h-full object-contain" />
@@ -301,7 +304,7 @@ const BrainTumorPage = () => {
                           </div>
                        </div>
                        <div className="bg-white rounded-2xl border border-[#e8ede9] p-6 shadow-subtle">
-                          <h4 className="font-[Syne] font-black text-[10px] uppercase tracking-[0.2em] text-[#0a0a0f]/40 mb-6 border-b border-slate-50 pb-3 text-right md:text-left">3D Anatomical Localization Matrix</h4>
+                          <h4 className="font-syne font-black text-[10px] uppercase tracking-[0.2em] text-[#0a0a0f]/40 mb-6 border-b border-slate-50 pb-3 text-right md:text-left">3D Anatomical Localization Matrix</h4>
                           <div className="aspect-square bg-slate-50 rounded-xl overflow-hidden relative border border-[#e8ede9] shadow-inner group transition-all hover:border-[#0fd68c]/30">
                              {tumorResult.anatomy_mapping ? (
                                 <Anatomy3DViewer highlightLobe={tumorResult.anatomy_mapping.lobe} />
@@ -332,10 +335,10 @@ const BrainTumorPage = () => {
                         <div className="space-y-6 text-center lg:text-left">
                            <div className="flex items-center justify-center lg:justify-start gap-4 text-[#0fd68c]">
                               <Cpu size={26} className="animate-pulse" />
-                              <p className="text-[11px] font-black uppercase tracking-[0.4em] font-[Syne]">Institutional Nodal Linkage Active</p>
+                              <p className="text-[11px] font-black uppercase tracking-[0.4em] font-syne">Institutional Nodal Linkage Active</p>
                            </div>
-                           <h4 className="text-3xl md:text-5xl font-black font-[Syne] tracking-tight leading-[0.95]">Clinical Escalation Protocol.</h4>
-                           <p className="text-sm md:text-lg text-slate-400 font-bold font-[DM_Sans] max-w-xl leading-relaxed opacity-80">
+                           <h4 className="text-3xl md:text-5xl font-black font-syne tracking-tight leading-[0.95]">Clinical Escalation Protocol.</h4>
+                           <p className="text-sm md:text-lg text-slate-400 font-bold font-dm max-w-xl leading-relaxed opacity-80">
                               Neural analysis is predictive. Radiological verification requires human-in-the-loop validation according to institutional standards. Connect with <strong className="text-white border-b-2 border-[#0fd68c]">Neurology Specialist Nodes</strong> for final clearance.
                            </p>
                         </div>

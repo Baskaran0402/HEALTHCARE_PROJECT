@@ -176,13 +176,13 @@ const ConsultationPage = () => {
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 md:space-y-12 pb-20">
           
           <motion.div variants={item} className="text-center mb-8 md:mb-16">
-            <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-[Syne]">
+            <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-syne">
               CLINICAL PROTOCOL V4.2
             </p>
-            <h1 className="font-[Syne] font-black text-2xl md:text-[2.6rem] text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4">
+            <h1 className="font-syne font-black text-2xl md:text-[2.6rem] text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4">
               High-Precision <span className="text-[#0fd68c]">Diagnostic Link.</span>
             </h1>
-            <p className="text-[#0a0a0f]/45 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-[DM_Sans]">
+            <p className="text-[#0a0a0f]/45 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-dm">
               Initialize a secure session. All telemetry is processed through institutional lattices with end-to-end encryption.
             </p>
           </motion.div>
@@ -211,12 +211,11 @@ const ConsultationPage = () => {
                         key={g}
                         type="button"
                         onClick={() => setFormData(p => ({...p, gender: g}))}
-                        className={`flex-1 py-3 md:py-4 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all cursor-pointer ${
-                          formData.gender === g 
-                            ? 'bg-teal-600 text-white shadow-glow' 
+                        className={`flex-1 py-3 md:py-4 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-all cursor-pointer border-none ${
+                          formData.gender === g
+                            ? 'bg-teal-600 text-white shadow-glow'
                             : 'bg-slate-100 text-slate-400 hover:bg-slate-200 hover:text-slate-600'
                         }`}
-                        style={{ border: 'none' }}
                       >
                         {g}
                       </button>
@@ -382,11 +381,10 @@ const ConsultationPage = () => {
               <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">Subject Telemetry Encryption V2 Active</span>
             </div>
             
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
-              className="w-full max-w-lg h-16 md:h-20 bg-slate-900 group hover:bg-teal-600 transition-all duration-500 rounded-2xl md:rounded-[2rem] flex items-center justify-center gap-4 md:gap-6 shadow-premium disabled:opacity-50 disabled:grayscale cursor-pointer"
-              style={{ border: 'none' }}
+              className="w-full max-w-lg h-16 md:h-20 bg-slate-900 group hover:bg-teal-600 transition-all duration-500 rounded-2xl md:rounded-[2rem] flex items-center justify-center gap-4 md:gap-6 shadow-premium disabled:opacity-50 disabled:grayscale cursor-pointer border-none"
             >
               {loading ? (
                 <div className="flex items-center gap-4">

@@ -4,7 +4,7 @@ import uuid
 from typing import List
 
 import uvicorn
-from fastapi import Depends, FastAPI, File, HTTPException, UploadFile, WebSocket, WebSocketDisconnect, status
+from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect, status
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator  # APM
 from sqlalchemy.orm import Session
@@ -294,9 +294,9 @@ async def analyze_health(request: schemas.AnalyzeHealthRequest, db: Session = De
 
 @app.post("/api/analyze/brain-tumor", response_model=schemas.AnalyzeHealthResponse, tags=["Analysis"])
 async def analyze_brain_tumor(
-    patient_name: str,
-    age: int,
-    gender: str,
+    patient_name: str = Form(...),
+    age: int = Form(...),
+    gender: str = Form(...),
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
@@ -319,23 +319,53 @@ async def analyze_brain_tumor(
         shutil.copyfileobj(file.file, buffer)
 
     # 2. Construct Analysis Request
-    # We map the inputs to the standard schema
+    # Heuristic lookup to avoid duplicate patient records
+    db_patient = None
+    all_potential_patients = db.query(models.Patient).filter(
+        models.Patient.age == age
+    ).all()
+
+    # Decrypt and compare names manually since name is an EncryptedString
+    for p in all_potential_patients:
+        if p.name == patient_name:
+            db_patient = p
+            break
+
+    existing_vitals = {}
+    patient_email = f"temp_{uuid.uuid4()}@example.com"
+    mrn = f"MRI-{uuid.uuid4().hex[:6]}"
+
+    if db_patient:
+        patient_email = db_patient.email
+        mrn = db_patient.medical_record_number or mrn
+        latest_record = crud.get_latest_medical_record(db, db_patient.id)
+        if latest_record:
+            # Fetch existing vitals from the latest record
+            # Only use fields defined in schemas.MedicalRecordBase
+            existing_vitals = {
+                "blood_pressure": latest_record.blood_pressure,
+                "cholesterol": latest_record.cholesterol,
+                "blood_glucose": latest_record.blood_glucose,
+                "hba1c": latest_record.hba1c,
+                "hdl_cholesterol": latest_record.hdl_cholesterol,
+                "bmi": latest_record.bmi,
+                "hypertension": latest_record.hypertension,
+                "diabetes": latest_record.diabetes,
+                "heart_disease": latest_record.heart_disease,
+                "smoking_status": latest_record.smoking_status,
+            }
+
     request = schemas.AnalyzeHealthRequest(
         patient_data=schemas.PatientCreate(
             name=patient_name,
             age=age,
             gender=gender,
-            email=f"temp_{uuid.uuid4()}@example.com",  # Temporary email
-            medical_record_number=f"MRI-{uuid.uuid4().hex[:6]}",
+            email=patient_email,
+            medical_record_number=mrn,
         ),
         medical_data=schemas.MedicalRecordBase(
             mri_image_path=abs_file_path,
-            # Defaults for fields not relevant to this specific trial
-            systolic_bp=120,
-            diastolic_bp=80,
-            heart_rate=72,
-            cholesterol_total=200,
-            blood_sugar_fasting=100,
+            **existing_vitals
         ),
         role="Doctor",
         conversation_history=[],

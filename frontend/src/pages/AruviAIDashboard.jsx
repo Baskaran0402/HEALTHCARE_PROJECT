@@ -32,31 +32,22 @@ export default function AruviAIDashboard() {
   const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.09 } } };
   const item = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { duration: 0.6 } } };
 
-  const inputStyle = {
-    fontFamily: "'DM Sans', sans-serif",
-    border: '1.5px solid #e0e8e4',
-    borderRadius: '10px',
-    padding: isMobile ? '12px 14px' : '14px 16px',
-    fontSize: '0.875rem',
-    outline: 'none',
-    width: '100%',
-    transition: 'border-color 0.2s, box-shadow 0.2s',
-  };
+  const inputClassName = `font-dm border-[1.5px] border-[#e0e8e4] rounded-[10px] ${isMobile ? 'px-[14px] py-[12px]' : 'px-4 py-[14px]'} text-sm outline-none w-full transition-all duration-200 focus:border-[#0fd68c] focus:ring-4 focus:ring-[#0fd68c]/10`;
 
   return (
     <AruviAILayout activeTab="Dashboard">
       <div className={`w-full max-w-7xl mx-auto ${isMobile ? 'px-4' : 'px-8'}`}>
         <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 md:space-y-10 pb-20 pt-6 md:pt-10">
- 
+
           {/* Page Header */}
           <motion.div variants={item} className="mb-6 md:mb-10 text-center lg:text-left">
-            <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-[Syne]">
+            <p className="text-[11px] md:text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black mb-2 font-syne">
               SYSTEM OVERVIEW
             </p>
-            <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight">
+            <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight">
               Clinical <span className="text-[#0fd68c]">Intelligence Center.</span>
             </h1>
-            <p className="text-[#0a0a0f]/40 text-sm mt-2 font-[DM_Sans] max-w-2xl mx-auto lg:mx-0">
+            <p className="text-[#0a0a0f]/40 text-sm mt-2 font-dm max-w-2xl mx-auto lg:mx-0">
               Monitoring live diagnostic telemetry and institutional throughput.
             </p>
           </motion.div>
@@ -75,14 +66,14 @@ export default function AruviAIDashboard() {
               <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-4 bg-slate-50">
                 <stat.icon size={20} className="text-[#0fd68c]" />
               </div>
-              <p className="text-[10px] uppercase tracking-widest mb-2 font-[DM_Sans] font-black text-slate-400">
+              <p className="text-[10px] uppercase tracking-widest mb-2 font-dm font-black text-slate-400">
                 {stat.label}
               </p>
               <div className="flex items-end gap-2">
-                <span className="font-[Syne] font-black text-2xl md:text-[1.75rem] text-slate-900 leading-none">
+                <span className="font-syne font-black text-2xl md:text-[1.75rem] text-slate-900 leading-none">
                   {stat.value}
                 </span>
-                <span className={`text-[10px] px-2 py-0.5 rounded-md mb-1 font-black font-[DM_Sans] ${
+                <span className={`text-[10px] px-2 py-0.5 rounded-md mb-1 font-black font-dm ${
                     stat.alert ? 'bg-red-50 text-red-500' : 'bg-teal-50 text-teal-600'
                   }`}>
                   {stat.trend}
@@ -97,10 +88,10 @@ export default function AruviAIDashboard() {
           <div className="rounded-2xl p-6 md:p-8 bg-white border border-slate-100 shadow-subtle">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
               <div>
-                <h3 className="font-[Syne] font-black text-lg md:text-xl text-slate-900">
+                <h3 className="font-syne font-black text-lg md:text-xl text-slate-900">
                   Throughput Velocity
                 </h3>
-                <p className="text-xs mt-1 font-[DM_Sans] font-medium text-slate-400">
+                <p className="text-xs mt-1 font-dm font-medium text-slate-400">
                   Live inference throughput
                 </p>
               </div>
@@ -125,30 +116,30 @@ export default function AruviAIDashboard() {
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis 
-                        dataKey="name" 
-                        axisLine={false} 
+                      <XAxis
+                        dataKey="name"
+                        axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} 
-                        dy={10} 
+                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}
+                        dy={10}
                       />
-                      <YAxis 
-                        axisLine={false} 
+                      <YAxis
+                        axisLine={false}
                         tickLine={false}
-                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }} 
+                        tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}
                       />
-                      <Tooltip 
+                      <Tooltip
                         contentStyle={{
-                          borderRadius: '16px', 
+                          borderRadius: '16px',
                           border: '1px solid #f1f5f9',
                           backgroundColor: 'rgba(255, 255, 255, 0.95)',
                           backdropFilter: 'blur(8px)',
-                          boxShadow: '0 12px 32px rgba(0,0,0,0.08)', 
+                          boxShadow: '0 12px 32px rgba(0,0,0,0.08)',
                           padding: '12px 16px',
-                          fontFamily: "'DM Sans', sans-serif", 
+                          fontFamily: "'DM Sans', sans-serif",
                           fontSize: '12px',
                           fontWeight: 700
-                        }} 
+                        }}
                       />
                       <Area type="monotone" dataKey="val" stroke="#0fd68c" strokeWidth={3}
                         fillOpacity={1} fill="url(#tealGrad)" animationDuration={2000} />
@@ -160,13 +151,13 @@ export default function AruviAIDashboard() {
 
         {/* Patient Form + MRI Upload + Result Panel */}
         <motion.div variants={item}>
-          <h2 className="mb-6 font-[Syne] font-black text-xl md:text-2xl text-slate-900 tracking-tight text-center lg:text-left">
+          <h2 className="mb-6 font-syne font-black text-xl md:text-2xl text-slate-900 tracking-tight text-center lg:text-left">
             New Assessment Protocol
           </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr_320px] gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1fr_1fr_320px] gap-6">
             {/* Form Inputs */}
             <div className="rounded-2xl p-6 md:p-8 bg-white space-y-4 border border-slate-100 shadow-subtle">
-              <h3 className="text-sm md:text-base font-[Syne] font-black text-slate-900 mb-6">
+              <h3 className="text-sm md:text-base font-syne font-black text-slate-900 mb-6">
                 Clinical Parameters
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -176,22 +167,20 @@ export default function AruviAIDashboard() {
                       {field}
                     </label>
                     <input type="text" placeholder={field}
-                      style={inputStyle}
-                      className="focus:border-[#0fd68c] focus:ring-4 focus:ring-[#0fd68c]/10"
+                      className={inputClassName}
                     />
                   </div>
                 ))}
               </div>
               <motion.button whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
-                className="w-full py-4 rounded-xl text-xs font-black uppercase tracking-widest mt-6 cursor-pointer border-none shadow-glow"
-                style={{ background: '#0fd68c', color: '#0a0a0f' }}>
+                className="w-full py-4 rounded-xl text-xs font-black uppercase tracking-widest mt-6 cursor-pointer border-none shadow-glow bg-[#0fd68c] text-[#0a0a0f]">
                 Run Full Diagnostic
               </motion.button>
             </div>
 
             {/* MRI Upload */}
             <div className="rounded-2xl p-6 md:p-8 bg-white border border-slate-100 shadow-subtle">
-              <h3 className="text-sm md:text-base font-[Syne] font-black text-slate-900 mb-6">
+              <h3 className="text-sm md:text-base font-syne font-black text-slate-900 mb-6">
                 Imaging Analysis
               </h3>
               <label
@@ -202,7 +191,7 @@ export default function AruviAIDashboard() {
                 <div className="w-16 h-16 rounded-2xl bg-white shadow-subtle flex items-center justify-center mb-6 text-[#0fd68c]">
                   <Upload size={32} />
                 </div>
-                <p className="text-sm font-black text-slate-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                <p className="text-sm font-black text-slate-900 font-dm">
                   {mriFile ? mriFile.name : 'Drop MRI Scan Here'}
                 </p>
                 <p className="text-[10px] uppercase font-bold mt-2 text-slate-400 tracking-widest">
@@ -211,8 +200,7 @@ export default function AruviAIDashboard() {
               </label>
               {mriFile && (
                 <motion.button whileHover={{ y: -2 }} whileTap={{ scale: 0.97 }}
-                  className="w-full py-4 rounded-xl text-xs font-black uppercase tracking-widest mt-6 cursor-pointer border-none shadow-premium transition-all"
-                  style={{ background: '#0a0a0f', color: '#0fd68c' }}>
+                  className="w-full py-4 rounded-xl text-xs font-black uppercase tracking-widest mt-6 cursor-pointer border-none shadow-premium transition-all bg-[#0a0a0f] text-[#0fd68c]">
                   Analyze Neural Scan
                 </motion.button>
               )}
@@ -223,7 +211,7 @@ export default function AruviAIDashboard() {
               <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center mb-6 text-slate-300">
                 <FileImage size={40} />
               </div>
-              <p className="text-sm font-bold text-slate-400 text-center leading-relaxed max-w-[200px]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <p className="text-sm font-bold text-slate-400 text-center leading-relaxed max-w-[200px] font-dm">
                 Results will appear here after neural analysis
               </p>
               <div className="mt-6 px-4 py-1.5 bg-slate-100 rounded-full">
@@ -236,21 +224,19 @@ export default function AruviAIDashboard() {
         {/* Recent Patients Table */}
         <motion.div variants={item}>
           <div className="rounded-2xl bg-white overflow-hidden border border-slate-100 shadow-subtle">
-            <div className="px-6 md:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-6"
-              style={{ borderBottom: '1px solid #f1f5f9' }}>
+            <div className="px-6 md:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-6 border-b border-slate-100">
               <div className="text-center sm:text-left">
-                <h3 className="font-[Syne] font-black text-lg md:text-xl text-slate-900">
+                <h3 className="font-syne font-black text-lg md:text-xl text-slate-900">
                   Recent Encounters
                 </h3>
-                <p className="text-xs mt-1 font-[DM_Sans] font-medium text-slate-400">
+                <p className="text-xs mt-1 font-dm font-medium text-slate-400">
                   Real-time diagnostic telemetry cluster
                 </p>
               </div>
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <div className="relative flex-1 sm:flex-none">
                   <input type="text" placeholder="Search records..."
-                    className="w-full sm:w-60 h-10 pl-10 pr-4 text-xs font-black rounded-xl outline-none bg-slate-50 transition-all border border-slate-200 focus:border-[#0fd68c] focus:ring-4 focus:ring-[#0fd68c]/5"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    className="w-full sm:w-60 h-10 pl-10 pr-4 text-xs font-black rounded-xl outline-none bg-slate-50 transition-all border border-slate-200 focus:border-[#0fd68c] focus:ring-4 focus:ring-[#0fd68c]/5 font-dm"
                   />
                   <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-300" />
                 </div>
@@ -265,8 +251,7 @@ export default function AruviAIDashboard() {
                 <thead>
                   <tr className="bg-slate-50/50">
                     {['Patient', 'Protocol', 'Date', 'Status', ''].map(h => (
-                      <th key={h} className={`px-6 md:px-8 py-5 text-[9px] md:text-[10px] uppercase font-black tracking-widest text-slate-400 ${h === '' ? 'text-right' : 'text-left'}`}
-                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      <th key={h} className={`px-6 md:px-8 py-5 text-[9px] md:text-[10px] uppercase font-black tracking-widest text-slate-400 ${h === '' ? 'text-right' : 'text-left'} font-dm`}>
                         {h}
                       </th>
                     ))}
@@ -282,31 +267,31 @@ export default function AruviAIDashboard() {
                     <tr key={i} className="transition-all hover:bg-slate-50/80 cursor-pointer">
                       <td className="px-6 md:px-8 py-5">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-[10px] bg-slate-900 text-[#0fd68c] font-black font-[Syne] shadow-constrained">
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-[10px] bg-slate-900 text-[#0fd68c] font-black font-syne shadow-constrained">
                             {row.name.split(' ').map(n => n[0]).join('')}
                           </div>
                           <div className="min-w-0">
-                            <p className="text-sm font-black text-slate-900 truncate" style={{ fontFamily: "'DM Sans', sans-serif" }}>{row.name}</p>
-                            <p className="text-[10px] font-black text-slate-300 tracking-widest truncate" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                            <p className="text-sm font-black text-slate-900 truncate font-dm">{row.name}</p>
+                            <p className="text-[10px] font-black text-slate-300 tracking-widest truncate font-mono">
                               {row.id}
                             </p>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 md:px-8 py-5">
-                        <span className="text-xs font-bold text-slate-500 whitespace-nowrap" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        <span className="text-xs font-bold text-slate-500 whitespace-nowrap font-dm">
                           {row.protocol}
                         </span>
                       </td>
                       <td className="px-6 md:px-8 py-5">
-                        <span className="text-xs font-black text-slate-900 whitespace-nowrap" style={{ fontFamily: "'JetBrains Mono', monospace" }}>
+                        <span className="text-xs font-black text-slate-900 whitespace-nowrap font-mono">
                           {row.date}
                         </span>
                       </td>
                       <td className="px-6 md:px-8 py-5">
                         <span className={`text-[9px] px-2.5 py-1 rounded-lg font-black uppercase tracking-widest whitespace-nowrap ${
-                            row.status === 'PENDING' ? 'bg-amber-50 text-amber-500' : 
-                            row.status === 'ACTIVE' ? 'bg-teal-50 text-teal-600' : 
+                            row.status === 'PENDING' ? 'bg-amber-50 text-amber-500' :
+                            row.status === 'ACTIVE' ? 'bg-teal-50 text-teal-600' :
                             'bg-slate-50 text-slate-400'
                           }`}>
                           {row.status}
@@ -334,10 +319,10 @@ export default function AruviAIDashboard() {
                 Aggregated <span className="text-slate-900">4</span> of 582 institutional entries
               </p>
               <div className="flex items-center gap-2">
-                <button className="px-4 py-2 text-[10px] font-black uppercase rounded-xl border border-slate-200 text-slate-300 hover:bg-white transition-all cursor-pointer" style={{ border: '1px solid #e2e8f0' }}>
+                <button className="px-4 py-2 text-[10px] font-black uppercase rounded-xl border border-slate-200 text-slate-300 hover:bg-white transition-all cursor-pointer">
                   Prev
                 </button>
-                <button className="px-4 py-2 text-[10px] font-black uppercase rounded-xl bg-white border border-slate-200 text-slate-900 shadow-subtle hover:border-[#0fd68c] transition-all cursor-pointer" style={{ border: '1px solid #e2e8f0' }}>
+                <button className="px-4 py-2 text-[10px] font-black uppercase rounded-xl bg-white border border-slate-200 text-slate-900 shadow-subtle hover:border-[#0fd68c] transition-all cursor-pointer">
                   Next
                 </button>
               </div>

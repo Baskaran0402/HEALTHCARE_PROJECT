@@ -13,13 +13,13 @@ export default function PatientHome() {
 
       {/* Greeting */}
       <div className="text-center md:text-left mb-10 md:mb-12">
-        <p className="text-[11px] md:text-[0.68rem] font-black uppercase tracking-[0.15em] text-[#0fd68c] mb-3 font-[Syne]">
+        <p className="text-[11px] md:text-[0.68rem] font-black uppercase tracking-[0.15em] text-[#0fd68c] mb-3 font-syne">
           PATIENT PORTAL
         </p>
-        <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-3 uppercase">
+        <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.04em] leading-tight mb-3 uppercase">
           Good {timeOfDay()}, <span className="text-[#0fd68c]">{user?.name?.split(' ')[0] || 'there'}.</span>
         </h1>
-        <p className="text-[#0a0a0f]/45 text-sm md:text-base font-bold font-[DM_Sans] max-w-lg mx-auto md:mx-0">
+        <p className="text-[#0a0a0f]/45 text-sm md:text-base font-bold font-dm max-w-lg mx-auto md:mx-0">
           What would you like to check today? Explore your clinical nodes below.
         </p>
       </div>
@@ -59,8 +59,8 @@ export default function PatientHome() {
           <Lightbulb size={28} />
         </div>
         <div className="text-center md:text-left">
-          <p className="font-[Syne] font-black text-lg md:text-xl text-[#0a0a0f] mb-2 uppercase tracking-tight">Regular screening saves lives</p>
-          <p className="text-sm font-bold text-[#0a0a0f]/45 leading-relaxed">
+          <p className="font-syne font-black text-lg md:text-xl text-[#0a0a0f] mb-2 uppercase tracking-tight">Regular screening saves lives</p>
+          <p className="text-sm font-bold text-[#0a0a0f]/45 leading-relaxed font-dm">
             AruviAI is a second-opinion AI tool. Always consult a licensed clinician for medical decisions.
           </p>
         </div>

@@ -86,7 +86,7 @@ export default function VideoConsultPage() {
             <Video size={20} className="text-[#060d0a]" />
           </div>
           <div>
-            <h1 className="font-[Syne] font-black text-lg tracking-tight leading-none">Telemedicine Node</h1>
+            <h1 className="font-syne font-black text-lg tracking-tight leading-none">Telemedicine Node</h1>
             <p className="text-[10px] font-bold text-[#0fd68c] uppercase tracking-[0.2em] mt-1">E2EE Encrypted Canal: {roomName}</p>
           </div>
         </div>
@@ -113,7 +113,7 @@ export default function VideoConsultPage() {
           <div className="absolute inset-0 flex items-center justify-center z-10 bg-[#060d0a]">
             <div className="text-center">
               <div className="w-20 h-20 border-4 border-[#0fd68c] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-              <h2 className="font-[Syne] text-2xl font-bold mb-2">Initializing Clinical Uplink</h2>
+              <h2 className="font-syne text-2xl font-bold mb-2">Initializing Clinical Uplink</h2>
               <p className="text-white/40 text-sm">Synchronizing encryption keys for end-to-end privacy...</p>
             </div>
           </div>

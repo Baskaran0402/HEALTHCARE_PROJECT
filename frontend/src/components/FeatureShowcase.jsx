@@ -14,17 +14,17 @@ export const FeatureShowcase = () => {
   const { isMobile } = useBreakpoint();
 
   return (
-    <section style={{ padding: isMobile ? '60px 0' : '96px 0', background: 'white' }}>
+    <section className={`bg-white ${isMobile ? 'py-[60px]' : 'py-[96px]'}`}>
       <div className="section-container">
         {/* Section header — always centered */}
         <div className="text-center mb-14">
-          <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-[Syne]">
+          <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-syne">
             CORE CAPABILITIES
           </p>
-          <h2 className="font-[Syne] font-black text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4 section-title">
+          <h2 className="font-syne font-black text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4 section-title">
             Engineered for <span className="text-[#0fd68c]">clinical precision.</span>
           </h2>
-          <p className="text-[#0a0a0f]/45 text-base max-w-lg mx-auto leading-relaxed font-[DM_Sans]">
+          <p className="text-[#0a0a0f]/45 text-base max-w-lg mx-auto leading-relaxed font-dm">
             Purpose-built infrastructure for institutional healthcare — powerful enough for research, intuitive enough for daily practice.
           </p>
         </div>
@@ -45,11 +45,11 @@ export const FeatureShowcase = () => {
                 <f.icon size={22} className="text-[#0fd68c]" />
               </div>
 
-              <h3 className="font-[Syne] font-bold text-lg text-[#0a0a0f] mb-3">
+              <h3 className="font-syne font-bold text-lg text-[#0a0a0f] mb-3">
                 {f.title}
               </h3>
 
-              <p className="text-sm text-[#0a0a0f]/50 leading-relaxed font-[DM_Sans]">
+              <p className="text-sm text-[#0a0a0f]/50 leading-relaxed font-dm">
                 {f.desc}
               </p>
             </motion.div>

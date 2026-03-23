@@ -17,13 +17,13 @@ const PlaceholderPage = ({ title, description, icon: Icon, badge }) => (
         </motion.div>
         
         <div className="space-y-4 max-w-3xl mx-auto">
-          <p className="text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-bold mb-2 font-[Syne]">
+          <p className="text-[0.65rem] uppercase tracking-[0.15em] text-[#0fd68c] font-bold mb-2 font-syne">
             {badge}
           </p>
-          <h1 className="font-[Syne] font-black text-5xl text-[#0a0a0f] tracking-[-0.04em] leading-tight">
+          <h1 className="font-syne font-black text-5xl text-[#0a0a0f] tracking-[-0.04em] leading-tight">
             {title}<span className="text-[#0fd68c]">.</span>
           </h1>
-          <p className="text-[#0a0a0f]/45 text-lg font-[DM_Sans] leading-relaxed">
+          <p className="text-[#0a0a0f]/45 text-lg font-dm leading-relaxed">
             {description}
           </p>
         </div>

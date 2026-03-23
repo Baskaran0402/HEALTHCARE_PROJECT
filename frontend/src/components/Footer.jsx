@@ -45,33 +45,30 @@ const Footer = () => {
   const { isMobile } = useBreakpoint();
 
   return (
-    <footer style={{ background: '#060d0a' }} className="relative overflow-hidden">
+    <footer className="bg-[#060d0a] relative overflow-hidden">
       {/* Top accent line */}
-      <div className="h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(15,214,140,0.2), transparent)' }} />
+      <div className="h-px bg-gradient-to-r from-transparent via-[#0fd68c]/20 to-transparent" />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 w-full relative z-10">
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 py-16 md:py-20">
           {/* Brand */}
           <div className="lg:col-span-4 space-y-6 flex flex-col items-center lg:items-start text-center lg:text-left">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ background: 'rgba(255,255,255,0.05)' }}>
-                <Brain className="w-5 h-5" style={{ color: '#0fd68c' }} />
+            <Link to="/" className="flex items-center gap-3 no-underline">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5">
+                <Brain className="w-5 h-5 text-[#0fd68c]" />
               </div>
               <div>
-                <span style={{ fontFamily: "'Syne', sans-serif", fontWeight: 800, color: '#ffffff', fontSize: '1.25rem', letterSpacing: '-0.04em' }}>
+                <span className="font-syne font-extrabold text-white text-[1.25rem] tracking-[-0.04em]">
                   AruviAI
                 </span>
-                <p className="text-[8px] uppercase tracking-[0.25em]"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 500, color: 'rgba(255,255,255,0.25)' }}>
+                <p className="text-[8px] uppercase tracking-[0.25em] font-dm font-medium text-white/25">
                   Clinical Intelligence OS
                 </p>
               </div>
             </Link>
 
-            <p className="text-sm leading-relaxed max-w-xs"
-              style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 300, color: 'rgba(255,255,255,0.35)' }}>
+            <p className="text-sm leading-relaxed max-w-xs font-dm font-light text-white/35">
               Accelerating preventative medicine through explainable AI diagnostics.
               Built for clinicians. Accessible to everyone.
             </p>
@@ -80,13 +77,10 @@ const Footer = () => {
             <div className="flex gap-2">
               {socials.map(s => (
                 <motion.a key={s.label} href="#" whileHover={{ y: -3 }} transition={{ duration: 0.2 }}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors border-none"
-                  style={{ background: 'rgba(255,255,255,0.05)', cursor: 'pointer' }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,214,140,0.15)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors border-none bg-white/5 cursor-pointer hover:bg-[#0fd68c]/15 group"
                   aria-label={s.label}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.4)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" className="fill-white/40 group-hover:fill-white/80">
                     <path d={s.path} />
                   </svg>
                 </motion.a>
@@ -98,23 +92,18 @@ const Footer = () => {
           <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-10 lg:gap-16">
             {sections.map(section => (
               <div key={section.title} className="space-y-5 flex flex-col items-center md:items-start text-center md:text-left">
-                <h4 className="text-[10px] uppercase tracking-[0.25em]"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: 'rgba(255,255,255,0.25)' }}>
+                <h4 className="text-[10px] uppercase tracking-[0.25em] font-dm font-semibold text-white/25">
                   {section.title}
                 </h4>
                 <ul className="space-y-3 p-0 list-none">
                   {section.links.map(link => (
                     <li key={link.label}>
                       <Link to={link.to}
-                        className="text-sm flex items-center justify-center md:justify-start gap-1.5 group transition-colors text-decoration-none"
-                        style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 400, color: 'rgba(255,255,255,0.4)' }}
-                        onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,1)'}
-                        onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+                        className="text-sm flex items-center justify-center md:justify-start gap-1.5 group transition-colors no-underline font-dm font-normal text-white/40 hover:text-white"
                       >
                         {link.label}
                         {!isMobile && (
-                          <ArrowRight size={11} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200"
-                            style={{ color: '#0fd68c' }} />
+                          <ArrowRight size={11} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 text-[#0fd68c]" />
                         )}
                       </Link>
                     </li>
@@ -126,38 +115,35 @@ const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="py-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div className="py-8 border-t border-white/5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Certifications */}
             <div className="flex flex-wrap items-center justify-center gap-6">
               <div className="flex items-center gap-2">
-                <ShieldCheck size={14} style={{ color: 'rgba(15,214,140,0.5)' }} />
-                <span className="text-[10px] uppercase tracking-widest"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: 'rgba(255,255,255,0.25)' }}>
+                <ShieldCheck size={14} className="text-[#0fd68c]/50" />
+                <span className="text-[10px] uppercase tracking-widest font-dm font-semibold text-white/25">
                   HIPAA
                 </span>
               </div>
-              <div className="w-px h-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
+              <div className="w-px h-3 bg-white/5" />
               <div className="flex items-center gap-2">
-                <Globe size={14} style={{ color: 'rgba(59,130,246,0.5)' }} />
-                <span className="text-[10px] uppercase tracking-widest"
-                  style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 600, color: 'rgba(255,255,255,0.25)' }}>
+                <Globe size={14} className="text-[#3b82f6]/50" />
+                <span className="text-[10px] uppercase tracking-widest font-dm font-semibold text-white/25">
                   ISO 27001
                 </span>
               </div>
-              <div className="w-px h-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
-              <span className="text-[10px] tracking-wider"
-                style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 500, color: 'rgba(255,255,255,0.15)' }}>
+              <div className="w-px h-3 bg-white/5" />
+              <span className="text-[10px] tracking-wider font-mono font-medium text-white/15">
                 v4.2.0
               </span>
             </div>
 
             {/* Copyright */}
-            <div className="flex items-center gap-2 text-[11px]" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            <div className="flex items-center gap-2 text-[11px] text-white/20">
               <span>© 2026 AruviAI</span>
               <span>·</span>
               <span className="flex items-center gap-1">
-                Built with <Heart size={10} style={{ color: 'rgba(239,68,68,0.4)' }} /> in India
+                Built with <Heart size={10} className="text-red-500/40" /> in India
               </span>
             </div>
           </div>

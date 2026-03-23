@@ -80,7 +80,7 @@ const BrainModel = ({ highlightLobe }) => {
 
 const Anatomy3DViewer = ({ highlightLobe = 'Default' }) => {
   return (
-    <div className="anatomy-3d-container" style={{ width: '100%', height: '400px', background: '#0f172a', borderRadius: '24px', position: 'relative', overflow: 'hidden' }}>
+    <div className="anatomy-3d-container h-[300px] sm:h-[400px] md:h-[500px] w-full bg-[#0f172a] rounded-[24px] relative overflow-hidden">
       <Canvas>
         <PerspectiveCamera makeDefault position={[0, 0, 5]} />
         <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
@@ -97,9 +97,9 @@ const Anatomy3DViewer = ({ highlightLobe = 'Default' }) => {
         <gridHelper args={[10, 10, '#1e293b', '#0f172a']} position={[0, -2, 0]} />
       </Canvas>
       
-      <div className="anatomy-overlay" style={{ position: 'absolute', bottom: '20px', left: '20px', pointerEvents: 'none' }}>
-        <div style={{ color: '#3b82f6', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '4px' }}>Neural Localizer</div>
-        <div style={{ color: 'white', fontSize: '1.25rem', fontWeight: 700 }}>{highlightLobe} Region</div>
+      <div className="anatomy-overlay absolute bottom-5 left-5 pointer-events-none">
+        <div className="text-[#3b82f6] text-xs font-extrabold uppercase mb-1">Neural Localizer</div>
+        <div className="text-white text-xl font-bold">{highlightLobe} Region</div>
       </div>
     </div>
   );

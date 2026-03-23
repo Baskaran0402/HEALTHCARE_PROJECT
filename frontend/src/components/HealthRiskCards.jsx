@@ -17,17 +17,17 @@ export function HealthRiskCards() {
   const { isMobile } = useBreakpoint();
 
   return (
-    <section style={{ padding: isMobile ? '60px 0' : '96px 0', background: '#f7f9f8' }}>
+    <section className={`bg-[#f7f9f8] ${isMobile ? 'py-[60px]' : 'py-[96px]'}`}>
       <div className="section-container">
         {/* Section header — always centered */}
         <div className="text-center mb-14">
-          <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-[Syne]">
+          <p className="text-[0.68rem] uppercase tracking-[0.12em] text-[#0fd68c] font-bold mb-3 font-syne">
             DISEASE MODELS
           </p>
-          <h2 className="font-[Syne] font-black text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4 section-title">
+          <h2 className="font-syne font-black text-[#0a0a0f] tracking-[-0.03em] leading-[1.05] mb-4 section-title">
             6 specialized <span className="text-[#0fd68c]">AI models.</span>
           </h2>
-          <p className="text-[#0a0a0f]/45 text-base max-w-lg mx-auto leading-relaxed font-[DM_Sans]">
+          <p className="text-[#0a0a0f]/45 text-base max-w-lg mx-auto leading-relaxed font-dm">
             Each model is independently trained and validated. Our unified assessment runs all tabular models simultaneously.
           </p>
         </div>
@@ -47,10 +47,10 @@ export function HealthRiskCards() {
                 <d.icon size={22} style={{ color: d.iconColor }} />
               </div>
               <div className="flex justify-between items-start mb-4">
-                <h3 className="font-[Syne] font-bold text-xl text-[#0a0a0f]">{d.name}</h3>
+                <h3 className="font-syne font-bold text-xl text-[#0a0a0f]">{d.name}</h3>
                 <span className="text-[0.65rem] font-bold text-[#0fd68c] uppercase tracking-widest">{d.accuracy}</span>
               </div>
-              <p className="text-sm text-[#0a0a0f]/50 leading-relaxed font-[DM_Sans]">
+              <p className="text-sm text-[#0a0a0f]/50 leading-relaxed font-dm">
                 {d.desc}
               </p>
             </motion.div>
@@ -59,19 +59,17 @@ export function HealthRiskCards() {
 
         {/* Unified CTA */}
         <div className="mt-16 text-center">
-            <p className="text-[#0a0a0f]/40 text-sm mb-8 font-[DM_Sans]">
+            <p className="text-[#0a0a0f]/40 text-sm mb-8 font-dm">
                 All 6 models run simultaneously in a single Health Assessment session.
             </p>
             <div className={`flex flex-col sm:flex-row items-center justify-center gap-4 ${isMobile ? 'px-4' : ''}`}>
                 <Link to="/consultation"
-                className="w-full sm:w-auto h-14 px-10 rounded-full bg-[#060d0a] text-[#0fd68c] font-[Syne] font-bold text-sm tracking-wide flex items-center justify-center gap-3 hover:bg-[#0a1a12] transition-all group shadow-xl shadow-black/5"
-                style={{ textDecoration: 'none' }}
+                className="w-full sm:w-auto h-14 px-10 rounded-full bg-[#060d0a] text-[#0fd68c] font-syne font-bold text-sm tracking-wide flex items-center justify-center gap-3 hover:bg-[#0a1a12] transition-all group shadow-xl shadow-black/5 no-underline"
                 >
                 Start Health Assessment <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link to="/brain-tumor"
-                className="w-full sm:w-auto h-14 px-10 rounded-full border border-[#e8ede9] text-[#0a0a0f] font-[Syne] font-bold text-sm tracking-wide flex items-center justify-center hover:border-[#0fd68c] hover:text-[#0fd68c] transition-all"
-                style={{ textDecoration: 'none' }}
+                className="w-full sm:w-auto h-14 px-10 rounded-full border border-[#e8ede9] text-[#0a0a0f] font-syne font-bold text-sm tracking-wide flex items-center justify-center hover:border-[#0fd68c] hover:text-[#0fd68c] transition-all no-underline"
                 >
                 Brain MRI Detection
                 </Link>

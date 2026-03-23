@@ -12,7 +12,7 @@ export function HealthScoreDashboard() {
   ];
 
   return (
-    <div className="bg-white rounded-[2.5rem] border border-[#E1EBF9] p-10 lg:p-14 shadow-sm relative overflow-hidden group font-inter">
+    <div className="bg-white rounded-[2.5rem] border border-[#E1EBF9] p-10 lg:p-14 shadow-sm relative overflow-hidden group font-dm">
       {/* Structural Pattern */}
       <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:scale-110 transition-transform duration-1000">
          <Dna size={320} className="text-[#000DB5]" />
@@ -21,8 +21,8 @@ export function HealthScoreDashboard() {
       <div className="relative z-10">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-16">
            <div>
-              <div className="header-badge mb-4">Diagnostic Oversight • Protocol Level 4</div>
-              <h2 className="text-3xl font-normal text-[#000650] font-outfit tracking-tight flex items-center gap-4 leading-none">
+              <div className="header-badge mb-4 font-syne">Diagnostic Oversight • Protocol Level 4</div>
+              <h2 className="text-3xl font-normal text-[#000650] font-syne tracking-tight flex items-center gap-4 leading-none">
                  <Activity className="text-[#000DB5]" size={32} />
                  Clinical Risk Matrix
               </h2>
@@ -41,8 +41,8 @@ export function HealthScoreDashboard() {
 
         <div className="flex flex-col xl:flex-row items-center gap-20">
           {/* Central Radial Score */}
-          <div className="relative flex-shrink-0 group/radial">
-            <svg className="w-80 h-80 transform -rotate-90 relative z-10">
+          <div className="relative flex-shrink-0 group/radial w-64 h-64 md:w-80 md:h-80">
+            <svg className="w-full h-full transform -rotate-90 relative z-10" viewBox="0 0 320 320">
                {/* Background Track */}
                <circle
                  cx="160"
@@ -72,11 +72,11 @@ export function HealthScoreDashboard() {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ delay: 0.5, type: "spring" }}
-                className="text-9xl font-normal text-[#000650] tracking-tighter leading-none font-outfit"
+                className="text-9xl font-normal text-[#000650] tracking-tighter leading-none font-syne"
               >
                 75
               </motion.div>
-              <div className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px] mb-6">Core Aggregate</div>
+              <div className="text-slate-400 font-black uppercase tracking-[0.4em] text-[10px] mb-6 font-syne">Core Aggregate</div>
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -138,8 +138,8 @@ function DiseaseRow({ disease, risk, icon, color, delay, factors }) {
             </div>
          </div>
          <div className="text-right">
-            <div className="text-2xl font-normal text-[#000650] font-outfit leading-none mb-1">{risk}%</div>
-            <p className="text-[9px] font-bold text-[#718096] uppercase tracking-widest">Confidence: 98%</p>
+            <div className="text-2xl font-normal text-[#000650] font-syne leading-none mb-1">{risk}%</div>
+            <p className="text-[9px] font-bold text-[#718096] uppercase tracking-widest font-dm">Confidence: 98%</p>
          </div>
       </div>
       

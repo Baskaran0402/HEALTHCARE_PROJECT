@@ -17,12 +17,12 @@ const RiskTrendChart = ({ history }) => {
   }));
 
   return (
-    <div className="risk-trend-chart" style={{ width: '100%', height: 300, marginTop: '20px' }}>
+    <div className="risk-trend-chart w-full h-[300px] mt-5 font-dm">
       <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-          <XAxis dataKey="date" stroke="#64748b" fontSize={10} fontWeight={700} axisLine={false} tickLine={false} dy={10} />
-          <YAxis stroke="#64748b" fontSize={10} fontWeight={700} domain={[0, 100]} axisLine={false} tickLine={false} />
+          <XAxis dataKey="date" stroke="#64748b" tick={{fontSize: 10, fontWeight: 700, fontFamily: 'DM Sans'}} axisLine={false} tickLine={false} dy={10} />
+          <YAxis stroke="#64748b" tick={{fontSize: 10, fontWeight: 700, fontFamily: 'DM Sans'}} domain={[0, 100]} axisLine={false} tickLine={false} />
           <Tooltip 
             contentStyle={{ 
               backgroundColor: 'rgba(255, 255, 255, 0.95)', 
@@ -34,7 +34,7 @@ const RiskTrendChart = ({ history }) => {
               fontWeight: 600
             }}
           />
-          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }} />
+          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'Syne' }} />
           
           <Line type="monotone" dataKey="overall_score" stroke="#3b82f6" strokeWidth={2} name="Overall Health Risk" dot={{ r: 4 }} />
           {/* Individual disease lines could be added here if the data is dense enough, 
@@ -43,7 +43,7 @@ const RiskTrendChart = ({ history }) => {
           <Line type="monotone" dataKey="Heart Disease" stroke="#f97316" strokeWidth={1} strokeDasharray="5 5" dot={false} />
         </LineChart>
       </ResponsiveContainer>
-      <div className="chart-legend-note" style={{ textAlign: 'center', fontSize: '0.8rem', color: '#64748b', marginTop: '10px' }}>
+      <div className="chart-legend-note text-center text-[0.8rem] text-slate-500 mt-[10px] font-dm italic">
         *Dashed lines represent individual organ risks
       </div>
     </div>

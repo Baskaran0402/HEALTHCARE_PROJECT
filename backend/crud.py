@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from backend import models, schemas
@@ -308,11 +309,11 @@ def search_nearby_doctors(
     # It calculates the distance between (lat, lng) and doctor's coordinates
 
     # 6371 is the earth radius in KM
-    distance_clause = f"""
+    distance_clause = """
         (6371 * acos(
-            cos(radians({lat})) * cos(radians(latitude)) *
-            cos(radians(longitude) - radians({lng})) +
-            sin(radians({lat})) * sin(radians(latitude))
+            cos(radians(:lat)) * cos(radians(latitude)) *
+            cos(radians(longitude) - radians(:lng)) +
+            sin(radians(:lat)) * sin(radians(latitude))
         ))
     """
 
@@ -325,13 +326,16 @@ def search_nearby_doctors(
         AND longitude IS NOT NULL
     """
 
-    if specialization:
-        query_str += f" AND specialization ILIKE '%{specialization}%'"
+    params = {"lat": lat, "lng": lng, "radius_km": radius_km}
 
-    query_str += f" AND {distance_clause} <= {radius_km}"
+    if specialization:
+        query_str += " AND specialization ILIKE :spec_pattern"
+        params["spec_pattern"] = f"%{specialization}%"
+
+    query_str += f" AND {distance_clause} <= :radius_km"
     query_str += " ORDER BY distance ASC"
 
-    result = db.execute(models.text(query_str))
+    result = db.execute(text(query_str).bindparams(**params))
     # Convert result proxy to list of dicts/models
     doctors = []
     for row in result:

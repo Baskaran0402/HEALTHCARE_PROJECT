@@ -16,47 +16,34 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
   const { isMobile, isTablet } = useBreakpoint();
 
   return (
-    <section style={{ 
-      minHeight: '100vh', 
-      background: '#f7f9f8', 
-      display: 'flex', 
-      alignItems: 'center', 
-      paddingTop: isMobile ? '80px' : '100px', 
-      paddingBottom: isMobile ? '48px' : '80px' 
-    }}>
+    <section className={`min-h-screen bg-[#f7f9f8] flex items-center ${isMobile ? 'pt-20 pb-12' : 'pt-[100px] pb-20'}`}>
       <div className="section-container">
         <motion.div
           variants={stagger}
           initial="hidden"
           animate="show"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: isMobile ? '1fr' : isTablet ? '1fr' : '1.1fr 0.9fr',
-            gap: isMobile ? '40px' : isTablet ? '48px' : '80px',
-            alignItems: 'center',
-            width: '100%'
-          }}
+          className={`grid ${isMobile || isTablet ? 'grid-cols-1' : 'grid-cols-[1.1fr_0.9fr]'} ${isMobile ? 'gap-10' : isTablet ? 'gap-12' : 'gap-20'} items-center w-full`}
         >
           {/* LEFT — primary messaging */}
-          <div className="flex flex-col relative z-10" style={{ textAlign: isMobile ? 'center' : 'left', alignItems: isMobile ? 'center' : 'flex-start' }}>
+          <div className={`flex flex-col relative z-10 ${isMobile ? 'text-center items-center' : 'text-left items-start'}`}>
             <motion.div variants={fadeUp} className="flex items-center gap-2 mb-10">
               <span className="w-2 h-2 rounded-full bg-[#0fd68c] animate-pulse shadow-[0_0_10px_rgba(15,214,140,0.5)]" />
-              <p className="text-[0.68rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black font-[Syne]">
+              <p className="text-[0.68rem] uppercase tracking-[0.15em] text-[#0fd68c] font-black font-syne">
                 Institutional Intelligence v4.3 — LIVE
               </p>
             </motion.div>
 
             {/* Heading — refined size and spacing */}
-            <motion.h1 
+            <motion.h1
               variants={fadeUp}
-              className="font-[Syne] font-black text-[#0a0a0f] tracking-[-0.045em] leading-[1] mb-10 hero-title"
+              className="font-syne font-black text-[#0a0a0f] tracking-[-0.045em] leading-[1] mb-10 hero-title"
             >
-              Smarter <span style={{ color: '#0fd68c' }}>Diagnostics</span> <span className={isMobile ? "inline" : "lg:block"}>for everyone.</span>
+              Smarter <span className="text-[#0fd68c]">Diagnostics</span> <span className={isMobile ? "inline" : "lg:block"}>for everyone.</span>
             </motion.h1>
 
-            <motion.p variants={fadeUp} className="text-[#0a0a0f]/45 text-xl max-w-lg mb-12 leading-relaxed font-[DM_Sans]">
-              Screen for 6 diseases in one session. Explainable AI 
-              gives you the <span className="text-[#0a0a0f] font-bold">why</span>, not just the score. Built for clinicians. 
+            <motion.p variants={fadeUp} className="text-[#0a0a0f]/45 text-xl max-w-lg mb-12 leading-relaxed font-dm">
+              Screen for 6 diseases in one session. Explainable AI
+              gives you the <span className="text-[#0a0a0f] font-bold">why</span>, not just the score. Built for clinicians.
               Accessible to all.
             </motion.p>
 
@@ -66,13 +53,7 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
                 onClick={onGetStarted}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group px-10 py-5 rounded-full flex items-center gap-3 text-sm shadow-xl shadow-[#0fd68c]/15 btn-primary"
-                style={{
-                  fontFamily: "'Syne', sans-serif",
-                  fontWeight: 800,
-                  background: '#0fd68c',
-                  color: '#060d0a',
-                }}
+                className="group px-10 py-5 rounded-full flex items-center gap-3 text-sm shadow-xl shadow-[#0fd68c]/15 btn-primary font-syne font-extrabold bg-[#0fd68c] text-[#060d0a] border-none"
               >
                 Start Free Assessment
                 <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
@@ -82,22 +63,15 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
                 onClick={onTryAssessment}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.98 }}
-                className="group px-10 py-5 rounded-full flex items-center gap-3 text-sm btn-primary"
-                style={{
-                  fontFamily: "'Syne', sans-serif",
-                  fontWeight: 700,
-                  background: 'white',
-                  border: '1px solid #e8ede9',
-                  color: '#0a0a0f',
-                }}
+                className="group px-10 py-5 rounded-full flex items-center gap-3 text-sm btn-primary font-syne font-bold bg-white border border-[#e8ede9] text-[#0a0a0f]"
               >
-                <Play size={16} fill="#0fd68c" style={{ color: '#0fd68c' }} />
+                <Play size={16} className="text-[#0fd68c] fill-[#0fd68c]" />
                 Watch Demo
               </motion.button>
             </motion.div>
 
             {/* Trust row */}
-            <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-5 mt-16 pt-8 border-t border-[#0a0a0f]/5" style={{ justifyContent: isMobile ? 'center' : 'flex-start' }}>
+            <motion.div variants={fadeUp} className={`flex flex-wrap items-center gap-5 mt-16 pt-8 border-t border-[#0a0a0f]/5 ${isMobile ? 'justify-center' : 'justify-start'}`}>
               <div className="flex -space-x-3">
                 {[1, 2, 3, 4].map((i) => (
                   <div
@@ -108,11 +82,11 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
                   </div>
                 ))}
               </div>
-              <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
-                <p className="text-sm" style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 700, color: '#0a0a0f' }}>
+              <div className={isMobile ? 'text-center' : 'text-left'}>
+                <p className="text-sm font-dm font-bold text-[#0a0a0f]">
                   Trusted by 150+ clinicians
                 </p>
-                <p className="text-[0.7rem] uppercase tracking-wider font-bold" style={{ color: '#0fd68c' }}>
+                <p className="text-[0.7rem] uppercase tracking-wider font-bold text-[#0fd68c]">
                   Across 12 major institutions
                 </p>
               </div>
@@ -134,24 +108,23 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
                       <div className="w-6 h-6 rounded bg-[#060d0a] flex items-center justify-center">
                           <span className="text-[#0fd68c] text-[10px] font-black">A</span>
                       </div>
-                      <span className="text-[10px] font-bold text-[#0a0a0f]/40 uppercase tracking-widest font-[Syne]">System_Active</span>
+                      <span className="text-[10px] font-bold text-[#0a0a0f]/40 uppercase tracking-widest font-syne">System_Active</span>
                   </div>
                   <div className="text-[10px] font-black text-[#0fd68c] uppercase tracking-widest px-2 py-1 bg-[#0fd68c]/10 rounded">LOW_RISK_DETECTED</div>
                 </div>
 
                 {/* Risk Score */}
                 <div className="mb-10">
-                  <div className="flex items-center justify-between mb-3 text-[11px] font-bold text-[#0a0a0f]/30 uppercase tracking-[0.15em] font-[DM_Sans]">
+                  <div className="flex items-center justify-between mb-3 text-[11px] font-bold text-[#0a0a0f]/30 uppercase tracking-[0.15em] font-dm">
                     <span>Aggregate Risk Lattice</span>
                     <span className="text-[#0fd68c]">24.8% Nominal</span>
                   </div>
-                  <div className="h-4 w-full rounded-full overflow-hidden p-0.5 border border-[#e8ede9]" style={{ background: 'white' }}>
+                  <div className="h-4 w-full rounded-full overflow-hidden p-0.5 border border-[#e8ede9] bg-white">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: '24.8%' }}
                       transition={{ duration: 2.5, delay: 1, ease: [0.22, 1, 0.36, 1] }}
-                      className="h-full rounded-full"
-                      style={{ background: '#0fd68c', boxShadow: '0 0 10px rgba(15,214,140,0.4)' }}
+                      className="h-full rounded-full bg-[#0fd68c] shadow-[0_0_10px_rgba(15,214,140,0.4)]"
                     />
                   </div>
                 </div>
@@ -173,10 +146,10 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
                       style={{ background: item.bg }}
                     >
                       <item.icon size={20} style={{ color: item.color }} strokeWidth={3} />
-                      <p className="text-[10px] mt-3 uppercase tracking-widest font-black" style={{ fontFamily: "'DM Sans', sans-serif", color: 'rgba(10,10,15,0.25)' }}>
+                      <p className="text-[10px] mt-3 uppercase tracking-widest font-black font-dm text-[#0a0a0f]/25">
                         {item.label}
                       </p>
-                      <p className="text-2xl tracking-tighter" style={{ fontFamily: "'Syne', sans-serif", fontWeight: 900, color: '#0a0a0f' }}>
+                      <p className="text-2xl tracking-tighter font-syne font-black text-[#0a0a0f]">
                         {item.score}
                       </p>
                     </motion.div>
@@ -184,14 +157,13 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
                 </div>
 
                 {/* Bottom status */}
-                <div className="flex items-center justify-between pt-8 mt-6"
-                  style={{ borderTop: '1px solid #e8ede9' }}>
+                <div className="flex items-center justify-between pt-8 mt-6 border-t border-[#e8ede9]">
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <span className="block w-2.5 h-2.5 rounded-full" style={{ background: '#0fd68c' }} />
-                      <span className="absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping" style={{ background: '#0fd68c' }} />
+                      <span className="block w-2.5 h-2.5 rounded-full bg-[#0fd68c]" />
+                      <span className="absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping bg-[#0fd68c]" />
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#0a0a0f]/40 font-[Syne]">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#0a0a0f]/40 font-syne">
                       6 Neural Models Online
                     </span>
                   </div>
@@ -200,7 +172,7 @@ export const HeroSection = ({ onTryAssessment, onGetStarted }) => {
                   </span>
                 </div>
               </motion.div>
-              
+
               {/* Background decorative elements */}
               <div className="absolute -top-10 -right-10 w-40 h-40 bg-[#0fd68c]/5 rounded-full blur-3xl -z-10" />
               <div className="absolute -bottom-10 -left-10 w-60 h-60 bg-blue-500/5 rounded-full blur-3xl -z-10" />

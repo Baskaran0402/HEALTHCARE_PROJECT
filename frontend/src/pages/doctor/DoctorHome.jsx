@@ -13,11 +13,11 @@ export default function DoctorHome() {
     <div className={`w-full max-w-7xl mx-auto ${isMobile ? 'px-4' : 'px-8'} py-10 md:py-12`}>
 
       <div className="text-center md:text-left mb-10">
-        <p className="text-[11px] md:text-[0.68rem] font-bold uppercase tracking-[0.15em] text-[#3b82f6] mb-2 font-[Syne]">CLINICAL WORKSPACE</p>
-        <h1 className="font-[Syne] font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.03em] leading-tight mb-2 uppercase">
+        <p className="text-[11px] md:text-[0.68rem] font-bold uppercase tracking-[0.15em] text-[#3b82f6] mb-2 font-syne">CLINICAL WORKSPACE</p>
+        <h1 className="font-syne font-black text-2xl md:text-4xl text-[#0a0a0f] tracking-[-0.03em] leading-tight mb-2 uppercase">
           Dr. {user?.name?.split(' ').slice(-1)[0] || 'Doctor'} — <span className="text-[#3b82f6]">Today's Overview</span>
         </h1>
-        <p className="text-[#0a0a0f]/40 text-sm font-bold font-[DM_Sans]">
+        <p className="text-[#0a0a0f]/45 text-sm font-bold font-dm">
           {new Date().toLocaleDateString('en-IN', {weekday:'long',year:'numeric',month:'long',day:'numeric'})}
         </p>
       </div>
@@ -30,9 +30,9 @@ export default function DoctorHome() {
           {label:'High Risk Patients',  value: stats.highRisk,color:'text-red-500', sub:'Needs attention'},
         ].map(s => (
           <div key={s.label} className="bg-white rounded-[2rem] border border-[#e8ede9] p-6 md:p-8 shadow-subtle hover:shadow-premium transition-shadow text-center md:text-left">
-            <p className={`font-[Syne] font-black text-4xl md:text-5xl ${s.color} mb-3 leading-none`}>{s.value}</p>
-            <p className="font-[Syne] font-black text-[13px] md:text-sm text-[#0a0a0f] mb-1 uppercase tracking-tight">{s.label}</p>
-            <p className="text-[10px] md:text-xs font-bold text-[#0a0a0f]/40 uppercase tracking-widest">{s.sub}</p>
+            <p className={`font-syne font-black text-4xl md:text-5xl ${s.color} mb-3 leading-none`}>{s.value}</p>
+            <p className="font-syne font-black text-[13px] md:text-sm text-[#0a0a0f] mb-1 uppercase tracking-tight">{s.label}</p>
+            <p className="text-[10px] md:text-xs font-bold text-[#0a0a0f]/40 uppercase tracking-widest font-dm">{s.sub}</p>
           </div>
         ))}
       </div>

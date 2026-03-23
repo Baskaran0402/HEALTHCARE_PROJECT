@@ -61,7 +61,7 @@ export function HealthMetricsChart() {
   ];
 
   return (
-    <div className="h-[500px] bg-white border border-[#E1EBF9] rounded-[2.5rem] flex flex-col relative overflow-hidden group shadow-sm p-8 lg:p-12">
+    <div className="h-[400px] md:h-[500px] bg-white border border-[#E1EBF9] rounded-[2.5rem] flex flex-col relative overflow-hidden group shadow-sm p-8 lg:p-12">
       {/* Dynamic Background Glow */}
       <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-50/50 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-50/50 blur-[100px] rounded-full pointer-events-none" />
@@ -71,13 +71,13 @@ export function HealthMetricsChart() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
            <div>
               <div className="flex items-center gap-3 mb-2">
-                 <div className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[9px] font-black uppercase tracking-widest text-blue-600 shadow-sm">
+                 <div className="px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-[9px] font-black uppercase tracking-widest text-blue-600 shadow-sm font-dm">
                     Neural Surveillance
                  </div>
                  <span className="text-slate-200 font-bold">•</span>
-                 <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest">SysID: TMS-ALPHA-9</span>
+                 <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest font-dm">SysID: TMS-ALPHA-9</span>
               </div>
-              <h2 className="text-3xl font-black text-[#000650] uppercase tracking-tighter leading-none">Biometric <span className="text-slate-300">Uplink</span></h2>
+              <h2 className="text-3xl font-black text-[#000650] uppercase tracking-tighter leading-none font-syne">Biometric <span className="text-slate-300 font-syne">Uplink</span></h2>
            </div>
            
            <div className="flex items-center gap-4">
@@ -203,9 +203,9 @@ function LegendItem({ label, value, icon, color }) {
    };
    
    return (
-      <div className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl border ${colorMap[color]} shadow-sm`}>
+      <div className={`flex items-center gap-3 px-4 py-2.5 rounded-2xl border ${colorMap[color]} shadow-sm font-dm`}>
          {icon}
-         <span className="text-[10px] font-black uppercase tracking-widest leading-none">{label}: <span className="text-[#000650] ml-1">{value}</span></span>
+         <span className="text-[10px] font-black uppercase tracking-widest leading-none font-dm">{label}: <span className="text-[#000650] ml-1 font-syne">{value}</span></span>
       </div>
    );
 }
@@ -219,11 +219,11 @@ function QuickSummary({ label, value, unit, trend, color }) {
    };
 
    return (
-      <div className="group">
-         <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1 group-hover:text-blue-600 transition-colors">{label}</p>
-         <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-[#000650] tracking-tighter leading-none">{value}</span>
-            <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">{unit}</span>
+      <div className="group font-dm">
+         <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1 group-hover:text-blue-600 transition-colors font-dm">{label}</p>
+         <div className="flex items-baseline gap-2 font-syne">
+            <span className="text-2xl font-black text-[#000650] tracking-tighter leading-none font-syne">{value}</span>
+            <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest font-dm">{unit}</span>
          </div>
          <div className="flex items-center gap-1.5 mt-2">
             {trend === 'up' ? <ArrowUpRight size={10} className="text-emerald-500" /> : trend === 'down' ? <ArrowDownRight size={10} className="text-red-500" /> : <RefreshCw size={10} className="text-blue-500" />}
