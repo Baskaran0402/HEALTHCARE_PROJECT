@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion' // eslint-disable-line no-unused-vars
-import { MessageCircle, X, Send, User, Bot, Sparkles } from 'lucide-react'
-import { healthAPI } from '../services/api'
-import './KiraChat.css'
+import { motion, AnimatePresence } from 'framer-motion'
+import { MessageCircle, X, Send, User, Bot, Sparkles, ChevronDown, Zap, Shield, Cpu } from 'lucide-react'
+import chatService from '../services/chatService'
+import { GlassCard } from './ui/GlassCard'
+import { GlassButton } from './ui/GlassButton'
 
 const KiraChat = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState([
     { 
       role: 'bot', 
-      content: 'Hello! I am Kira, your AI health assistant. I can help you with health questions or book an appointment. How can I assist you today?' 
+      content: 'Initialization complete. I am Kira, your clinical diagnostic assistant. I can assist with real-time health queries or help orchestrate specialist consultations. How shall we proceed today?' 
     }
   ])
   const [inputValue, setInputValue] = useState('')
@@ -36,13 +37,12 @@ const KiraChat = () => {
     setIsLoading(true)
 
     try {
-      // Serialize history correctly
       const history = messages.map(m => ({
         role: m.role === 'bot' ? 'assistant' : 'user',
         content: m.content
       }))
 
-      const result = await healthAPI.chatWithKira({
+      const result = await chatService.chatWithKira({
         message: userMsg.content,
         history: history
       })
@@ -52,7 +52,7 @@ const KiraChat = () => {
       
     } catch (error) {
       console.error("Chat error:", error)
-      setMessages(prev => [...prev, { role: 'bot', content: "I'm having trouble connecting right now. Please try again." }])
+      setMessages(prev => [...prev, { role: 'bot', content: "Protocol interruption. Unable to reach diagnostic neural net. Please attempt reconnection." }])
     } finally {
       setIsLoading(false)
     }
@@ -66,94 +66,133 @@ const KiraChat = () => {
   }
 
   return (
-    <div className="kira-widget-container">
+    <div className="fixed bottom-8 right-8 z-[1000] flex flex-col items-end pointer-events-none">
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="kira-chat-window"
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="w-[380px] max-w-[90vw] h-[600px] max-h-[80vh] mb-6 pointer-events-auto"
           >
-            {/* Header */}
-            <div className="kira-header">
-              <div className="kira-profile">
-                <div className="kira-avatar">
-                  <Sparkles size={20} />
+            <div className="kira-glass h-full flex flex-col rounded-[2.5rem] overflow-hidden shadow-premium transition-all">
+              {/* Premium Header */}
+              <div className="p-6 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#4f46e5] to-[#7c3aed] border border-white/10 flex items-center justify-center text-white shadow-xl">
+                    <Sparkles size={24} className="animate-pulse" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black text-white uppercase tracking-tighter leading-none mb-1">Kira <span className="text-[#4f46e5]">A.I.</span></h3>
+                    <div className="flex items-center gap-2">
+                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
+                       <p className="text-[8px] font-black uppercase tracking-[0.3em] text-white/30">Clinical Uplink Active</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="kira-info">
-                  <h3>Kira AI</h3>
-                  <p><span className="kira-status-dot"></span>Online Assistant</p>
+                <button 
+                  className="w-8 h-8 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/40 hover:text-white transition-all"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ChevronDown size={18} />
+                </button>
+              </div>
+
+              {/* Secure Transmission Ledger (Messages) */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-white/2">
+                {messages.map((msg, idx) => (
+                  <motion.div 
+                    key={idx} 
+                    initial={{ opacity: 0, x: msg.role === 'bot' ? -10 : 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+                  >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 border ${
+                      msg.role === 'bot' 
+                        ? 'bg-[#4f46e5]/10 border-[#4f46e5]/20 text-[#4f46e5]' 
+                        : 'bg-white/5 border-white/10 text-white/40'
+                    }`}>
+                      {msg.role === 'bot' ? <Cpu size={14} /> : <User size={14} />}
+                    </div>
+                    <div className={`px-5 py-3.5 rounded-[1.25rem] text-[11px] font-bold leading-relaxed uppercase tracking-tight shadow-xl ${
+                      msg.role === 'bot'
+                        ? 'bg-white/5 border border-white/10 text-white/70 rounded-tl-none'
+                        : 'bg-[#4f46e5] border border-white/10 text-white rounded-tr-none'
+                    }`}>
+                      {msg.content}
+                    </div>
+                  </motion.div>
+                ))}
+                
+                {isLoading && (
+                  <div className="flex gap-4">
+                    <div className="w-8 h-8 rounded-lg bg-[#4f46e5]/10 border border-[#4f46e5]/20 flex items-center justify-center text-[#4f46e5] animate-pulse">
+                      <Cpu size={14} />
+                    </div>
+                    <div className="px-6 py-4 rounded-[1.25rem] bg-white/5 border border-white/10 rounded-tl-none">
+                       <div className="flex gap-2">
+                          {[0, 1, 2].map(i => (
+                             <motion.div 
+                               key={i}
+                               animate={{ opacity: [0.2, 1, 0.2] }}
+                               transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+                               className="w-1.5 h-1.5 rounded-full bg-[#4f46e5]"
+                             />
+                          ))}
+                       </div>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input Authorization Area */}
+              <div className="p-6 border-t border-white/5 bg-white/2">
+                <div className="relative group">
+                   <textarea
+                     className="w-full bg-white/5 border border-white/10 rounded-2xl pl-6 pr-14 py-4 text-[11px] font-bold text-white placeholder:text-white/20 outline-none focus:border-[#4f46e5]/30 transition-all resize-none max-h-32"
+                     placeholder="Authorize request..."
+                     value={inputValue}
+                     onChange={(e) => setInputValue(e.target.value)}
+                     onKeyDown={handleKeyPress}
+                     rows={1}
+                   />
+                   <button 
+                     className={`absolute right-3 bottom-3 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+                        !inputValue.trim() || isLoading 
+                          ? 'bg-white/5 text-white/10 cursor-not-allowed' 
+                          : 'bg-[#4f46e5] text-white hover:bg-opacity-90 shadow-glow'
+                     }`}
+                     onClick={handleSend}
+                     disabled={isLoading || !inputValue.trim()}
+                   >
+                     <Send size={18} />
+                   </button>
+                </div>
+                <div className="mt-4 flex items-center justify-between px-2">
+                   <div className="flex items-center gap-2">
+                      <Shield size={10} className="text-emerald-500/50" />
+                      <span className="text-[8px] font-black uppercase tracking-widest text-white/20">End-to-End Encrypted</span>
+                   </div>
+                   <div className="flex items-center gap-2">
+                      <Zap size={10} className="text-blue-500/50" />
+                      <span className="text-[8px] font-black uppercase tracking-widest text-white/20">Neural Engine v4.0</span>
+                   </div>
                 </div>
               </div>
-              <button className="kira-close-btn" onClick={() => setIsOpen(false)}>
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Messages */}
-            <div className="kira-messages">
-              {messages.map((msg, idx) => (
-                <motion.div 
-                  key={idx} 
-                  className={`message-group ${msg.role}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                >
-                  <div className="message-avatar">
-                    {msg.role === 'bot' ? <Bot size={16} /> : <User size={16} />}
-                  </div>
-                  <div className="message-bubble">
-                    {msg.content}
-                  </div>
-                </motion.div>
-              ))}
-              
-              {isLoading && (
-                <div className="message-group bot">
-                  <div className="message-avatar">
-                    <Bot size={16} />
-                  </div>
-                  <div className="message-bubble typing-indicator">
-                    <div className="typing-dot"></div>
-                    <div className="typing-dot"></div>
-                    <div className="typing-dot"></div>
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {/* Input */}
-            <div className="kira-input-area">
-              <textarea
-                className="kira-input"
-                placeholder="Ask a health question or book appointment..."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyPress}
-                rows={1}
-              />
-              <button 
-                className="kira-send-btn" 
-                onClick={handleSend}
-                disabled={isLoading || !inputValue.trim()}
-              >
-                <Send size={20} />
-              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       <motion.button
-        className="kira-toggle-btn"
         onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: 1.1, rotate: isOpen ? 90 : 0 }}
+        whileTap={{ scale: 0.9 }}
+        className="w-16 h-16 rounded-[1.5rem] bg-[#4f46e5] text-white shadow-glow flex items-center justify-center border border-white/10 pointer-events-auto relative overflow-hidden group animate-neural-aura"
       >
-        {isOpen ? <X size={28} /> : <MessageCircle size={28} />}
+        <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        {isOpen ? <X size={28} className="relative z-10" /> : <MessageCircle size={28} className="relative z-10" />}
       </motion.button>
     </div>
   )
