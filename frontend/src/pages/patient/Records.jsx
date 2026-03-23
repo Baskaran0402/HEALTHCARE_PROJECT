@@ -2,72 +2,81 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import DocumentUpload from '../../components/patient/DocumentUpload';
 import DocumentList from '../../components/patient/DocumentList';
-import { ShieldCheck, Lock, Activity } from 'lucide-react';
-import Navbar from '../../components/Navbar';
+import { 
+  ShieldCheck, 
+  Activity, 
+  Database, 
+  Cpu, 
+  ChevronRight 
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { 
+  ClinicalCard, 
+  ClinicalBadge, 
+  SectionHeader,
+  StatCard
+} from '../../components/ClinicalComponents';
+import { AruviAILayout } from '../../components/ui/AruviAILayout';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const PatientRecords = () => {
-    // In a real app, this would be the logged-in user's profile ID
     const { patientId } = useParams();
     const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const { isMobile, isTablet } = useBreakpoint();
 
     const handleUploadComplete = () => {
         setRefreshTrigger(prev => prev + 1);
     };
 
     return (
-        <div className="records-page-wrapper">
-            <Navbar />
-            <div className="min-h-screen bg-slate-50 p-6 pt-32">
-            <div className="max-w-6xl mx-auto space-y-8">
-                <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-8 border-b border-slate-200">
-                    <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="bg-blue-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-[0.2em]">Medical Vault</span>
-                            <div className="flex items-center gap-1 text-green-600 text-xs font-bold bg-green-50 px-2 py-0.5 rounded border border-green-100">
-                                <ShieldCheck size={12} />
-                                end-to-end encrypted
-                            </div>
+        <AruviAILayout activeTab="Records">
+            <div className={`w-full max-w-7xl mx-auto ${isMobile ? 'px-4' : 'px-8'}`}>
+                <div className="space-y-10 md:space-y-12 pb-24 pt-6 md:pt-10 text-center md:text-left">
+                  
+                  <SectionHeader 
+                    badge="Lattice Vault v2.1 — Secured"
+                    title={<>Clinical <span className="text-teal-600">Archive.</span></>}
+                    subtitle="Multi-layer encrypted storage for longitudinal clinical history, lab reports, and radiological data."
+                    actions={
+                      <ClinicalBadge variant="success" className="font-black text-[9px] uppercase tracking-widest px-4 py-2">
+                        <div className="flex items-center gap-2">
+                          <ShieldCheck size={14} />
+                          <span>AES-256 MASTER-GRADE</span>
                         </div>
-                        <h1 className="text-4xl font-extrabold font-heading text-slate-900 tracking-tight">Health Records</h1>
-                        <p className="text-slate-500 mt-2 font-medium">Securely store and manage your lab reports, prescriptions, and radiology scans.</p>
-                    </div>
+                      </ClinicalBadge>
+                    }
+                  />
 
-                    <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
-                        <div className="bg-slate-50 p-3 rounded-xl text-slate-600">
-                            <Lock size={20}/>
-                        </div>
-                        <div>
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Security Level</p>
-                            <p className="text-lg font-black text-slate-800">AES-256 Military Grade</p>
-                        </div>
-                    </div>
-                </header>
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+                      <div className="lg:col-span-4 space-y-8">
+                          <DocumentUpload patientId={patientId || 'default_patient'} onUploadSuccess={handleUploadComplete} />
+                          
+                          <ClinicalCard className="bg-gradient-to-br from-teal-600 to-teal-800 text-white border-none shadow-premium group relative overflow-hidden p-8 md:p-10 text-center md:text-left">
+                              <div className="absolute top-0 right-0 p-8 opacity-10">
+                                  <Cpu size={100} className="text-white" />
+                              </div>
+                              <div className="relative z-10">
+                                  <div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center text-white mb-8 group-hover:scale-110 transition-transform shadow-xl mx-auto md:mx-0">
+                                      <Activity size={28}/>
+                                  </div>
+                                  <h4 className="text-2xl font-black text-white font-display tracking-tight mb-4 leading-tight uppercase">Neural <br /> Interpretation</h4>
+                                  <p className="text-xs font-bold text-teal-100/60 leading-relaxed uppercase tracking-widest mb-10 opacity-80">
+                                      Activate AI parsing to automatically update clinical profiles based on recent diagnostics.
+                                  </p>
+                                  <button className="w-full py-4 bg-white text-teal-900 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-teal-50 transition-all flex items-center justify-center gap-3 shadow-lg cursor-pointer border-none">
+                                      Initiate Parsing <ChevronRight size={14} />
+                                  </button>
+                              </div>
+                          </ClinicalCard>
+                      </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-1 space-y-6">
-                        <DocumentUpload patientId={patientId || 'default_patient'} onUploadSuccess={handleUploadComplete} />
-                        
-                        <div className="bg-blue-900 text-white p-6 rounded-2xl shadow-xl space-y-4">
-                            <div className="bg-blue-800/50 w-12 h-12 rounded-xl flex items-center justify-center">
-                                <Activity size={24}/>
-                            </div>
-                            <h4 className="text-xl font-bold">Clinical Integration</h4>
-                            <p className="text-blue-100 text-sm leading-relaxed">
-                                Once uploaded, you can securely share reports with your doctor. Our AI Assistant can also parse these files to update your health profile automatically.
-                            </p>
-                            <button className="w-full bg-white text-blue-900 py-3 rounded-xl font-black text-sm uppercase tracking-wider hover:bg-blue-50 transition-colors">
-                                Enable AI Parsing
-                            </button>
-                        </div>
-                    </div>
-
-                    <div className="lg:col-span-2">
-                        <DocumentList patientId={patientId || 'default_patient'} refreshTrigger={refreshTrigger} />
-                    </div>
-                </div>
+                      <div className="lg:col-span-8">
+                          <DocumentList patientId={patientId || 'default_patient'} refreshTrigger={refreshTrigger} />
+                      </div>
+                  </div>
                 </div>
             </div>
-        </div>
+        </AruviAILayout>
     );
 };
 
