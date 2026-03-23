@@ -17,8 +17,10 @@
   --color-dark-surface: #1e293b; /* Slate-800 */
   --color-dark-border: rgba(255, 255, 255, 0.08);
 
-  --font-sans: 'Inter', 'Plus Jakarta Sans', ui-sans-serif, system-ui;
-  --font-display: 'Outfit', 'Syne', sans-serif;
+  --font-sans: 'DM Sans', 'Inter', 'Plus Jakarta Sans', ui-sans-serif, system-ui;
+  --font-display: 'Syne', 'Outfit', sans-serif;
+  --font-syne: 'Syne', sans-serif;
+  --font-dm: 'DM Sans', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
