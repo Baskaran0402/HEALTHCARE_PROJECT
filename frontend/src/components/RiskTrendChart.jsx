@@ -18,15 +18,23 @@ const RiskTrendChart = ({ history }) => {
 
   return (
     <div className="risk-trend-chart" style={{ width: '100%', height: 300, marginTop: '20px' }}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-          <XAxis dataKey="date" stroke="#64748b" fontSize={12} />
-          <YAxis stroke="#64748b" fontSize={12} domain={[0, 100]} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+          <XAxis dataKey="date" stroke="#64748b" fontSize={10} fontWeight={700} axisLine={false} tickLine={false} dy={10} />
+          <YAxis stroke="#64748b" fontSize={10} fontWeight={700} domain={[0, 100]} axisLine={false} tickLine={false} />
           <Tooltip 
-            contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '4px' }}
+            contentStyle={{ 
+              backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+              backdropFilter: 'blur(8px)',
+              border: '1px solid #e2e8f0', 
+              borderRadius: '16px',
+              boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
+              fontSize: '12px',
+              fontWeight: 600
+            }}
           />
-          <Legend />
+          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }} />
           
           <Line type="monotone" dataKey="overall_score" stroke="#3b82f6" strokeWidth={2} name="Overall Health Risk" dot={{ r: 4 }} />
           {/* Individual disease lines could be added here if the data is dense enough, 

@@ -25,4 +25,13 @@ export const doctorService = {
     const response = await apiClient.post(`/api/doctors/${id}/verify-license`);
     return response.data;
   },
+
+  getNearbyDoctors: async (lat, lng, radius, specialization) => {
+    const response = await apiClient.get('/api/doctors/nearby', {
+      params: { lat, lng, radius, specialization }
+    });
+    return response.data;
+  }
 };
+
+export default doctorService;

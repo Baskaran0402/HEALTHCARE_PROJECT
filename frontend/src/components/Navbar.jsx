@@ -1,90 +1,243 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { LogOut, User, LayoutDashboard, Shield, Activity } from 'lucide-react';
-import './Navbar.css';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Brain, Bell, LogOut, User, ChevronDown, Settings } from 'lucide-react';
+import useAuthStore from '../store/authStore';
+import SignupModal from './SignupModal';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const Navbar = () => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-  const location = useLocation();
+    const { isMobile } = useBreakpoint();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const [showSignup, setShowSignup] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { user, isAuthenticated, logout } = useAuthStore();
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const storedUser = localStorage.getItem('user');
-      setUser(storedUser ? JSON.parse(storedUser) : null);
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 10);
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    const links = [
+        { label: 'Home', path: '/' },
+        { label: 'Diagnostics', path: '/diagnostics' },
+        { label: 'Analytics', path: '/analytics' },
+        { label: 'Documentation', path: '/docs' },
+    ];
+
+    const handleLogout = async () => {
+        await logout();
+        setProfileOpen(false);
+        navigate('/');
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('authChange', handleStorageChange);
-    
-    // Initial load
-    handleStorageChange();
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('authChange', handleStorageChange);
+    const getInitials = () => {
+        if (!user) return '??';
+        const first = user.first_name || user.username || '';
+        const last = user.last_name || '';
+        if (first && last) return `${first[0]}${last[0]}`.toUpperCase();
+        return first.substring(0, 2).toUpperCase();
     };
-  }, [location]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    setUser(null);
-    navigate('/login');
-  };
-
-  const getDashboardLink = () => {
-    if (!user) return '/';
-    if (user.role === 'doctor') return '/doctor/dashboard';
-    if (user.role === 'patient') return '/patient/dashboard';
-    if (user.role === 'super_admin' || user.role === 'org_admin') return '/admin/dashboard';
-    return '/';
-  };
-
-  return (
-    <nav className="enterprise-nav glass">
-      <div className="nav-container">
-        <Link to="/" className="logo-section">
-          <div className="logo-icon">AI</div>
-          <span className="logo-text">CarePortal <span className="text-primary">Enterprise</span></span>
-        </Link>
-        
-        <div className="nav-links">
-           <Link to="/demo" className="nav-link">Platform</Link>
-           <Link to="/find-doctors" className="nav-link">Network</Link>
-           
-           {user ? (
-             <div className="auth-profile-section">
-                <Link to={getDashboardLink()} className="nav-dashboard-btn">
-                   <LayoutDashboard size={18} />
-                   <span>Dashboard</span>
+    return (
+        <>
+            <nav style={{
+                position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: isMobile ? '14px 20px' : '18px 48px',
+                background: scrolled ? 'rgba(255, 255, 255, 0.88)' : 'rgba(247, 249, 248, 0.88)',
+                backdropFilter: 'blur(16px)',
+                borderBottom: '1px solid rgba(10,10,15,0.06)',
+                height: isMobile ? '70px' : '88px',
+                transition: 'all 0.3s ease'
+            }}>
+                {/* Logo */}
+                <Link to="/" className="flex items-center gap-3 group" style={{ textDecoration: 'none' }}>
+                    <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform duration-500 group-hover:rotate-[15deg]"
+                        style={{ background: '#0a0a0f' }}
+                    >
+                        <Brain className="w-5 h-5" style={{ color: '#0fd68c' }} />
+                    </div>
+                    <span
+                        className="text-xl tracking-[-0.04em]"
+                        style={{ fontFamily: "'Syne', sans-serif", fontWeight: 900, color: '#0a0a0f' }}
+                    >
+                        AruviAI<span className="text-[#0fd68c]">.</span>
+                    </span>
                 </Link>
-                <div className="user-dropdown">
-                   <div className="user-avatar-small">
-                      {user.username ? user.username.substring(0, 2).toUpperCase() : 'U'}
-                   </div>
-                   <div className="dropdown-menu">
-                      <div className="dropdown-header">
-                         <p className="font-black text-slate-800">{user.username}</p>
-                         <p className="text-[10px] text-slate-400 uppercase tracking-widest">{user.role}</p>
-                      </div>
-                      <div className="dropdown-divider"></div>
-                      <button onClick={handleLogout} className="dropdown-item text-danger">
-                         <LogOut size={16} />
-                         <span>Sign Out</span>
-                      </button>
-                   </div>
+
+                {/* Nav links — hide on mobile */}
+                {!isMobile && (
+                    <ul style={{ display: 'flex', gap: '32px', listStyle: 'none', margin: 0, padding: 0 }}>
+                        {links.map(link => {
+                            const isActive = location.pathname === link.path;
+                            return (
+                                <li key={link.path}>
+                                    <Link
+                                        to={link.path}
+                                        className="relative text-[10px] font-bold uppercase tracking-[0.12em] transition-colors"
+                                        style={{
+                                            fontFamily: "'Syne', sans-serif",
+                                            color: isActive ? '#0fd68c' : 'rgba(10,10,15,0.4)',
+                                            textDecoration: 'none'
+                                        }}
+                                    >
+                                        {link.label}
+                                        {isActive && (
+                                            <motion.div
+                                                layoutId="nav-underline"
+                                                className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full"
+                                                style={{ background: '#0fd68c' }}
+                                            />
+                                        )}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                )}
+
+                {/* Right side */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    {isAuthenticated && user ? (
+                        <div className="flex items-center gap-4">
+                            {!isMobile && (
+                                <button className="w-10 h-10 rounded-xl flex items-center justify-center bg-[#0a0a0f]/5 hover:bg-[#0a0a0f]/10 transition-colors border-none cursor-pointer">
+                                    <Bell size={18} style={{ color: 'rgba(10,10,15,0.4)' }} />
+                                </button>
+                            )}
+
+                            <div className="relative">
+                                <button
+                                    onClick={() => setProfileOpen(!profileOpen)}
+                                    className="flex items-center gap-3 pl-2 pr-3 py-1.5 rounded-full bg-white border border-[#e8ede9] shadow-sm hover:shadow-md transition-all cursor-pointer"
+                                >
+                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[10px]"
+                                        style={{ background: '#0a0a0f', color: '#0fd68c', fontFamily: "'Syne', sans-serif", fontWeight: 900 }}
+                                    >
+                                        {getInitials()}
+                                    </div>
+                                    <ChevronDown size={14} style={{ color: 'rgba(10,10,15,0.3)', transform: profileOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.3s' }} />
+                                </button>
+
+                                <AnimatePresence>
+                                    {profileOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 12, scale: 0.95 }}
+                                            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                                            className="absolute right-0 top-full mt-3 w-64 bg-white border border-[#e8ede9] rounded-24 shadow-2xl overflow-hidden z-50 p-2"
+                                            style={{ borderRadius: '20px' }}
+                                        >
+                                            <div className="p-4 border-b border-[#e8ede9] mb-1">
+                                                <p className="text-sm font-black" style={{ fontFamily: "'Syne', sans-serif", margin: 0 }}>
+                                                    {user.first_name ? `${user.first_name} ${user.last_name || ''}` : user.username}
+                                                </p>
+                                                <p className="text-[10px] uppercase font-bold tracking-widest mt-1 text-[#0fd68c]" style={{ margin: '4px 0 0' }}>{user.role || 'patient'}</p>
+                                            </div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                <Link to="/settings" onClick={() => setProfileOpen(false)}
+                                                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-[#0a0a0f]/60 hover:text-[#0a0a0f] hover:bg-[#f7f9f8] transition-all"
+                                                    style={{ fontFamily: "'Syne', sans-serif", textDecoration: 'none' }}
+                                                >
+                                                    <Settings size={16} /> Platform Settings
+                                                </Link>
+                                                <Link to={user.role === 'patient' ? '/patient/dashboard' : '/dashboard'} onClick={() => setProfileOpen(false)}
+                                                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-[#0a0a0f]/60 hover:text-[#0a0a0f] hover:bg-[#f7f9f8] transition-all"
+                                                    style={{ fontFamily: "'Syne', sans-serif", textDecoration: 'none' }}
+                                                >
+                                                    <User size={16} /> Personal Control
+                                                </Link>
+                                            </div>
+                                            <div className="mt-1 pt-1 border-t border-[#e8ede9]">
+                                                <button onClick={handleLogout}
+                                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-rose-500 hover:bg-rose-50 transition-all border-none cursor-pointer text-left"
+                                                    style={{ fontFamily: "'Syne', sans-serif" }}
+                                                >
+                                                    <LogOut size={16} /> Terminate Session
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            {!isMobile && (
+                                <Link to="/login"
+                                    className="px-6 py-2.5 text-xs font-black uppercase tracking-widest transition-colors"
+                                    style={{ fontFamily: "'Syne', sans-serif", color: 'rgba(10,10,15,0.4)', textDecoration: 'none' }}
+                                >
+                                    Sign In
+                                </Link>
+                            )}
+                            {!isMobile && (
+                                <button
+                                    onClick={() => setShowSignup(true)}
+                                    className="px-8 py-3.5 text-[10px] font-black uppercase tracking-[0.15em] rounded-full shadow-lg shadow-[#0fd68c]/20 transition-all hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+                                    style={{
+                                        fontFamily: "'Syne', sans-serif",
+                                        background: '#0a0a0f',
+                                        color: '#0fd68c',
+                                        border: 'none'
+                                    }}
+                                >
+                                    GET STARTED
+                                </button>
+                            )}
+                        </>
+                    )}
+
+                    {/* Mobile: hamburger only */}
+                    {isMobile && (
+                        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} style={{
+                            background: '#0a0a0f', border: 'none', color: '#0fd68c',
+                            width: '36px', height: '36px', borderRadius: '8px',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1rem'
+                        }}>
+                            {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
+                        </button>
+                    )}
                 </div>
-             </div>
-           ) : (
-             <>
-                <button onClick={() => navigate('/login')} className="btn-secondary">Sign In</button>
-                <button onClick={() => navigate('/register')} className="btn-primary">Get Started</button>
-             </>
-           )}
-        </div>
-      </div>
-    </nav>
-  );
+
+                {/* Mobile dropdown menu */}
+                <AnimatePresence>
+                    {isMobile && mobileMenuOpen && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            style={{
+                                position: 'absolute', top: '100%', left: 0, right: 0,
+                                background: '#060d0a', borderBottom: '1px solid rgba(15,214,140,0.1)',
+                                padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '4px', zIndex: 100
+                            }}
+                        >
+                            {links.map(link => (
+                                <Link key={link.path} to={link.path} onClick={() => setMobileMenuOpen(false)} style={{
+                                    color: 'rgba(255,255,255,0.6)', fontSize: '0.9rem', padding: '12px 8px',
+                                    textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.06)',
+                                    fontFamily: 'DM Sans'
+                                }}>{link.label}</Link>
+                            ))}
+                            {!isAuthenticated && (
+                                <Link to="/login" onClick={() => setMobileMenuOpen(false)} style={{ color: '#0fd68c', fontSize: '0.9rem', padding: '12px 8px', textDecoration: 'none', fontFamily: 'Syne', fontWeight: 700 }}>Sign In →</Link>
+                            )}
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </nav>
+
+            <SignupModal isOpen={showSignup} onClose={() => setShowSignup(false)} />
+        </>
+    );
 };
 
 export default Navbar;
