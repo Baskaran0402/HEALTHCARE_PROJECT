@@ -48,7 +48,21 @@ export default function DashboardLayout({ children }) {
       const connectTimeout = setTimeout(() => {
         if (!isMounted) return;
         
-        socket = new WebSocket(`ws://${window.location.host.split(':')[0]}:8000/ws/alerts/institutional_alerts`);
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const host = window.location.hostname;
+
+        // Build the best possible default WebSocket URL
+        let defaultWsUrl;
+        const apiUrl = import.meta.env.VITE_API_URL;
+
+        if (apiUrl && apiUrl.startsWith('http')) {
+          defaultWsUrl = apiUrl.replace(/^http/, 'ws') + '/ws/alerts/institutional_alerts';
+        } else {
+          const apiPort = window.location.port === '5173' ? '8000' : (window.location.port || (window.location.protocol === 'https:' ? '443' : '80'));
+          defaultWsUrl = `${protocol}//${host}:${apiPort}/ws/alerts/institutional_alerts`;
+        }
+
+        socket = new WebSocket(import.meta.env.VITE_WS_URL || defaultWsUrl);
         
         socket.onmessage = (event) => {
           try {
@@ -82,7 +96,7 @@ export default function DashboardLayout({ children }) {
     <>
       {/* Logo */}
       <div className={`flex items-center gap-2.5 mb-1.5 px-2 py-1 ${isTablet && !sidebarOpen && !isMobile ? 'justify-center' : 'justify-start'}`}>
-        <div 
+        <div
           className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0 border"
           style={{ background: `${accent}15`, borderColor: `${accent}30` }}
         >
@@ -90,7 +104,7 @@ export default function DashboardLayout({ children }) {
         </div>
         {(!isTablet || sidebarOpen || isMobile) && (
           <div className="sidebar-label">
-            <p className="text-white font-[Syne] font-bold text-[0.95rem] m-0 leading-none">AruviAI</p>
+            <p className="text-white font-syne font-bold text-[0.95rem] m-0 leading-none">AruviAI</p>
             <p className="font-bold tracking-[0.1em] uppercase m-0 mt-0.5 text-[0.55rem]" style={{ color: accent }}>Intelligence OS</p>
           </div>
         )}
@@ -98,12 +112,12 @@ export default function DashboardLayout({ children }) {
 
       {/* Role badge */}
       {(!isTablet || sidebarOpen || isMobile) && (
-        <div 
+        <div
           className="inline-flex items-center gap-1.5 px-2.5 py-1.25 rounded-full mx-2 mt-2 mb-3 border"
           style={{ background: `${accent}10`, borderColor: `${accent}25` }}
         >
           <span className="w-1.5 h-1.5 rounded-full" style={{ background: accent }} />
-          <span className="font-bold tracking-[0.1em] uppercase font-[Syne] text-[0.58rem]" style={{ color: accent }}>
+          <span className="font-bold tracking-[0.1em] uppercase font-syne text-[0.58rem]" style={{ color: accent }}>
             {ROLE_LABEL[role]}
           </span>
         </div>
@@ -135,11 +149,11 @@ export default function DashboardLayout({ children }) {
       {/* User info */}
       {(!isTablet || sidebarOpen || isMobile) && (
         <div className="flex items-center gap-2.5 px-3 py-2.5 bg-white/5 rounded-xl mb-5 border border-white/5">
-          <div 
+          <div
             className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
             style={{ background: accent }}
           >
-            <span className="text-[#060d0a] font-[Syne] font-extrabold text-[0.85rem]">
+            <span className="text-[#060d0a] font-syne font-extrabold text-[0.85rem]">
               {user?.name?.charAt(0)?.toUpperCase() || 'U'}
             </span>
           </div>
@@ -222,7 +236,7 @@ export default function DashboardLayout({ children }) {
   )
 
   return (
-    <div className="dashboard-layout h-screen flex overflow-hidden bg-slate-50 relative">
+    <div className="dashboard-layout h-screen flex flex-col md:flex-row w-full overflow-hidden bg-slate-50 relative">
       {/* ── Mobile overlay ── */}
       <div
         className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
@@ -257,21 +271,21 @@ export default function DashboardLayout({ children }) {
               ☰
             </button>
             <div className="flex items-center gap-2">
-              <div 
+              <div
                 className="w-6 h-6 rounded-md flex items-center justify-center border"
                 style={{ background: `${accent}15`, borderColor: `${accent}30` }}
               >
                 <span className="font-bold text-[0.7rem]" style={{ color: accent }}>A</span>
               </div>
-              <span className="text-white font-[Syne] font-bold text-[0.95rem]">AruviAI</span>
+              <span className="text-white font-syne font-bold text-[0.95rem]">AruviAI</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div 
+            <div
               className="w-8 h-8 rounded-full flex items-center justify-center shadow-lg"
               style={{ background: accent }}
             >
-              <span className="text-[#060d0a] font-[Syne] font-extrabold text-[0.8rem]">
+              <span className="text-[#060d0a] font-syne font-extrabold text-[0.8rem]">
                 {user?.name?.charAt(0)?.toUpperCase() || 'U'}
               </span>
             </div>
