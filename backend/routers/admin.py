@@ -11,20 +11,20 @@ router = APIRouter(prefix="/api/admin", tags=["Governance"])
 
 
 @router.get("/users", response_model=List[schemas.UserResponse])
-def get_all_users(db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin"]))):
+def get_all_users(db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))):
     return db.query(models.User).all()
 
 
 @router.get("/users/pending", response_model=List[schemas.UserResponse])
 def get_pending_users(
-    db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin"]))
+    db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))
 ):
     return db.query(models.User).filter(models.User.is_approved.is_(False)).all()
 
 
 @router.put("/users/{user_id}/approve", response_model=schemas.UserResponse)
 def approve_user(
-    user_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin"]))
+    user_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))
 ):
     user = crud.get_user(db, user_id)
     if not user:
@@ -40,7 +40,7 @@ def approve_user(
 
 @router.put("/users/{user_id}/reject", response_model=schemas.UserResponse)
 def reject_user(
-    user_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin"]))
+    user_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))
 ):
     user = crud.get_user(db, user_id)
     if not user:
@@ -54,14 +54,14 @@ def reject_user(
 
 @router.get("/organizations", response_model=List[schemas.OrganizationResponse])
 def get_all_organizations(
-    db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin"]))
+    db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))
 ):
     return db.query(models.Organization).all()
 
 
 @router.get("/system-stats")
 def get_system_stats(
-    db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin"]))
+    db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))
 ):
     total_users = db.query(models.User).count()
     active_sessions = db.query(models.UserSession).filter(models.UserSession.is_active.is_(True)).count()

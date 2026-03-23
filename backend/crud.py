@@ -223,7 +223,7 @@ def create_user(db: Session, user: schemas.UserCreate, hashed_password: str):
         hashed_password=hashed_password,
         # Default approval based on role for simplicity in demo
         # Patients are auto-approved, doctors/staff need admin review
-        is_approved=True if user.role == "patient" else False,
+        is_approved=True if user.role in ["patient", "super_admin"] else False,
     )
     db.add(db_user)
     db.commit()

@@ -89,6 +89,8 @@ def get_current_active_user(current_user: models.User = Depends(get_current_user
 
 def check_role(roles: list):
     def role_checker(current_user: models.User = Depends(get_current_active_user)):
+        if current_user.role == "super_admin":
+            return current_user
         if current_user.role not in roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,

@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* AruviAI Teal Brand */
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 174 46% 32%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 166 76% 47%;
+    --accent-foreground: 174 60% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 174 46% 32%;
+
+    --radius: 0.75rem;
+
+    /* AruviAI Extended Palette */
+    --teal-50: 166 76% 97%;
+    --teal-100: 167 85% 89%;
+    --teal-200: 168 84% 78%;
+    --teal-300: 171 77% 64%;
+    --teal-400: 172 66% 50%;
+    --teal-500: 173 80% 40%;
+    --teal-600: 174 46% 32%;
+    --teal-700: 175 77% 26%;
+    --teal-800: 176 69% 22%;
+    --teal-900: 176 61% 19%;
+
+    --blue-500: 217 91% 60%;
+    --blue-600: 221 83% 53%;
+
+    --success: 160 84% 39%;
+    --warning: 38 92% 50%;
+    --error: 0 84% 60%;
+    --info: 199 89% 48%;
+
+    --slate-25: 220 14% 99%;
+    --slate-50: 210 40% 98%;
+    --slate-100: 210 40% 96%;
+    --slate-200: 214 32% 91%;
+    --slate-400: 215 16% 47%;
+    --slate-600: 215 19% 35%;
+    --slate-900: 222 47% 11%;
+
+    /* Gradients */
+    --gradient-brand: linear-gradient(135deg, hsl(174 46% 32%) 0%, hsl(173 80% 40%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsla(0 0% 100% / 0.8) 0%, hsl(0 0% 100%) 100%);
+    --gradient-shimmer: linear-gradient(90deg, hsl(166 76% 97%) 0%, hsl(214 100% 97%) 50%, hsl(166 76% 97%) 100%);
+
+    /* Shadows */
+    --shadow-subtle: 0 2px 4px hsla(222 47% 11% / 0.04);
+    --shadow-premium: 0 10px 15px -3px hsla(222 47% 11% / 0.08), 0 4px 6px -2px hsla(222 47% 11% / 0.04);
+    --shadow-glow: 0 0 20px hsla(174 46% 32% / 0.2);
+
+    /* Typography */
+    --font-display: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-tamil: 'Noto Sans Tamil', sans-serif;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 19% 35%;
+    --sidebar-primary: 174 46% 32%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 166 76% 97%;
+    --sidebar-accent-foreground: 174 60% 15%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 174 46% 32%;
+  }
+
+  .dark {
+    --background: 222 47% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 8%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 8%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 173 80% 40%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 173 80% 40%;
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 173 80% 40%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 217 33% 17%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 173 80% 40%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-body {
+    font-family: var(--font-body);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+  .font-tamil {
+    font-family: var(--font-tamil);
+  }
+
+  .gradient-brand {
+    background: var(--gradient-brand);
+  }
+  .gradient-shimmer {
+    background: var(--gradient-shimmer);
+  }
+
+  .shadow-subtle {
+    box-shadow: var(--shadow-subtle);
+  }
+  .shadow-premium {
+    box-shadow: var(--shadow-premium);
+  }
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+  }
+}

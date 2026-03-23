@@ -36,8 +36,8 @@ Base.metadata.create_all(bind=engine)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="AI Doctor Healthcare API",
-    description="FastAPI backend for AI-powered healthcare decision support system",
+    title="AruviAI Clinical Intelligence API",
+    description="FastAPI backend for AruviAI — Knowledge-driven clinical intelligence for Indian healthcare",
     version="1.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
@@ -59,7 +59,11 @@ app.include_router(chat.router)
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,35 +73,7 @@ app.add_middleware(
 Instrumentator().instrument(app).expose(app)
 
 
-# ============================================================
-# WebSocket Connection Manager
-# ============================================================
-
-
-class ConnectionManager:
-    def __init__(self):
-        self.active_connections: dict[str, List[WebSocket]] = {}
-
-    async def connect(self, websocket: WebSocket, room_id: str):
-        await websocket.accept()
-        if room_id not in self.active_connections:
-            self.active_connections[room_id] = []
-        self.active_connections[room_id].append(websocket)
-
-    def disconnect(self, websocket: WebSocket, room_id: str):
-        if room_id in self.active_connections:
-            self.active_connections[room_id].remove(websocket)
-
-    async def send_personal_message(self, message: str, websocket: WebSocket):
-        await websocket.send_text(message)
-
-    async def broadcast(self, message: str, room_id: str):
-        if room_id in self.active_connections:
-            for connection in self.active_connections[room_id]:
-                await connection.send_text(message)
-
-
-manager = ConnectionManager()
+from backend.websocket_manager import manager
 
 
 @app.websocket("/ws/chat/{consultation_id}")
@@ -106,10 +82,20 @@ async def websocket_endpoint(websocket: WebSocket, consultation_id: str):
     try:
         while True:
             data = await websocket.receive_text()
-            # In a production app, we would save the message to DB here
             await manager.broadcast(f"{data}", consultation_id)
     except WebSocketDisconnect:
         manager.disconnect(websocket, consultation_id)
+
+
+@app.websocket("/ws/alerts/{room_id}")
+async def alerts_websocket_endpoint(websocket: WebSocket, room_id: str):
+    await manager.connect(websocket, room_id)
+    try:
+        while True:
+            # Just keep the connection alive, alerts are server-to-client
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect(websocket, room_id)
 
 
 # ============================================================
@@ -120,7 +106,7 @@ async def websocket_endpoint(websocket: WebSocket, consultation_id: str):
 @app.get("/", tags=["Health"])
 def root():
     return {
-        "message": "AI Doctor Healthcare API",
+        "message": "AruviAI Clinical Intelligence API",
         "status": "running",
         "docs": "/api/docs",
     }

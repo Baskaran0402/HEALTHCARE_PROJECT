@@ -13,7 +13,7 @@ router = APIRouter(prefix="/api/doctors", tags=["Doctors"])
 def register_doctor(
     doctor: schemas.DoctorBase,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(auth.check_role(["doctor", "admin"])),
+    current_user: models.User = Depends(auth.check_role(["doctor", "admin", "institution"])),
 ):
     # Check if user already has a doctor profile
     existing = crud.get_doctor_by_user_id(db, user_id=current_user.id)
@@ -55,7 +55,7 @@ def update_doctor(
     if not db_doctor:
         raise HTTPException(status_code=404, detail="Doctor not found")
 
-    if db_doctor.user_id != current_user.id and current_user.role != "admin":
+    if db_doctor.user_id != current_user.id and current_user.role not in ["admin", "institution"]:
         raise HTTPException(status_code=403, detail="Not authorized to update this profile")
 
     return crud.update_doctor(db, doctor_id=doctor_id, update=update)
@@ -63,7 +63,7 @@ def update_doctor(
 
 @router.post("/{doctor_id}/verify-license", response_model=schemas.DoctorResponse)
 def verify_doctor_license(
-    doctor_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["admin"]))
+    doctor_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["admin", "institution"]))
 ):
     db_doctor = crud.get_doctor(db, doctor_id=doctor_id)
     if not db_doctor:

@@ -1,4 +1,5 @@
 from typing import List
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -15,9 +16,31 @@ def request_consultation(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(auth.check_role(["patient"])),
 ):
-    # Verify patient_id matches user's patient profile
-    # (Assuming patient profile is linked to user)
-    return crud.create_doctor_consultation(db=db, consultation=consultation)
+    # Resolve the patient profile from the authenticated user.
+    # The frontend may send the User.id, but the FK requires the Patient profile id.
+    patient = db.query(models.Patient).filter(
+        models.Patient.user_id == current_user.id
+    ).first()
+
+    if not patient:
+        # Auto-create a minimal patient profile if the user hasn't done an assessment yet
+        patient = models.Patient(
+            id=str(uuid.uuid4()),
+            user_id=current_user.id,
+            name=f"{current_user.first_name or ''} {current_user.last_name or ''}".strip() or current_user.username,
+            age=0,  # placeholder — updated when they complete an assessment
+            gender="Unknown",
+            email=current_user.email,
+        )
+        db.add(patient)
+        db.commit()
+        db.refresh(patient)
+
+    # Always use the resolved patient profile id — never trust the frontend value
+    consultation_data = schemas.DoctorConsultationCreate(
+        **{**consultation.model_dump(), "patient_id": patient.id}
+    )
+    return crud.create_doctor_consultation(db=db, consultation=consultation_data)
 
 
 @router.get("/{consultation_id}", response_model=schemas.DoctorConsultationResponse)

@@ -61,7 +61,7 @@ class User(Base):
     email = Column(String(255), unique=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
 
-    # role: super_admin, org_admin, doctor, nurse, patient, researcher
+    # role: super_admin, org_admin, doctor, patient, institution
     role = Column(String(50), nullable=False)
 
     first_name = Column(String(100), nullable=True)

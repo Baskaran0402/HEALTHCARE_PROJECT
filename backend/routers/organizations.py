@@ -29,10 +29,10 @@ def get_organization(org_id: str, db: Session = Depends(get_db)):
 def get_organization_users(
     org_id: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(auth.check_role(["org_admin", "super_admin"])),
+    current_user: models.User = Depends(auth.check_role(["org_admin", "super_admin", "institution"])),
 ):
     # Verify the admin belongs to this org unless super_admin
-    if current_user.role != "super_admin" and current_user.organization_id != org_id:
+    if current_user.role not in ["super_admin", "institution"] and current_user.organization_id != org_id:
         raise HTTPException(status_code=403, detail="Not authorized to access this organization's users")
 
     return db.query(models.User).filter(models.User.organization_id == org_id).all()
@@ -42,13 +42,13 @@ def get_organization_users(
 def approve_user(
     user_id: str,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(auth.check_role(["org_admin", "super_admin"])),
+    current_user: models.User = Depends(auth.check_role(["org_admin", "super_admin", "institution"])),
 ):
     user = crud.get_user(db, user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if current_user.role != "super_admin" and current_user.organization_id != user.organization_id:
+    if current_user.role not in ["super_admin", "institution"] and current_user.organization_id != user.organization_id:
         raise HTTPException(status_code=403, detail="Not authorized to approve users from another organization")
 
     user.is_approved = True

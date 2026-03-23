@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.orm import Session
 
 from backend import crud, schemas
@@ -183,6 +185,26 @@ class HealthAnalysisService:
                 },
             ),
         )
+
+        # 10. REAL-TIME ALERT: Broadcast "Critical Risk" to Doctor/Admin Nodes
+        if assessment.overall_risk_level in ["Critical", "High"]:
+            from backend.websocket_manager import manager
+            import json
+
+            alert_payload = {
+                "type": "CRITICAL_RISK_ALERT",
+                "patient_name": patient.name,
+                "risk_level": assessment.overall_risk_level,
+                "score": assessment.overall_risk_score,
+                "concerns": assessment.primary_concerns,
+                "timestamp": datetime.utcnow().isoformat(),
+                "assessment_id": assessment.id,
+                "patient_id": patient.id
+            }
+            
+            # Broadcast to a global alerts room for staff
+            import asyncio
+            asyncio.create_task(manager.broadcast(json.dumps(alert_payload), "institutional_alerts"))
 
         # 10. Refresh and return
         self.db.refresh(patient)
