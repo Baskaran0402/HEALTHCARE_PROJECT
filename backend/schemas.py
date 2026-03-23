@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 # ============================================================
 # Patient Schemas
@@ -30,8 +30,7 @@ class PatientResponse(PatientBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -76,9 +75,8 @@ class MedicalRecordResponse(MedicalRecordBase):
     id: str
     patient_id: str
     recorded_at: datetime
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -108,9 +106,8 @@ class ConsultationResponse(ConsultationBase):
     conversation_history: List[Dict[str, str]]
     started_at: datetime
     completed_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -135,9 +132,8 @@ class HealthAssessmentCreate(BaseModel):
 class HealthAssessmentResponse(HealthAssessmentCreate):
     id: str
     assessed_at: datetime
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -213,7 +209,7 @@ class AppointmentResponse(AppointmentCreate):
 class UserBase(BaseModel):
     username: str = Field(..., min_length=3, max_length=50)
     email: EmailStr
-    role: str = Field(..., pattern="^(super_admin|org_admin|doctor|nurse|patient|researcher)$")
+    role: str = Field(..., pattern="^(super_admin|org_admin|doctor|patient|institution)$")
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     phone: Optional[str] = None
@@ -236,6 +232,18 @@ class Token(BaseModel):
     token_type: str
 
 
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
+
+class LogoutRequest(BaseModel):
+    refresh_token: str
+
+
+class GoogleLoginRequest(BaseModel):
+    token: str
+
+
 class TokenData(BaseModel):
     user_id: Optional[str] = None
     role: Optional[str] = None
@@ -248,9 +256,8 @@ class UserResponse(UserBase):
     is_approved: bool
     created_at: datetime
     last_login: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -279,9 +286,8 @@ class OrganizationResponse(OrganizationBase):
     is_verified: bool
     is_active: bool
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -344,9 +350,8 @@ class DoctorResponse(DoctorBase):
     is_verified: bool
     created_at: datetime
     updated_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -363,6 +368,7 @@ class DoctorConsultationBase(BaseModel):
 
 class DoctorConsultationCreate(DoctorConsultationBase):
     ai_assessment_id: Optional[str] = None
+    scheduled_for: Optional[datetime] = None
 
 
 class DoctorConsultationUpdate(BaseModel):
@@ -396,9 +402,8 @@ class DoctorConsultationResponse(DoctorConsultationBase):
     meeting_link: Optional[str] = None
     rating: Optional[int] = None
     patient_feedback: Optional[str] = None
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -424,9 +429,8 @@ class MessageResponse(MessageBase):
     is_read: bool
     read_at: Optional[datetime] = None
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -474,9 +478,8 @@ class DocumentResponse(DocumentBase):
     is_verified: bool
     verified_by: Optional[str] = None
     verified_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 class DocumentShareRequest(BaseModel):
@@ -492,16 +495,14 @@ class DocumentAccessLogResponse(BaseModel):
     ip_address: Optional[str] = None
     accessed_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class AuditLogResponse(AuditLogCreate):
     id: str
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -526,9 +527,8 @@ class PrescriptionResponse(PrescriptionBase):
     doctor_id: str
     patient_id: str
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -554,9 +554,8 @@ class SOSAlertResponse(SOSAlertBase):
     nearby_hospitals: List[Dict[str, Any]]
     created_at: datetime
     resolved_at: Optional[datetime] = None
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
 
 
 # ============================================================
@@ -580,6 +579,5 @@ class PaymentResponse(PaymentBase):
     status: str
     transaction_id: Optional[str]
     created_at: datetime
-
-    class Config:
-        from_attributes = True
+    
+    model_config = ConfigDict(from_attributes=True)
