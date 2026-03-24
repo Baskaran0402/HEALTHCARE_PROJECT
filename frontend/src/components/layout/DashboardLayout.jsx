@@ -105,7 +105,7 @@ export default function DashboardLayout({ children }) {
         {(!isTablet || sidebarOpen || isMobile) && (
           <div className="sidebar-label">
             <p className="text-white font-syne font-bold text-[0.95rem] m-0 leading-none">AruviAI</p>
-            <p className="font-bold tracking-[0.1em] uppercase m-0 mt-0.5 text-[0.55rem]" style={{ color: accent }}>Intelligence OS</p>
+            <p className="font-bold tracking-[0.1em] uppercase m-0 mt-0.5 text-[0.55rem] font-dm" style={{ color: accent }}>Intelligence OS</p>
           </div>
         )}
       </div>
@@ -126,13 +126,13 @@ export default function DashboardLayout({ children }) {
       {/* Simulation shell for super_admin */}
       {(user?.role === 'super_admin' || user?.email === '2022ad0128@svce.ac.in') && (!isTablet || sidebarOpen || isMobile) && (
         <div className="mx-2 mb-5 p-2.5 rounded-xl border border-white/5 bg-white/5">
-          <p className="text-white/30 text-[0.5rem] font-extrabold uppercase tracking-[0.08em] mb-2">Simulation Shell</p>
+          <p className="text-white/30 text-[0.5rem] font-extrabold uppercase tracking-[0.08em] mb-2 font-dm">Simulation Shell</p>
           <div className="grid grid-cols-2 gap-1">
             {['patient', 'doctor', 'institution', 'super_admin'].map(r => (
               <button 
                 key={r}
                 onClick={() => setRole(r)}
-                className="px-0.5 py-1.5 rounded-md text-[0.55rem] font-bold capitalize transition-all border outline-none font-inter cursor-pointer"
+                className="px-0.5 py-1.5 rounded-md text-[0.55rem] font-bold capitalize transition-all border outline-none font-dm cursor-pointer"
                 style={{
                   background: role === r ? ROLE_ACCENT[r] : 'rgba(255,255,255,0.04)',
                   color: role === r ? '#060d0a' : 'rgba(255,255,255,0.4)',
@@ -158,8 +158,8 @@ export default function DashboardLayout({ children }) {
             </span>
           </div>
           <div className="overflow-hidden">
-            <p className="text-white text-[0.8rem] font-semibold m-0 whitespace-nowrap overflow-hidden text-ellipsis">{user?.name || 'User'}</p>
-            <p className="text-white/30 text-[0.65rem] m-0 whitespace-nowrap overflow-hidden text-ellipsis">{user?.email || ''}</p>
+            <p className="text-white text-[0.8rem] font-semibold m-0 whitespace-nowrap overflow-hidden text-ellipsis font-dm">{user?.name || 'User'}</p>
+            <p className="text-white/30 text-[0.65rem] m-0 whitespace-nowrap overflow-hidden text-ellipsis font-dm">{user?.email || ''}</p>
           </div>
         </div>
       )}
@@ -169,7 +169,7 @@ export default function DashboardLayout({ children }) {
         {config?.sections?.map(section => (
           <div key={section.title} className="mb-4">
             {(!isTablet || sidebarOpen || isMobile) && (
-              <p className="text-slate-500 text-[0.6rem] font-black tracking-[0.18em] uppercase px-2.5 mb-2 mt-2">
+              <p className="text-slate-500 text-[0.6rem] font-black tracking-[0.18em] uppercase px-2.5 mb-2 mt-2 font-dm">
                 {section.title}
               </p>
             )}
@@ -191,7 +191,7 @@ export default function DashboardLayout({ children }) {
                   <>
                     <span className="text-base shrink-0">◈</span>
                     {(!isTablet || sidebarOpen || isMobile) && (
-                      <span className={`sidebar-label flex-1 ml-2 text-[0.8rem] tracking-tight font-inter ${isActive ? 'font-bold' : 'font-medium'}`}>
+                      <span className={`sidebar-label flex-1 ml-2 text-[0.8rem] tracking-tight font-dm ${isActive ? 'font-bold' : 'font-medium'}`}>
                         {item.label}
                       </span>
                     )}
@@ -216,7 +216,7 @@ export default function DashboardLayout({ children }) {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ background: accent }}></span>
             <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: accent }}></span>
           </div>
-          <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white font-mono">Neural Heartbeat Nominal</span>
+          <span className="text-[0.6rem] font-bold tracking-[0.2em] uppercase text-white font-dm">Neural Heartbeat Nominal</span>
         </div>
       )}
 
@@ -229,7 +229,7 @@ export default function DashboardLayout({ children }) {
           `}
         >
           <span className="text-lg leading-none">→</span>
-          {(!isTablet || sidebarOpen || isMobile) && <span className="sidebar-label ml-2 font-inter font-medium text-[0.75rem] uppercase tracking-wider">De-authorize Session</span>}
+          {(!isTablet || sidebarOpen || isMobile) && <span className="sidebar-label ml-2 font-dm font-medium text-[0.75rem] uppercase tracking-wider">De-authorize Session</span>}
         </button>
       </div>
     </>

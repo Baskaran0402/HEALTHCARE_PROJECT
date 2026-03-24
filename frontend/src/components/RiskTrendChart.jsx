@@ -31,10 +31,11 @@ const RiskTrendChart = ({ history }) => {
               borderRadius: '16px',
               boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
               fontSize: '12px',
-              fontWeight: 600
+              fontWeight: 600,
+              fontFamily: 'DM Sans'
             }}
           />
-          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'Syne' }} />
+          <Legend wrapperStyle={{ paddingTop: '20px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'DM Sans' }} />
           
           <Line type="monotone" dataKey="overall_score" stroke="#3b82f6" strokeWidth={2} name="Overall Health Risk" dot={{ r: 4 }} />
           {/* Individual disease lines could be added here if the data is dense enough, 
