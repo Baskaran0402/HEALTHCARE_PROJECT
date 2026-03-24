@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   ShieldCheck, LogIn, ChevronRight, Fingerprint, Lock, 
   Mail, User, ArrowRight, Dna, Activity, CheckCircle2,
@@ -48,7 +48,7 @@ export function AuthGate({ onAuthSuccess }) {
         } else {
           setError('Organizational Restriction: Only @svce.ac.in accounts are permitted access.');
         }
-      } catch (err) {
+      } catch (e) {
         setError('Authentication Failed: Could not connect to Google Identity Platform.');
       } finally {
         setIsLoading(false);

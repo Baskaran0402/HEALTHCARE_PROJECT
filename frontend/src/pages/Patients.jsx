@@ -3,9 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Users, Search, UserPlus, Filter, 
-  MoreVertical, ChevronRight, Activity, 
-  Calendar, MapPin, Hash, ArrowUpRight,
-  Database, ShieldCheck, Mail, Phone
+  ChevronRight, Activity, 
+  Calendar, MapPin,
+  Database, ShieldCheck
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import patientService from '../services/patientService';

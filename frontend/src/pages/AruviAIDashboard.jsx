@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import dashboardService from '../services/dashboardService';
 import {
-  Users, Activity, Search, Filter, Upload, Brain,
-  ShieldCheck, Zap, Heart, MoreHorizontal, FileImage
+  Users, Activity, Search, Filter, Upload,
+  Zap, Heart, MoreHorizontal, FileImage
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -16,7 +16,7 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 export default function AruviAIDashboard() {
   const [range, setRange] = useState('7D');
   const [mriFile, setMriFile] = useState(null);
-  const { isMobile, isTablet } = useBreakpoint();
+  const { isMobile } = useBreakpoint();
 
   const { data: throughput = [] } = useQuery({
     queryKey: ['throughput', range],

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import patientService from '../services/patientService'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Home, FileText, Activity, AlertCircle, ChevronRight, User, Calendar, ShieldCheck, Mail, MapPin } from 'lucide-react'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { Home, FileText, Activity, AlertCircle, ChevronRight, User, ShieldCheck, MapPin } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { AruviAILayout } from '../components/ui/AruviAILayout'
 import { 
@@ -15,7 +15,6 @@ import {
 const PatientDashboard = () => {
   const { patientId } = useParams()
   const navigate = useNavigate()
-  const { t } = useTranslation()
   const [patient, setPatient] = useState(null)
   const [assessments, setAssessments] = useState([])
   const [loading, setLoading] = useState(true)

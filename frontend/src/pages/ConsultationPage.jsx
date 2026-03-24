@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { 
   Activity, User, Heart, ChevronRight, Zap, 
-  ShieldCheck, ArrowRight, Save, Database, 
+  ShieldCheck, ArrowRight, Database, 
   Dna, Brain, Scale
 } from 'lucide-react';
 import consultationService from '../services/consultationService';
@@ -12,10 +11,6 @@ import { ClinicalCard, ClinicalBadge, ClinicalInput, ClinicalTextArea } from '..
 import { useToast } from '../components/ui/Toast';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
-const container = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
-};
 const item = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 }
@@ -63,17 +58,19 @@ const ConsultationPage = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [loadingMessage, setLoadingMessage] = useState('');
 
   useEffect(() => {
-    if (formData.height && formData.weight) {
-      const h = parseFloat(formData.height) / 100;
-      const w = parseFloat(formData.weight);
-      if (h > 0) {
-        setFormData(prev => ({ ...prev, bmi: (w / (h * h)).toFixed(1) }));
+    const h = parseFloat(formData.height) / 100;
+    const w = parseFloat(formData.weight);
+    if (h > 0 && w > 0) {
+      const newBmi = (w / (h * h)).toFixed(1);
+      if (formData.bmi !== newBmi) {
+        setFormData(prev => ({ ...prev, bmi: newBmi }));
       }
+    } else if (formData.bmi !== '') {
+      setFormData(prev => ({ ...prev, bmi: '' }));
     }
-  }, [formData.height, formData.weight]);
+  }, [formData.height, formData.weight, formData.bmi]);
 
   const getBMICategory = (bmi) => {
     if (!bmi) return '';
@@ -98,9 +95,7 @@ const ConsultationPage = () => {
       addToast('Identifier Check Failed: Patient Name is required.', 'error');
       return;
     }
-
     setLoading(true);
-    setLoadingMessage('Initializing Neural Stratification...');
 
     try {
       const requestData = {
@@ -149,11 +144,8 @@ const ConsultationPage = () => {
           context: role
         }
       };
-
-      setLoadingMessage('Bridging Institutional Lattice...');
       const response = await consultationService.analyzeHealth(requestData);
       
-      setLoadingMessage('Finalizing Transcript...');
       setTimeout(() => {
         setLoading(false);
         navigate('/results', { state: { 
@@ -168,6 +160,16 @@ const ConsultationPage = () => {
       setLoading(false);
       addToast("Handshake Failed: Neural engine rejected the diagnostic packet.", "error");
     }
+  };
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 }
   };
 
   return (

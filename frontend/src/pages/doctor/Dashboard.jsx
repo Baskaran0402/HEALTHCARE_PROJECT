@@ -4,7 +4,6 @@ import consultationService from '../../services/consultationService';
 import doctorService from '../../services/doctorService';
 import useAuthStore from '../../store/authStore';
 import { 
-  User, 
   Users,
   Calendar, 
   MessageSquare, 
@@ -19,19 +18,15 @@ import {
   Stethoscope,
   Database,
   Briefcase,
-  Zap,
   MoreHorizontal,
-  Mail,
   UserCheck,
   Search,
   Bell,
   RefreshCw,
   ExternalLink,
-  ChevronDown,
-  Dna,
-  Microscope
+  ChevronDown
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 import { AruviAILayout } from '../../components/ui/AruviAILayout';

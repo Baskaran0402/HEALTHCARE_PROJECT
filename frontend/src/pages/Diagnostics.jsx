@@ -6,7 +6,7 @@ import { AruviAILayout } from '../components/ui/AruviAILayout';
 import { ClinicalCard, ClinicalBadge } from '../components/ClinicalComponents';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
-const DiagnosticModule = ({ icon: Icon, title, description, path, color, badge, isMobile }) => {
+const DiagnosticModule = ({ icon: Icon, title, description, path, badge, isMobile }) => {
   const navigate = useNavigate();
   return (
     <ClinicalCard 
