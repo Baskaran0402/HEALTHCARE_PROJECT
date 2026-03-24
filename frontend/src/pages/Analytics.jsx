@@ -10,15 +10,15 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, BarChart, Bar, Cell, PieChart as RePieChart, Pie
 } from 'recharts';
-import { ClinicalCard, ClinicalBadge, StatCard } from '../components/ClinicalComponents';
+import { ClinicalCard, StatCard } from '../components/ClinicalComponents';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
 export default function Analytics() {
-  const { data: metrics, isLoading } = useQuery({
+  const { data: metrics } = useQuery({
     queryKey: ['analyticsMetrics'],
     queryFn: () => analyticsService.getDashboardMetrics(),
   });
-  const { isMobile, isTablet } = useBreakpoint();
+  const { isMobile } = useBreakpoint();
 
   const displayStats = metrics ? [
     { label: 'Throughput', value: metrics.total_throughput || '412', trend: '+12.5%', icon: <Activity size={20} /> },

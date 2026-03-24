@@ -57,5 +57,6 @@ def seed_special_account():
     finally:
         db.close()
 
+
 if __name__ == "__main__":
     seed_special_account()
