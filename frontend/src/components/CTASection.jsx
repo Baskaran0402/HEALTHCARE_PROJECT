@@ -4,6 +4,18 @@ import { ArrowRight, Play } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useBreakpoint } from '../hooks/useBreakpoint';
 
+// Pre-calculated random offsets moved outside component to maintain purity
+const particles = [...Array(20)].map((_, i) => ({
+  id: i,
+  x: Math.random() * 100 - 50,
+  y: Math.random() * 100 - 50,
+  duration: 5 + Math.random() * 5,
+  left: `${Math.random() * 100}%`,
+  top: `${Math.random() * 100}%`,
+  width: `${Math.random() * 4 + 1}px`,
+  height: `${Math.random() * 4 + 1}px`
+}));
+
 export function CTASection() {
   const { isMobile } = useBreakpoint();
 
@@ -14,27 +26,27 @@ export function CTASection() {
       
       {/* Dynamic particles background illusion */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((p) => (
           <motion.div
-            key={i}
+            key={p.id}
             initial={{ opacity: 0.1, scale: 0.5 }}
             animate={{ 
               opacity: [0.1, 0.3, 0.1], 
               scale: [0.5, 1, 0.5],
-              x: Math.random() * 100 - 50,
-              y: Math.random() * 100 - 50
+              x: p.x,
+              y: p.y
             }}
             transition={{ 
-              duration: 5 + Math.random() * 5, 
+              duration: p.duration, 
               repeat: Infinity, 
               ease: "easeInOut" 
             }}
             style={{
               position: 'absolute',
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 4 + 1}px`,
-              height: `${Math.random() * 4 + 1}px`,
+              left: p.left,
+              top: p.top,
+              width: p.width,
+              height: p.height,
               background: '#0fd68c',
               borderRadius: '50%',
               filter: 'blur(1px)'

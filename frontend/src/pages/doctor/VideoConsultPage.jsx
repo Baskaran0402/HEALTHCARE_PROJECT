@@ -9,25 +9,13 @@ export default function VideoConsultPage() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Extract room from query or state, fallback to a unique institutional room
-  const queryParams = new URLSearchParams(location.search);
-  const roomName = queryParams.get('room') || `AruviAI-Clinical-${Math.random().toString(36).substring(7)}`;
+  const [fallbackRoomId] = useState(() => Math.random().toString(36).substring(7));
+  const roomName = React.useMemo(() => {
+    const queryParams = new URLSearchParams(location.search);
+    return queryParams.get('room') || `AruviAI-Clinical-${fallbackRoomId}`;
+  }, [location.search, fallbackRoomId]);
 
-  useEffect(() => {
-    // Load Jitsi External API script dynamically if not present
-    const script = document.createElement('script');
-    script.src = 'https://meet.jit.si/external_api.js';
-    script.async = true;
-    script.onload = () => startConference();
-    document.body.appendChild(script);
-
-    return () => {
-      if (jitsiApi) jitsiApi.dispose();
-      document.body.removeChild(script);
-    };
-  }, []);
-
-  const startConference = () => {
+  const startConference = React.useCallback(() => {
     if (!window.JitsiMeetExternalAPI) return;
 
     const domain = 'meet.jit.si';
@@ -70,7 +58,21 @@ export default function VideoConsultPage() {
     });
 
     setJitsiApi(api);
-  };
+  }, [roomName, navigate]);
+
+  useEffect(() => {
+    // Load Jitsi External API script dynamically if not present
+    const script = document.createElement('script');
+    script.src = 'https://meet.jit.si/external_api.js';
+    script.async = true;
+    script.onload = () => startConference();
+    document.body.appendChild(script);
+
+    return () => {
+      if (jitsiApi) jitsiApi.dispose();
+      document.body.removeChild(script);
+    };
+  }, [startConference, jitsiApi]);
 
   const handleEndCall = () => {
     if (jitsiApi) jitsiApi.executeCommand('hangup');

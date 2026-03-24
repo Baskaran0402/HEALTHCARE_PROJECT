@@ -22,10 +22,7 @@ import {
   Cpu,
   Database,
   Lock,
-  LayoutDashboard,
-  LayoutGrid,
   FileSearch,
-  Fingerprint,
   ChevronDown,
   Menu,
   X,
@@ -544,24 +541,30 @@ const SystemAuditTrail = () => (
         </button>
      </div>
 
-     <div className="space-y-4 max-w-5xl mx-auto">
-        {[1,2,3,4,5,6,7,8].map(i => (
-           <div key={i} className="flex items-center gap-8 p-6 rounded-2xl border border-[#E1EBF9] hover:bg-[#F0F6FE]/50 transition-all group">
-              <div className={`w-2 h-2 rounded-full ${i === 1 ? 'bg-[#E53E3E]' : 'bg-[#000DB5]/40'} group-hover:bg-[#000DB5] transition-all`} />
-              <div className="flex-1 min-w-0">
-                 <div className="flex flex-wrap items-center gap-4 mb-2">
-                    <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded border ${i === 1 ? 'bg-[#FFF5F5] text-[#E53E3E] border-[#FED7D7]' : 'bg-[#F0F6FE] text-[#000DB5] border-[#E1EBF9]'}`}>{i === 1 ? 'SYS_CRITICAL' : i % 2 === 0 ? 'NET_UPLINK' : 'AUTH_EVENT'}</span>
-                    <span className="text-sm font-bold text-[#000650] truncate">Diagnostic node synchronization finalized for seq_{Math.random().toString(16).substring(2, 6)}</span>
-                 </div>
-                 <p className="text-[10px] font-mono font-bold text-[#718096]/40 uppercase tracking-widest">Hash: 0x{Math.random().toString(16).substring(2, 24).toUpperCase()}</p>
-              </div>
-              <div className="text-right shrink-0">
-                 <p className="text-xs font-bold text-[#000650] mb-1">T-minus {i*4}s</p>
-                 <span className="text-[8px] font-bold text-[#718096] uppercase tracking-widest italic">{i % 2 === 0 ? 'Alpha Cluster' : 'Gamma Node'}</span>
-              </div>
-           </div>
-        ))}
-     </div>
+      <div className="space-y-4 max-w-5xl mx-auto">
+        {React.useState(() => [1,2,3,4,5,6,7,8].map(i => {
+           const seqId = Math.random().toString(16).substring(2, 6);
+           const hash = Math.random().toString(16).substring(2, 24).toUpperCase();
+           return { i, seqId, hash };
+        }))[0].map(({ i, seqId, hash }) => {
+           return (
+            <div key={i} className="flex items-center gap-8 p-6 rounded-2xl border border-[#E1EBF9] hover:bg-[#F0F6FE]/50 transition-all group">
+               <div className={`w-2 h-2 rounded-full ${i === 1 ? 'bg-[#E53E3E]' : 'bg-[#000DB5]/40'} group-hover:bg-[#000DB5] transition-all`} />
+               <div className="flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-4 mb-2">
+                     <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded border ${i === 1 ? 'bg-[#FFF5F5] text-[#E53E3E] border-[#FED7D7]' : 'bg-[#F0F6FE] text-[#000DB5] border-[#E1EBF9]'}`}>{i === 1 ? 'SYS_CRITICAL' : i % 2 === 0 ? 'NET_UPLINK' : 'AUTH_EVENT'}</span>
+                     <span className="text-sm font-bold text-[#000650] truncate">Diagnostic node synchronization finalized for seq_{seqId}</span>
+                  </div>
+                  <p className="text-[10px] font-mono font-bold text-[#718096]/40 uppercase tracking-widest">Hash: 0x{hash}</p>
+               </div>
+               <div className="text-right shrink-0">
+                  <p className="text-xs font-bold text-[#000650] mb-1">T-minus {i*4}s</p>
+                  <span className="text-[8px] font-bold text-[#718096] uppercase tracking-widest italic">{i % 2 === 0 ? 'Alpha Cluster' : 'Gamma Node'}</span>
+               </div>
+            </div>
+           );
+        })}
+      </div>
      
      <div className="mt-20 text-center">
         <button className="btn-pill btn-pill-primary py-4 px-12 text-sm flex items-center gap-4 mx-auto">
