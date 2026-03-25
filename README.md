@@ -46,144 +46,144 @@ The color system is derived from semantic risk stratification:
 
 AruviAI operates on a **Tri-Layer Stratification Architecture**, ensuring a seamless flow from clinical data acquisition to diagnostic synthesis.
 
+### 1. Detailed System Architecture Diagram
 ```mermaid
-  graph TD
-      %% Styling
-      classDef frontend fill:#61DAFB,stroke:#000,stroke-width:2px,color:#000
-      classDef backend fill:#009688,stroke:#000,stroke-width:2px,color:#fff
-      classDef ai fill:#4f46e5,stroke:#000,stroke-width:2px,color:#fff
-      classDef database fill:#336791,stroke:#000,stroke-width:2px,color:#fff
-      classDef external fill:#FF9900,stroke:#000,stroke-width:2px,color:#000
+graph TD
+    %% Styling
+    classDef frontend fill:#61DAFB,stroke:#000,stroke-width:2px,color:#000
+    classDef backend fill:#009688,stroke:#000,stroke-width:2px,color:#fff
+    classDef ai fill:#4f46e5,stroke:#000,stroke-width:2px,color:#fff
+    classDef database fill:#336791,stroke:#000,stroke-width:2px,color:#fff
+    classDef external fill:#FF9900,stroke:#000,stroke-width:2px,color:#000
 
-      %% Client Layer
-      subgraph Client Layer ["🖥️ Client Interfaces (React/Vite)"]
-          UI_Pat["Patient Dashboard"]:::frontend
-          UI_Doc["Clinician Workspace"]:::frontend
-          UI_Admin["Institutional Dashboard"]:::frontend
-          UI_Chat["Kira A.I. Chat Interface"]:::frontend
-          UI_3D["3D Anatomy Viewer"]:::frontend
-      end
+    %% Client Layer
+    subgraph Client_Layer ["🖥️ Client Interfaces (React/Vite)"]
+        UI_Pat["Patient Dashboard"]:::frontend
+        UI_Doc["Clinician Workspace"]:::frontend
+        UI_Admin["Institutional Dashboard"]:::frontend
+        UI_Chat["Kira A.I. Chat Interface"]:::frontend
+        UI_3D["3D Anatomy Viewer"]:::frontend
+    end
 
-      %% API Gateway & Backend Layer
-      subgraph API Gateway ["⚙️ Backend Layer (FastAPI)"]
-          API_Auth["Auth & JWT Router"]:::backend
-          API_Doc["Document & PDF Router"]:::backend
-          API_Ana["Analytics & Alerts Router"]:::backend
-          API_Consult["Human Consultations & WebSockets"]:::backend
-      end
+    %% API Gateway & Backend Layer
+    subgraph API_Gateway ["⚙️ Backend Layer (FastAPI)"]
+        API_Auth["Auth & JWT Router"]:::backend
+        API_Doc["Document & PDF Router"]:::backend
+        API_Ana["Analytics & Alerts Router"]:::backend
+        API_Consult["Human Consultations & WebSockets"]:::backend
+    end
 
-      %% Neural Orchestration Layer
-      subgraph Orchestration ["🧠 Neural Orchestration (src/coordinator)"]
-          Coord_Exec["Executor Engine"]:::ai
-          Coord_Cross["Cross-Intelligence Engine"]:::ai
-          Coord_Explain["Explainability Engine (SHAP)"]:::ai
-          Coord_Agg["Synthesis Aggregator"]:::ai
-      end
+    %% Neural Orchestration Layer
+    subgraph Orchestration ["🧠 Neural Orchestration (src/coordinator)"]
+        Coord_Exec["Executor Engine"]:::ai
+        Coord_Cross["Cross-Intelligence Engine"]:::ai
+        Coord_Explain["Explainability Engine (SHAP)"]:::ai
+        Coord_Agg["Synthesis Aggregator"]:::ai
+    end
 
-      %% Specialized ML Nodes
-      subgraph ML Nodes ["🔬 Specialized AI Agents (src/agents)"]
-          Agent_Kira["Kira Conversational Agent"]:::ai
-          Agent_CV["Brain Tumor CV Agent"]:::ai
-          Agent_Heart["Cardiovascular Agent"]:::ai
-          Agent_Metabolic["Metabolic/Diabetes Agent"]:::ai
-          Agent_Renal["Renal/Kidney Agent"]:::ai
-          Agent_Hepatic["Hepatic/Liver Agent"]:::ai
-      end
+    %% Specialized ML Nodes
+    subgraph ML_Nodes ["🔬 Specialized AI Agents (src/agents)"]
+        Agent_Kira["Kira Conversational Agent"]:::ai
+        Agent_CV["Brain Tumor CV Agent"]:::ai
+        Agent_Heart["Cardiovascular Agent"]:::ai
+        Agent_Metabolic["Metabolic/Diabetes Agent"]:::ai
+        Agent_Renal["Renal/Kidney Agent"]:::ai
+        Agent_Hepatic["Hepatic/Liver Agent"]:::ai
+    end
 
-      %% Persistence & External Services
-      subgraph Data & External Services ["💾 Persistence & External APIs"]
-          DB[(PostgreSQL Store)]:::database
-          Cache[(Memory Lattice)]:::database
-          LLM_Gemini["Google Gemini API"]:::external
-          LLM_Groq["Groq (Llama 3)"]:::external
-      end
+    %% Persistence & External Services
+    subgraph Data_Services ["💾 Persistence & External APIs"]
+        DB[(PostgreSQL Store)]:::database
+        Cache[(Memory Lattice)]:::database
+        LLM_Gemini["Google Gemini API"]:::external
+        LLM_Groq["Groq (Llama 3)"]:::external
+    end
 
-      %% Connections
-      UI_Pat -->|REST/WS| API Gateway
-      UI_Doc -->|REST/WS| API Gateway
-      UI_Admin -->|REST/WS| API Gateway
-      UI_Chat -->|WebSocket| API Gateway
-      UI_3D -->|REST| API_Doc
+    %% Connections
+    UI_Pat -->|REST/WS| API_Gateway
+    UI_Doc -->|REST/WS| API_Gateway
+    UI_Admin -->|REST/WS| API_Gateway
+    UI_Chat -->|WebSocket| API_Gateway
+    UI_3D -->|REST| API_Doc
 
-      API_Gateway -.->|Auth/Read/Write| DB
-      API_Gateway -.->|State| Cache
+    API_Auth -.->|Auth/Read/Write| DB
+    API_Doc -.->|Read/Write| DB
+    API_Consult -.->|State| Cache
 
-      API_Gateway -->|Routing| Orchestration
+    API_Gateway -->|Routing| Orchestration
+    
+    Coord_Exec --> Agent_Kira
+    Coord_Exec --> Agent_CV
+    Coord_Exec --> Agent_Heart
+    Coord_Exec --> Agent_Metabolic
+    Coord_Exec --> Agent_Renal
+    Coord_Exec --> Agent_Hepatic
 
-      Coord_Exec --> Agent_Kira
-      Coord_Exec --> Agent_CV
-      Coord_Exec --> Agent_Heart
-      Coord_Exec --> Agent_Metabolic
-      Coord_Exec --> Agent_Renal
-      Coord_Exec --> Agent_Hepatic
+    Agent_Kira -->|NLP| LLM_Groq
+    Agent_Kira -->|Vision| LLM_Gemini
+    
+    Agent_CV --> Coord_Explain
+    Agent_Heart --> Coord_Explain
+    Agent_Metabolic --> Coord_Explain
+    Agent_Renal --> Coord_Explain
+    Agent_Hepatic --> Coord_Explain
+    
+    Coord_Explain --> Coord_Agg
+    Coord_Agg -->|SOAP/PDF Gen| API_Gateway
+```
 
-      Agent_Kira -->|NLP| LLM_Groq
-      Agent_Kira -->|Vision| LLM_Gemini
+### 2. Clinical Workflow & Stratification Diagram
+```mermaid
+sequenceDiagram
+    autonumber
+    
+    actor Patient
+    participant Interface as Kira A.I. / Web UI
+    participant Backend as FastAPI Gateway
+    participant Cord as Neural Orchestrator
+    participant ML as Specialized AI Nodes
+    participant LLM as Generative Synthesis (LLM)
+    participant DB as PostgreSQL DB
+    actor Clinician
 
-      Agent_CV --> Coord_Explain
-      Agent_Heart --> Coord_Explain
-      Agent_Metabolic --> Coord_Explain
-
-      Coord_Explain --> Coord_Agg
-      Coord_Agg -->|SOAP/PDF Gen| API_Gateway
-
-  ---
-  2. Clinical Workflow & Stratification Diagram
-
-  This sequence diagram illustrates the step-by-step flow when a patient interacts with
-  the system, how the neural nodes stratify the risk, and how the clinician receives the
-  actionable output.
-
-  sequenceDiagram
-      autonumber
-
-      actor Patient
-      participant Interface as Kira A.I. / Web UI
-      participant Backend as FastAPI Gateway
-      participant Cord as Neural Orchestrator
-      participant ML as Specialized AI Nodes
-      participant LLM as Generative Synthesis (LLM)
-      participant DB as PostgreSQL DB
-      actor Clinician
-
-      %% Step 1: Data Intake
-      Patient->>Interface: Inputs symptoms / Uploads Medical PDF
-      Interface->>Backend: Secure Payload (JWT Auth)
-
-      %% Step 2: Routing & Parsing
-      Backend->>Cord: Initialize Assessment Request
-      Cord->>DB: Fetch historical patient state
-
-      %% Step 3: Stratification
-      par Feature Extraction
-          Cord->>ML: Image Payload -> CV Node (EfficientNet)
-      and Structured Data Inference
-          Cord->>ML: Vital Signs -> XGBoost/RF Nodes
-      end
-
-      %% Step 4: Inference & XAI
-      ML-->>Cord: Raw Risk Probabilities (e.g. 0.89 Risk)
-      Cord->>Cord: Explainability Engine runs SHAP values
-
-      %% Step 5: Generative Synthesis
-      Cord->>LLM: Send structured data + risk factors
-      Note over LLM: Models clinical guidelines<br/>(ADA, AHA, etc.)
-      LLM-->>Cord: Generates SOAP Transcript & Recommendations
-
-      %% Step 6: Alerting & Storage
-      Cord->>Backend: Return Aggregated Synthesis
-      Backend->>DB: Save Consult & Transcript
-
-      %% Step 7: Clinician Alerting
-      alt Risk > Threshold
-          Backend-->>Clinician: WebSocket 🚨 CRITICAL_RISK_ALERT
-      else Routine Check
-          Backend-->>Clinician: Queue Update via Dashboard
-      end
-
-      %% Step 8: Review & Consult
-      Clinician->>Interface: Reviews SOAP Transcript & SHAP plots
-      Clinician->>Patient: Initiates Telemedicine Video Consult
+    %% Step 1: Data Intake
+    Patient->>Interface: Inputs symptoms / Uploads Medical PDF
+    Interface->>Backend: Secure Payload (JWT Auth)
+    
+    %% Step 2: Routing & Parsing
+    Backend->>Cord: Initialize Assessment Request
+    Cord->>DB: Fetch historical patient state
+    
+    %% Step 3: Stratification
+    par Feature Extraction
+        Cord->>ML: Image Payload -> CV Node (EfficientNet)
+    and Structured Data Inference
+        Cord->>ML: Vital Signs -> XGBoost/RF Nodes
+    end
+    
+    %% Step 4: Inference & XAI
+    ML-->>Cord: Raw Risk Probabilities (e.g. 0.89 Risk)
+    Cord->>Cord: Explainability Engine runs SHAP values
+    
+    %% Step 5: Generative Synthesis
+    Cord->>LLM: Send structured data + risk factors
+    Note over LLM: Models clinical guidelines<br/>(ADA, AHA, etc.)
+    LLM-->>Cord: Generates SOAP Transcript & Recommendations
+    
+    %% Step 6: Alerting & Storage
+    Cord->>Backend: Return Aggregated Synthesis
+    Backend->>DB: Save Consult & Transcript
+    
+    %% Step 7: Clinician Alerting
+    alt Risk > Threshold
+        Backend-->>Clinician: WebSocket 🚨 CRITICAL_RISK_ALERT
+    else Routine Check
+        Backend-->>Clinician: Queue Update via Dashboard
+    end
+    
+    %% Step 8: Review & Consult
+    Clinician->>Interface: Reviews SOAP Transcript & SHAP plots
+    Clinician->>Patient: Initiates Telemedicine Video Consult
 ```
 
 ### Key Architectural Pillars
