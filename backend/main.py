@@ -73,6 +73,7 @@ app.add_middleware(
 # Initialize APM
 Instrumentator().instrument(app).expose(app)
 
+
 @app.websocket("/ws/chat/{consultation_id}")
 async def websocket_endpoint(websocket: WebSocket, consultation_id: str):
     await manager.connect(websocket, consultation_id)
