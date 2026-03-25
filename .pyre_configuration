@@ -1,0 +1,17 @@
+{
+  "source_directories": [
+    {
+      "import_root": ".",
+      "source": "."
+    }
+  ],
+  "search_path": [
+    ".",
+    "venv/Lib/site-packages"
+  ],
+  "exclude": [
+    ".*/venv/.*",
+    ".*/node_modules/.*",
+    ".*/__pycache__/.*"
+  ]
+}

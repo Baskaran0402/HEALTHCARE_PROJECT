@@ -1,0 +1,17 @@
+{
+  "python.defaultInterpreterPath": "c:\\Users\\hp\\Desktop\\HEALTHCARE_PROJECT\\venv\\Scripts\\python.exe",
+  "python.analysis.extraPaths": [
+    "c:\\Users\\hp\\Desktop\\HEALTHCARE_PROJECT"
+  ],
+  "python.analysis.autoSearchPaths": true,
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.reportMissingImports": "warning",
+  "python.analysis.reportMissingModuleSource": "none",
+  "python.analysis.exclude": [
+    "**/node_modules",
+    "**/venv",
+    "**/env",
+    "**/.git",
+    "**/__pycache__"
+  ]
+}

@@ -1,5 +1,5 @@
 # Frontend Dockerfile
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN rm -f package-lock.json && npm install
 
 # Copy source code
 COPY . .
