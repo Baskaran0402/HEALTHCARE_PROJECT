@@ -429,7 +429,7 @@ class MessageResponse(MessageBase):
     is_read: bool
     read_at: Optional[datetime] = None
     created_at: datetime
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -478,7 +478,7 @@ class DocumentResponse(DocumentBase):
     is_verified: bool
     verified_by: Optional[str] = None
     verified_at: Optional[datetime] = None
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -501,7 +501,7 @@ class DocumentAccessLogResponse(BaseModel):
 class AuditLogResponse(AuditLogCreate):
     id: str
     created_at: datetime
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -527,7 +527,7 @@ class PrescriptionResponse(PrescriptionBase):
     doctor_id: str
     patient_id: str
     created_at: datetime
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
