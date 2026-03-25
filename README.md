@@ -2,43 +2,17 @@
 
 ## Integrated Clinical Intelligence & Multi-Node Diagnostic Stratification Lattice
 
-> **Abstract**: AruviAI is an enterprise-grade clinical decision support system (CDSS) designed to unify multi-modal diagnostic data through a decentralized neural stratification model. By bridging high-precision machine learning nodes with real-time generative clinical synthesis, AruviAI provides institutional-level risk assessment and automated SOAP transcript generation, facilitating rapid, evidence-based clinical workflows.
+> **Abstract**: AruviAI is an enterprise-grade Clinical Decision Support System (CDSS) designed to unify multi-modal diagnostic data through a decentralized neural stratification architecture. By bridging high-precision machine learning nodes with real-time generative clinical synthesis, AruviAI delivers institutional-level risk assessment and automated SOAP transcript generation, facilitating rapid, evidence-based clinical workflows.
 
 <div align="center">
 
-[![Paper](https://img.shields.io/badge/Status-Research--Ready-blue?style=for-the-badge&logo=googlescholar&logoColor=white)](#)
-[![Python](https://img.shields.io/badge/Core-Python_3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/API-FastAPI_0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/UI-React_19_|_Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
-[![License](https://img.shields.io/badge/Compliance-MIT-green.svg?style=for-the-badge)](LICENSE)
+[![Status: Research Ready](https://img.shields.io/badge/Status-Research--Ready-blue?style=for-the-badge&logo=googlescholar&logoColor=white)](#)
+[![Python 3.11+](https://img.shields.io/badge/Core-Python_3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI 0.110](https://img.shields.io/badge/API-FastAPI_0.110-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React 19.2](https://img.shields.io/badge/UI-React_19.2_|_Vite_7.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![License: MIT](https://img.shields.io/badge/Compliance-MIT-green.svg?style=for-the-badge)](LICENSE)
 
 </div>
-
----
-
-## 🎨 Provisio Design System: Visual Semantics & UX
-
-AruviAI utilizes a bespoke design system, **Provisio**, optimized for high-density clinical data and institutional authority. The interface is engineered to reduce cognitive load while maintaining medical-grade precision.
-
-### 🖋️ Typography & Legibility
-
-- **Headings (Outfit)**: A high-clarity sans-serif designed for structural authority.
-- **Display (Syne)**: Used for institutional branding and primary metrics (`AruviAI Intelligence OS`).
-- **Body & UI (Inter/Plus Jakarta Sans)**: Optimized for terminal-grade precision in diagnostic transcripts and risk matrices.
-
-### 🌈 Visual Semantics (Color Lattice)
-
-The color system is derived from semantic risk stratification:
-
-- **Institutional Slate (`#060A14`)**: The foundation for high-contrast, zero-distraction focus.
-- **Diagnostic Indigo (`#4f46e5`)**: Primary action and stratification orchestrator.
-- **Emerald/Crimson Gradient**: A non-binary risk scale mapped to diagnostic node confidence.
-- **Role Accents**: Specific color-coding for Patients (Emerald), Doctors (Azure), and Institutions (Amber).
-
-### 🎞️ Motion & Elevation
-
-- **Micro-Animations**: Sequenced entrances via `framer-motion` to guide the eye through multi-disease outcomes.
-- **Depth Strategy**: 4-layer elevation system utilizing `backdrop-blur: 12px` and `glassmorphism` to separate diagnostic overlays from navigation shells.
 
 ---
 
@@ -111,7 +85,7 @@ graph TD
     API_Consult -.->|State| Cache
 
     API_Gateway -->|Routing| Orchestration
-    
+
     Coord_Exec --> Agent_Kira
     Coord_Exec --> Agent_CV
     Coord_Exec --> Agent_Heart
@@ -121,13 +95,13 @@ graph TD
 
     Agent_Kira -->|NLP| LLM_Groq
     Agent_Kira -->|Vision| LLM_Gemini
-    
+
     Agent_CV --> Coord_Explain
     Agent_Heart --> Coord_Explain
     Agent_Metabolic --> Coord_Explain
     Agent_Renal --> Coord_Explain
     Agent_Hepatic --> Coord_Explain
-    
+
     Coord_Explain --> Coord_Agg
     Coord_Agg -->|SOAP/PDF Gen| API_Gateway
 ```
@@ -136,7 +110,7 @@ graph TD
 ```mermaid
 sequenceDiagram
     autonumber
-    
+
     actor Patient
     participant Interface as Kira A.I. / Web UI
     participant Backend as FastAPI Gateway
@@ -149,38 +123,38 @@ sequenceDiagram
     %% Step 1: Data Intake
     Patient->>Interface: Inputs symptoms / Uploads Medical PDF
     Interface->>Backend: Secure Payload (JWT Auth)
-    
+
     %% Step 2: Routing & Parsing
     Backend->>Cord: Initialize Assessment Request
     Cord->>DB: Fetch historical patient state
-    
+
     %% Step 3: Stratification
     par Feature Extraction
         Cord->>ML: Image Payload -> CV Node (EfficientNet)
     and Structured Data Inference
         Cord->>ML: Vital Signs -> XGBoost/RF Nodes
     end
-    
+
     %% Step 4: Inference & XAI
     ML-->>Cord: Raw Risk Probabilities (e.g. 0.89 Risk)
     Cord->>Cord: Explainability Engine runs SHAP values
-    
+
     %% Step 5: Generative Synthesis
     Cord->>LLM: Send structured data + risk factors
     Note over LLM: Models clinical guidelines<br/>(ADA, AHA, etc.)
     LLM-->>Cord: Generates SOAP Transcript & Recommendations
-    
+
     %% Step 6: Alerting & Storage
     Cord->>Backend: Return Aggregated Synthesis
     Backend->>DB: Save Consult & Transcript
-    
+
     %% Step 7: Clinician Alerting
     alt Risk > Threshold
         Backend-->>Clinician: WebSocket 🚨 CRITICAL_RISK_ALERT
     else Routine Check
         Backend-->>Clinician: Queue Update via Dashboard
     end
-    
+
     %% Step 8: Review & Consult
     Clinician->>Interface: Reviews SOAP Transcript & SHAP plots
     Clinician->>Patient: Initiates Telemedicine Video Consult
@@ -188,107 +162,109 @@ sequenceDiagram
 
 ### Key Architectural Pillars
 
-1.  **Tri-Role Access Control**: Granular permissioning for Patients (History/Alerts), Doctors (Diagnostics/Synthesis/Video), and Institutions (Global Telemetry/Audit).
-2.  **Neural Stratification Engine**: A multi-model pipeline that executes parallel inference across 6 specialized disease nodes.
-3.  **Institutional Telemetry & Alerts**: Real-time Population Risk Analytics and low-latency WebSocket-driven alerting system for critical risk detection (`CRITICAL_RISK_ALERT`).
-4.  **Clinical Workspace & Telemedicine**: Integrated Clinical Queue with high-fidelity Video Consultation capabilities for real-time physician-patient interaction.
-5.  **Generative Synthesis (XAI)**: Transitioning "Black Box" predictions into structured **SOAP** (Subjective, Objective, Assessment, Plan) transcripts using advanced LLM reasoning.
+1. **Tri-Role Access Control**: Granular permissioning models for Patients (Historical telemetry, Alerts), Clinicians (Diagnostic override, Synthesis review, Telemedicine), and Institutional Administrators (Global telemetry, Audit logging).
+2. **Neural Stratification Engine**: A parallelized, multi-model pipeline executing concurrent inference across six specialized pathogenic nodes.
+3. **Institutional Telemetry & Alerts**: Real-time Population Risk Analytics paired with a low-latency WebSocket-driven alerting bus for critical anomaly detection (`CRITICAL_RISK_ALERT`).
+4. **Clinical Workspace & Telemedicine**: An integrated Clinical Queue featuring high-fidelity Video Consultation protocols for real-time physician-patient interaction.
+5. **Generative Synthesis (XAI)**: Advanced LLM reasoning engines that translate non-linear "Black Box" predictions into structured **SOAP** (Subjective, Objective, Assessment, Plan) transcripts.
 
 ---
 
 ## 📊 Empirical Evaluation & Diagnostic Performance
 
-The AruviAI neural nodes have been rigorously validated against standard clinical benchmarks, achieving high precision across all diagnostic vectors.
+The AruviAI neural nodes have undergone rigorous validation against standard clinical benchmarks, demonstrating exceptional precision across all diagnostic vectors.
 
 ### Primary Diagnostic Matrix
 
-| Clinical Node       | Methodology            | Accuracy  | Precision | Recall   | F1-Score | AUC-ROC  |
-| :------------------ | :--------------------- | :-------- | :-------- | :------- | :------- | :------- |
-| **Brain Tumor**     | EfficientNet-B0 (T-L)  | **99.7%** | **0.99**  | **0.99** | **0.99** | **1.00** |
-| **Metabolic (Dia)** | XGBoost Stratified     | 89.1%     | 0.88      | 0.91     | 0.89     | 0.93     |
-| **CVD (Heart)**     | Random Forest Ensemble | 87.3%     | 0.85      | 0.89     | 0.87     | 0.91     |
-| **Cerebrovascular** | Gradient Boosting      | 85.7%     | 0.83      | 0.87     | 0.85     | 0.89     |
-| **Renal (Kidney)**  | Logistic Regression +  | 86.5%     | 0.84      | 0.88     | 0.86     | 0.90     |
-| **Hepatic (Liver)** | SVM Classifier         | 84.2%     | 0.81      | 0.86     | 0.83     | 0.87     |
+| Clinical Node       | Algorithmic Methodology | Accuracy  | Precision | Recall   | F1-Score | AUC-ROC  |
+| :------------------ | :---------------------- | :-------- | :-------- | :------- | :------- | :------- |
+| **Brain Tumor**     | EfficientNet-B0 (T-L)   | **99.7%** | **0.99**  | **0.99** | **0.99** | **1.00** |
+| **Metabolic (Dia)** | XGBoost Stratified      | 89.1%     | 0.88      | 0.91     | 0.89     | 0.93     |
+| **CVD (Heart)**     | Random Forest Ensemble  | 87.3%     | 0.85      | 0.89     | 0.87     | 0.91     |
+| **Cerebrovascular** | Gradient Boosting       | 85.7%     | 0.83      | 0.87     | 0.85     | 0.89     |
+| **Renal (Kidney)**  | Logistic Regression +   | 86.5%     | 0.84      | 0.88     | 0.86     | 0.90     |
+| **Hepatic (Liver)** | SVM Classifier          | 84.2%     | 0.81      | 0.86     | 0.83     | 0.87     |
 
 > [!NOTE]
-> **Bias & Generalization**: The Brain Tumor model has been validated for minimal generalization gap (-0.4%) and low-bias risk (0.01% class performance gap). See [Bias & Fit Analysis](docs/BIAS_AND_FIT_ANALYSIS_GUIDE.md) for full details.
+> **Bias & Generalization Constraints**: The Brain Tumor Convolutional model has been validated for minimal generalization gap (-0.4%) and low-bias risk (0.01% class performance gap). Please consult the [Bias & Fit Analysis](docs/BIAS_AND_FIT_ANALYSIS_GUIDE.md) for comprehensive validation metrics.
 
 ---
 
 ## 🔬 Explainable AI (XAI) & Clinical Synthesis
 
-AruviAI prioritizes transparency in automated assessments:
+AruviAI mandates algorithmic transparency to maintain clinical trust:
 
-- **SHAP Vectoring**: Local feature importance visualization for heart risk and metabolic predictions, allowing clinicians to see _why_ a risk score was assigned.
-- **Structured SOAP Generation**: Automated mapping of ML output into the medical standard SOAP format, significantly reducing clinician administrative overhead.
-- **Guideline Lineage**: Synthesis transcripts reference established clinical protocols (e.g., ADA for Diabetes, AHA for Heart Disease).
-
----
-
-## 🛠️ Technological Stack
-
-| Functional Layer  | Technologies                                                         |
-| :---------------- | :------------------------------------------------------------------- |
-| **Foundation**    | Python 3.11, FastAPI, SQLAlchemy, PostgreSQL 16                      |
-| **Intelligence**  | Scikit-learn, PyTorch, EfficientNet, SHAP                            |
-| **Interface**     | React 19, Vite, TailwindCSS, Framer Motion, Syne & Outfit Typography |
-| **Orchestration** | Groq (Llama 3), Google Gemini Flash, WebSockets                      |
-
----
-
-## 🚀 Deployment & Reproduction
-
-For researchers looking to reproduce the stratification lattices:
-
-### Environment Configuration
-
-1. **Repository Synchronization**: `git clone <repo_url>`
-2. **Backbone Setup**: `pip install -r requirements.txt`
-3. **Intelligence OS Activation**: `python -m backend.main`
-4. **Interface Hydration**: `cd frontend && npm install && npm run dev`
-
----
-
-## 🛡️ Safety, Ethics & Limitations
-
-AruviAI is a **Clinical Decision Support Tool**, not a diagnostic replacement.
-
-1. **Clinical Oversight**: All assessments must be reviewed by a certified medical professional.
-2. **Data Privacy**: Audit logging and role-based encryption are enforced across the lattice.
-3. **Guideline Adherence**: Predictions are advisory and should be weighed against direct examination.
-
----
-
-## 👨‍💻 Research & Authorship
-
-**Baskaran S**  
-_Lead Architect & AI Researcher_
-
-- **LinkedIn**: [Baskaran S](https://www.linkedin.com/in/baskaran0402)
-- **GitHub**: [@Baskaran0402](https://github.com/Baskaran0402)
-- **Email**: [baskarseenu2005@gmail.com](mailto:baskarseenu2005@gmail.com)
+- **SHAP Vectoring**: Local feature importance visualization for cardiovascular and metabolic predictions, granting clinicians direct insight into the localized drivers of a risk score.
+- **Structured SOAP Generation**: Deterministic mapping of ML outputs into the universally recognized SOAP format, significantly attenuating clinician administrative burden.
+- **Guideline Lineage**: Generative synthesis transcripts explicitly reference established clinical protocols (e.g., ADA for Diabetes, AHA for Heart Disease) to anchor AI reasoning in peer-reviewed literature.
 
 ---
 
 ## 🤖 AI Personification: Kira A.I.
 
-While **AruviAI** represents the underlying institutional lattice and diagnostic infrastructure, **Kira A.I.** is the personified conversational interface designed for empathetic patient-clinician interaction.
+While **AruviAI** represents the underlying institutional infrastructure and deterministic stratification lattices, **Kira A.I.** acts as the semantic layer—a personified conversational interface engineered for empathetic, first-touch patient interaction.
 
-### Kira vs. The Platform Lattice
+### Platform Dichotomy
 
-| Feature          | **AruviAI (Product Lattice)**             | **Kira A.I. (Interface Agent)**              |
+| Feature Matrix   | **AruviAI (Core Lattice)**                | **Kira A.I. (Semantic Interface)**           |
 | :--------------- | :---------------------------------------- | :------------------------------------------- |
-| **Logic Type**   | Structured ML & Deep Learning             | Generative LLM (Conversational)              |
-| **Primary Goal** | High-precision diagnostic stratification  | Empathic Q&A & Appointment orchestration     |
-| **Output**       | SOAP Transcripts, Risk Scores, PDFs       | Natural language dialogue, Intent extraction |
+| **Logic Typology**| Structured ML & Deep Learning Ensembles   | Generative LLM (Conversational AI)           |
+| **Primary Goal** | High-precision diagnostic stratification  | Empathic triage & Appointment orchestration  |
+| **Output Vector**| SOAP Transcripts, Risk Matrices, PDFs     | Natural language dialogue, Intent extraction |
 | **User Role**    | Institutional oversight & Clinical Review | Direct user engagement & First-touch triage  |
 
-### Kira's Principal Capabilities
+---
 
-- **Real-time Health Synthesis**: Bridging complex clinical data into human-readable insights.
-- **Intent-based Orchestration**: Automated detection of appointment booking intent with department-specific routing.
-- **24/7 Triage Support**: Constant availability for initial symptom surfacing and procedural guidance.
+## 🎨 Provisio Design System: Visual Semantics & UX
+
+AruviAI introduces **Provisio**, a proprietary design system explicitly optimized for high-density clinical data presentation and institutional authority.
+
+- **Typography**: Employs `Outfit` for structural authority, `Syne` for primary institutional metrics, and `Inter` for terminal-grade precision in diagnostic matrices.
+- **Color Lattice**: Derives from semantic risk stratification—Institutional Slate (`#060A14`) for focus, Diagnostic Indigo (`#4f46e5`) for action, and an Emerald/Crimson Gradient representing non-binary risk scales.
+- **Depth & Motion**: Implements a 4-layer glassmorphism elevation strategy (`backdrop-blur: 12px`) and `framer-motion` sequenced entrances to guide clinical focus through complex multi-disease outcomes.
+
+---
+
+## 🛠️ Technological Stack & Dependencies
+
+Built on a robust, modern, and highly scalable enterprise stack.
+
+| Architectural Layer | Core Technologies & Exact Versions |
+| :------------------ | :-------------------------------------------------------------------------------- |
+| **Foundation API**  | Python `3.11`, FastAPI `0.110.0`, SQLAlchemy `2.0.0`, PostgreSQL `16`             |
+| **Intelligence**    | Scikit-learn `1.6.1`, PyTorch `2.0.0`, OpenCV `4.8.0`, SHAP `0.44.0`              |
+| **Client Interface**| React `19.2.0`, Vite `7.2.4`, TailwindCSS `4.2.1`, Zustand `5.0.11`               |
+| **UI Components**   | Radix UI, Framer Motion `12.26.2`, React Three Fiber `9.5.0`, Recharts `3.6.0`    |
+| **Orchestration**   | Groq (Llama 3) `0.4.2`, Google Gemini, WebSockets, JWT Authentication             |
+
+---
+
+## 🚀 Deployment & Reproduction
+
+For academic researchers and system administrators looking to reproduce the stratification lattices locally:
+
+### Environment Configuration
+
+```bash
+# 1. Repository Synchronization
+git clone https://github.com/Baskaran0402/HEALTHCARE_PROJECT.git
+cd HEALTHCARE_PROJECT
+
+# 2. Backbone Setup (Backend)
+cd backend
+python -m venv venv
+source venv/bin/activate  # Or `venv\Scripts\activate` on Windows
+pip install -r ../requirements.txt
+
+# 3. Intelligence OS Activation
+python -m backend.main
+
+# 4. Interface Hydration (Frontend)
+# Open a new terminal window
+cd frontend
+npm install
+npm run dev
+```
 
 ---
 
@@ -296,25 +272,48 @@ While **AruviAI** represents the underlying institutional lattice and diagnostic
 
 ```bash
 HEALTHCARE_PROJECT/
-├── backend/                    # FastAPI Institutional Node
-├── frontend/                   # React Intelligence Console
+├── backend/                    # FastAPI Institutional Gateway
+│   ├── routers/                # REST/WebSocket API Endpoints
+│   └── main.py                 # Application Entrypoint
+├── frontend/                   # React 19 Intelligence Console
 │   └── src/components/ui/      # Atomic Enterprise Components
 ├── src/                        # Core ML/AI Neural Orchestration
-│   ├── agents/                 # Specialized Intelligence Nodes
-│   │   └── kira_agent.py        # Conversational Interface Logic
-│   ├── coordinator/            # Stratification Orchestrator
-│   └── core/                   # LLM & Clinical Utilities (Groq/Gemini)
-├── models/                     # Trained Neural Weights (.pkl)
-├── notebooks/                  # EDA & Calibration Notebooks
-├── scripts/                    # Maintenance & Training Scripts
+│   ├── agents/                 # Specialized Pathogenic Nodes
+│   │   └── kira_agent.py       # Conversational Interface Logic
+│   ├── coordinator/            # Cross-Intelligence & Execution
+│   └── core/                   # LLM & Clinical Utilities
+├── models/                     # Trained Neural Weights (.pkl/.pt)
+├── notebooks/                  # EDA & Calibration Environments
+├── scripts/                    # Maintenance & Training Routines
 └── README.md                   # Master Documentation
 ```
 
 ---
 
+## 🛡️ Safety, Ethics & Limitations
+
+AruviAI is classified as a **Clinical Decision Support Tool**, not a definitive diagnostic replacement.
+
+1. **Clinical Oversight Mandate**: All algorithmic assessments must undergo final review by a certified medical professional.
+2. **Data Privacy & Governance**: Extensive audit logging and role-based access control (RBAC) are strictly enforced across the lattice.
+3. **Guideline Adherence**: Predictions are strictly advisory and must be weighed against direct physiological examination.
+
+---
+
+## 👨‍💻 Research & Authorship
+
+**Baskaran S**
+*Lead Architect & AI Researcher*
+
+- **LinkedIn**: [Baskaran S](https://www.linkedin.com/in/baskaran0402)
+- **GitHub**: [@Baskaran0402](https://github.com/Baskaran0402)
+- **Email**: [baskarseenu2005@gmail.com](mailto:baskarseenu2005@gmail.com)
+
+---
+
 ## 📄 Citation
 
-If you use this system or its multi-node stratification architecture in your research, please cite it as:
+If you incorporate this system or its multi-node stratification architecture into your academic research, please cite as:
 
 ```bibtex
 @software{aruvi_ai_2026,
@@ -328,16 +327,6 @@ If you use this system or its multi-node stratification architecture in your res
 ---
 
 <div align="center">
-  <b>Built for clinical precision. Dedicated to healthcare transformation.</b>
-</div>
-baskarseenu2005@gmail.com
-
----
-
-<div align="center">
-
-**Built for institutional excellence. Strategic clinical intelligence.**
-
-🩺 **AruviAI Professional**
-
+  <b>Built for institutional excellence. Strategic clinical intelligence.</b><br>
+  🩺 <i>AruviAI Professional</i>
 </div>
