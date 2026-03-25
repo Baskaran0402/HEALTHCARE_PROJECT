@@ -30,6 +30,7 @@ from backend.routers import (
 from backend.services import HealthAnalysisService
 from backend.utils.pdf_generator import PDFReportGenerator
 from src.agents.heart_agent import generate_shap_plot
+from backend.websocket_manager import manager
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -71,10 +72,6 @@ app.add_middleware(
 
 # Initialize APM
 Instrumentator().instrument(app).expose(app)
-
-
-from backend.websocket_manager import manager
-
 
 @app.websocket("/ws/chat/{consultation_id}")
 async def websocket_endpoint(websocket: WebSocket, consultation_id: str):

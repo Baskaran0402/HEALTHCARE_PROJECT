@@ -11,7 +11,10 @@ router = APIRouter(prefix="/api/admin", tags=["Governance"])
 
 
 @router.get("/users", response_model=List[schemas.UserResponse])
-def get_all_users(db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))):
+def get_all_users(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.check_role(["super_admin", "institution"])),
+):
     return db.query(models.User).all()
 
 
@@ -24,7 +27,9 @@ def get_pending_users(
 
 @router.put("/users/{user_id}/approve", response_model=schemas.UserResponse)
 def approve_user(
-    user_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.check_role(["super_admin", "institution"])),
 ):
     user = crud.get_user(db, user_id)
     if not user:
@@ -40,7 +45,9 @@ def approve_user(
 
 @router.put("/users/{user_id}/reject", response_model=schemas.UserResponse)
 def reject_user(
-    user_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["super_admin", "institution"]))
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.check_role(["super_admin", "institution"])),
 ):
     user = crud.get_user(db, user_id)
     if not user:

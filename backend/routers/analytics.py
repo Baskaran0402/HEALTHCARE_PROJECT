@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 from datetime import datetime, timedelta
 import random
 
@@ -19,11 +19,11 @@ def get_dashboard_metrics(db: Session = Depends(get_db)):
     total_patients = db.query(models.Patient).count()
     total_consultations = db.query(models.Consultation).count()
     total_assessments = db.query(models.HealthAssessment).count()
-    
+
     # Mock trajectory data for the frontend chart
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     trajectory = [{"name": day, "val": random.randint(10, 80)} for day in days]
-    
+
     # Mock distribution
     distribution = [
         {"name": "Cardiology", "value": 45, "color": "teal"},
@@ -50,7 +50,7 @@ def get_throughput(range_type: str = Query("7D", alias="range"), db: Session = D
     # Simply return random data for now to satisfy the frontend visuals
     days_count = 7 if range_type == "7D" else 30
     base_date = datetime.now()
-    
+
     data = []
     for i in range(days_count):
         date = base_date - timedelta(days=i)
@@ -58,7 +58,7 @@ def get_throughput(range_type: str = Query("7D", alias="range"), db: Session = D
             "timestamp": date.strftime("%Y-%m-%d"),
             "val": random.randint(20, 100)
         })
-        
+
     return {
         "range": range_type,
         "data": sorted(data, key=lambda x: x["timestamp"])
@@ -73,9 +73,24 @@ def get_execution_logs(limit: int = 10, db: Session = Depends(get_db)):
     # Mock logs for now
     logs = [
         {"id": 1, "level": "INFO", "message": "Neural node heartbeat nominal", "timestamp": datetime.now().isoformat()},
-        {"id": 2, "level": "INFO", "message": "E2EE handshake successful", "timestamp": (datetime.now() - timedelta(minutes=5)).isoformat()},
-        {"id": 3, "level": "WARNING", "message": "High latency detected in Lobal Mapping node", "timestamp": (datetime.now() - timedelta(minutes=15)).isoformat()},
-        {"id": 4, "level": "INFO", "message": "Patient sync complete", "timestamp": (datetime.now() - timedelta(hours=1)).isoformat()},
+        {
+            "id": 2,
+            "level": "INFO",
+            "message": "E2EE handshake successful",
+            "timestamp": (datetime.now() - timedelta(minutes=5)).isoformat(),
+        },
+        {
+            "id": 3,
+            "level": "WARNING",
+            "message": "High latency detected in Lobal Mapping node",
+            "timestamp": (datetime.now() - timedelta(minutes=15)).isoformat(),
+        },
+        {
+            "id": 4,
+            "level": "INFO",
+            "message": "Patient sync complete",
+            "timestamp": (datetime.now() - timedelta(hours=1)).isoformat(),
+        },
     ]
     return logs[:limit]
 

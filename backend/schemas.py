@@ -75,7 +75,7 @@ class MedicalRecordResponse(MedicalRecordBase):
     id: str
     patient_id: str
     recorded_at: datetime
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -106,7 +106,7 @@ class ConsultationResponse(ConsultationBase):
     conversation_history: List[Dict[str, str]]
     started_at: datetime
     completed_at: Optional[datetime] = None
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -132,7 +132,7 @@ class HealthAssessmentCreate(BaseModel):
 class HealthAssessmentResponse(HealthAssessmentCreate):
     id: str
     assessed_at: datetime
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -256,7 +256,6 @@ class UserResponse(UserBase):
     is_approved: bool
     created_at: datetime
     last_login: Optional[datetime] = None
-    
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -286,7 +285,6 @@ class OrganizationResponse(OrganizationBase):
     is_verified: bool
     is_active: bool
     created_at: datetime
-    
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -350,9 +348,8 @@ class DoctorResponse(DoctorBase):
     is_verified: bool
     created_at: datetime
     updated_at: Optional[datetime] = None
-    
-    model_config = ConfigDict(from_attributes=True)
 
+    model_config = ConfigDict(from_attributes=True)
 
 # ============================================================
 # Doctor Consultation Schemas
@@ -402,9 +399,7 @@ class DoctorConsultationResponse(DoctorConsultationBase):
     meeting_link: Optional[str] = None
     rating: Optional[int] = None
     patient_feedback: Optional[str] = None
-    
     model_config = ConfigDict(from_attributes=True)
-
 
 # ============================================================
 # Messaging Schemas

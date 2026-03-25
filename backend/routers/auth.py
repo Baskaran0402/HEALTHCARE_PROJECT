@@ -133,7 +133,9 @@ def google_login(request: schemas.GoogleLoginRequest, db: Session = Depends(get_
             user = crud.create_user(db=db, user=user_data, hashed_password=hashed)
 
         # Create Tokens
-        access_token = auth.create_access_token(data={"sub": user.id, "role": user.role, "org_id": user.organization_id})
+        access_token = auth.create_access_token(
+            data={"sub": user.id, "role": user.role, "org_id": user.organization_id}
+        )
         refresh_token_str = auth.create_refresh_token(data={"sub": user.id})
 
         # Create Session

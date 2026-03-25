@@ -35,9 +35,11 @@ async def upload_document(
     # 1.5 Authorization: Check if current_user can upload for this patient
     is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
     is_patient_owner = (current_user.id == patient_id) or (
-        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == patient_id
+        current_user.role == "patient"
+        and current_user.patient_profile
+        and current_user.patient_profile.id == patient_id
     )
-    is_assigned_doctor = current_user.role == "doctor" # Temporary broad doctor access for upload
+    is_assigned_doctor = current_user.role == "doctor"  # Temporary broad doctor access for upload
 
     if not (is_admin or is_patient_owner or is_assigned_doctor):
         raise HTTPException(status_code=403, detail="Not authorized to upload documents for this patient")
@@ -96,7 +98,9 @@ def get_patient_documents(
     # Authorization check
     is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
     is_patient_owner = (current_user.id == patient_id) or (
-        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == patient_id
+        current_user.role == "patient"
+        and current_user.patient_profile
+        and current_user.patient_profile.id == patient_id
     )
 
     # If it's a doctor, they can only see documents explicitly shared with them
@@ -107,7 +111,8 @@ def get_patient_documents(
             docs = db.query(models.PatientDocument).filter(
                 models.PatientDocument.patient_id == patient_id,
                 models.PatientDocument.shared_with_doctor_id == doctor_id,
-                (models.PatientDocument.share_expires_at == None) | (models.PatientDocument.share_expires_at > datetime.now())
+                (models.PatientDocument.share_expires_at.is_(None))
+                | (models.PatientDocument.share_expires_at > datetime.now()),
             ).all()
             return docs
 
@@ -128,7 +133,9 @@ def get_document(
     # Authorization check
     is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
     is_patient_owner = (current_user.id == doc.patient_id) or (
-        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+        current_user.role == "patient"
+        and current_user.patient_profile
+        and current_user.patient_profile.id == doc.patient_id
     )
 
     # Check if explicitly shared with this doctor
@@ -156,7 +163,9 @@ async def download_document(
     # Authorization check
     is_admin = current_user.role in ["super_admin", "admin", "org_admin"]
     is_patient_owner = (current_user.id == doc.patient_id) or (
-        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+        current_user.role == "patient"
+        and current_user.patient_profile
+        and current_user.patient_profile.id == doc.patient_id
     )
 
     is_shared = False
@@ -204,7 +213,9 @@ def delete_document(
     # Authorization: Usually only the owner (patient) or privileged roles can delete
     is_privileged = current_user.role in ["admin", "super_admin", "org_admin"]  # More restricted for deletion
     is_patient = (current_user.id == doc.patient_id) or (
-        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+        current_user.role == "patient"
+        and current_user.patient_profile
+        and current_user.patient_profile.id == doc.patient_id
     )
 
     if not (is_privileged or is_patient):
@@ -234,7 +245,9 @@ def share_document(
     # Authorization: only the patient themselves or privileged roles
     is_privileged = current_user.role in ["doctor", "admin", "super_admin", "institution", "org_admin"]
     is_patient = (current_user.id == doc.patient_id) or (
-        current_user.role == "patient" and current_user.patient_profile and current_user.patient_profile.id == doc.patient_id
+        current_user.role == "patient"
+        and current_user.patient_profile
+        and current_user.patient_profile.id == doc.patient_id
     )
 
     if not (is_privileged or is_patient):

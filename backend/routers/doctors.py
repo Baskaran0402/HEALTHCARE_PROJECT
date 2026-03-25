@@ -63,7 +63,9 @@ def update_doctor(
 
 @router.post("/{doctor_id}/verify-license", response_model=schemas.DoctorResponse)
 def verify_doctor_license(
-    doctor_id: str, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_role(["admin", "institution"]))
+    doctor_id: str,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.check_role(["admin", "institution"])),
 ):
     db_doctor = crud.get_doctor(db, doctor_id=doctor_id)
     if not db_doctor:
