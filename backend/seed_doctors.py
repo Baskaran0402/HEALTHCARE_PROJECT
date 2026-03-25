@@ -44,7 +44,10 @@ def seed_doctors():
                 "hospital_affiliation": "Apollo Hospitals",
                 "years_of_experience": 12,
                 "consultation_fee": 850.0,
-                "bio": "Interventional cardiologist specialising in coronary artery disease and heart failure management.",
+                "bio": (
+                    "Interventional cardiologist specialising in coronary artery disease "
+                    "and heart failure management."
+                ),
                 "is_verified": True, "is_available": True, "user_id": user_id,
             },
             {
@@ -134,7 +137,10 @@ def seed_doctors():
                 "hospital_affiliation": "Sakra World Hospital",
                 "years_of_experience": 13,
                 "consultation_fee": 1100.0,
-                "bio": "Nephrologist with specialisation in chronic kidney disease, dialysis, and renal transplantation.",
+                "bio": (
+                    "Nephrologist with specialisation in chronic kidney disease, "
+                    "dialysis, and renal transplantation."
+                ),
                 "is_verified": True, "is_available": True, "user_id": user_id,
             },
             {

@@ -554,7 +554,7 @@ class SOSAlertResponse(SOSAlertBase):
     nearby_hospitals: List[Dict[str, Any]]
     created_at: datetime
     resolved_at: Optional[datetime] = None
-    
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -579,5 +579,5 @@ class PaymentResponse(PaymentBase):
     status: str
     transaction_id: Optional[str]
     created_at: datetime
-    
+
     model_config = ConfigDict(from_attributes=True)
