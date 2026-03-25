@@ -46,16 +46,12 @@ def get_extensions():
 
     from torch.utils.cpp_extension import ROCM_HOME
 
-    is_rocm_pytorch = (
-        True if ((torch.version.hip is not None) and (ROCM_HOME is not None)) else False
-    )
+    is_rocm_pytorch = True if ((torch.version.hip is not None) and (ROCM_HOME is not None)) else False
     if is_rocm_pytorch:
         assert torch_ver >= [1, 8], "ROCM support requires PyTorch >= 1.8!"
 
     # common code between cuda and rocm platforms, for hipify version [1,0,0] and later.
-    source_cuda = glob.glob(path.join(extensions_dir, "**", "*.cu")) + glob.glob(
-        path.join(extensions_dir, "*.cu")
-    )
+    source_cuda = glob.glob(path.join(extensions_dir, "**", "*.cu")) + glob.glob(path.join(extensions_dir, "*.cu"))
     sources = [main_source] + sources
 
     extension = CppExtension
@@ -115,9 +111,7 @@ def get_model_zoo_configs() -> List[str]:
 
     # Use absolute paths while symlinking.
     source_configs_dir = path.join(path.dirname(path.realpath(__file__)), "configs")
-    destination = path.join(
-        path.dirname(path.realpath(__file__)), "detectron2", "model_zoo", "configs"
-    )
+    destination = path.join(path.dirname(path.realpath(__file__)), "detectron2", "model_zoo", "configs")
     # Symlink the config directory inside package to have a cleaner pip install.
 
     # Remove stale symlink/directory from a previous build.
@@ -134,9 +128,7 @@ def get_model_zoo_configs() -> List[str]:
             # Fall back to copying if symlink fails: ex. on Windows.
             shutil.copytree(source_configs_dir, destination)
 
-    config_paths = glob.glob("configs/**/*.yaml", recursive=True) + glob.glob(
-        "configs/**/*.py", recursive=True
-    )
+    config_paths = glob.glob("configs/**/*.yaml", recursive=True) + glob.glob("configs/**/*.py", recursive=True)
     return config_paths
 
 
@@ -153,8 +145,7 @@ setup(
     version=get_version(),
     author="FAIR",
     url="https://github.com/facebookresearch/detectron2",
-    description="Detectron2 is FAIR's next-generation research "
-    "platform for object detection and segmentation.",
+    description="Detectron2 is FAIR's next-generation research " "platform for object detection and segmentation.",
     packages=find_packages(exclude=("configs", "tests*")) + list(PROJECTS.keys()),
     package_dir=PROJECTS,
     package_data={"detectron2.model_zoo": get_model_zoo_configs()},

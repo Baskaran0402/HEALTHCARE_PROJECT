@@ -23,9 +23,7 @@ from .densepose_results_textures import get_texture_atlas
 @lru_cache()
 def get_xyz_vertex_embedding(mesh_name: str, device: torch.device):
     if mesh_name == "smpl_27554":
-        embed_path = PathManager.get_local_path(
-            "https://dl.fbaipublicfiles.com/densepose/data/cse/mds_d=256.npy"
-        )
+        embed_path = PathManager.get_local_path("https://dl.fbaipublicfiles.com/densepose/data/cse/mds_d=256.npy")
         embed_map, _ = np.load(embed_path, allow_pickle=True)
         embed_map = torch.tensor(embed_map).float()[:, 0]
         embed_map -= embed_map.min()
@@ -50,9 +48,7 @@ class DensePoseOutputsVertexVisualizer:
         default_class=0,
         **kwargs,
     ):
-        self.mask_visualizer = MatrixVisualizer(
-            inplace=inplace, cmap=cmap, val_scale=1.0, alpha=alpha
-        )
+        self.mask_visualizer = MatrixVisualizer(inplace=inplace, cmap=cmap, val_scale=1.0, alpha=alpha)
         self.class_to_mesh_name = get_class_to_mesh_name_mapping(cfg)
         self.embedder = build_densepose_embedder(cfg)
         self.device = torch.device(device)
@@ -74,9 +70,7 @@ class DensePoseOutputsVertexVisualizer:
         if outputs_boxes_xywh_classes[0] is None:
             return image_bgr
 
-        S, E, N, bboxes_xywh, pred_classes = self.extract_and_check_outputs_and_boxes(
-            outputs_boxes_xywh_classes
-        )
+        S, E, N, bboxes_xywh, pred_classes = self.extract_and_check_outputs_and_boxes(outputs_boxes_xywh_classes)
 
         for n in range(N):
             x, y, w, h = bboxes_xywh[n].int().tolist()
@@ -105,26 +99,21 @@ class DensePoseOutputsVertexVisualizer:
 
         assert isinstance(
             densepose_output, DensePoseEmbeddingPredictorOutput
-        ), "DensePoseEmbeddingPredictorOutput expected, {} encountered".format(
-            type(densepose_output)
-        )
+        ), "DensePoseEmbeddingPredictorOutput expected, {} encountered".format(type(densepose_output))
 
         S = densepose_output.coarse_segm
         E = densepose_output.embedding
         N = S.size(0)
-        assert N == E.size(
-            0
-        ), "CSE coarse_segm {} and embeddings {}" " should have equal first dim size".format(
+        assert N == E.size(0), "CSE coarse_segm {} and embeddings {}" " should have equal first dim size".format(
             S.size(), E.size()
         )
         assert N == len(
             bboxes_xywh
-        ), "number of bounding boxes {}" " should be equal to first dim size of outputs {}".format(
+        ), "number of bounding boxes {}" " should be equal to first dim size of outputs {}".format(len(bboxes_xywh), N)
+        assert N == len(
+            pred_classes
+        ), "number of predicted classes {}" " should be equal to first dim size of outputs {}".format(
             len(bboxes_xywh), N
-        )
-        assert N == len(pred_classes), (
-            "number of predicted classes {}"
-            " should be equal to first dim size of outputs {}".format(len(bboxes_xywh), N)
         )
 
         return S, E, N, bboxes_xywh, pred_classes
@@ -168,8 +157,7 @@ class DensePoseOutputsTextureVisualizer(DensePoseOutputsVertexVisualizer):
         self.default_class = default_class
 
         self.mesh_vertex_embeddings = {
-            mesh_name: self.embedder(mesh_name).to(self.device)
-            for mesh_name in self.class_to_mesh_name.values()
+            mesh_name: self.embedder(mesh_name).to(self.device) for mesh_name in self.class_to_mesh_name.values()
         }
 
     def visualize(
@@ -183,13 +171,9 @@ class DensePoseOutputsTextureVisualizer(DensePoseOutputsVertexVisualizer):
         if outputs_boxes_xywh_classes[0] is None:
             return image_target_bgr
 
-        S, E, N, bboxes_xywh, pred_classes = self.extract_and_check_outputs_and_boxes(
-            outputs_boxes_xywh_classes
-        )
+        S, E, N, bboxes_xywh, pred_classes = self.extract_and_check_outputs_and_boxes(outputs_boxes_xywh_classes)
 
-        meshes = {
-            p: create_mesh(self.class_to_mesh_name[p], self.device) for p in np.unique(pred_classes)
-        }
+        meshes = {p: create_mesh(self.class_to_mesh_name[p], self.device) for p in np.unique(pred_classes)}
 
         for n in range(N):
             x, y, w, h = bboxes_xywh[n].int().cpu().numpy()

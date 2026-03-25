@@ -12,9 +12,7 @@ from detectron2.utils.file_io import PathManager
 from densepose.data.meshes.catalog import MeshCatalog, MeshInfo
 
 
-def _maybe_copy_to_device(
-    attribute: Optional[torch.Tensor], device: torch.device
-) -> Optional[torch.Tensor]:
+def _maybe_copy_to_device(attribute: Optional[torch.Tensor], device: torch.device) -> Optional[torch.Tensor]:
     if attribute is None:
         return None
     return attribute.to(device)
@@ -143,9 +141,7 @@ def load_mesh_data(
     return None
 
 
-def load_mesh_auxiliary_data(
-    fpath: str, device: Optional[torch.device] = None
-) -> Optional[torch.Tensor]:
+def load_mesh_auxiliary_data(fpath: str, device: Optional[torch.device] = None) -> Optional[torch.Tensor]:
     fpath_local = PathManager.get_local_path(fpath)
     with PathManager.open(fpath_local, "rb") as hFile:
         return torch.as_tensor(pickle.load(hFile), dtype=torch.float).to(device)
@@ -153,15 +149,11 @@ def load_mesh_auxiliary_data(
 
 
 @lru_cache()
-def load_mesh_symmetry(
-    symmetry_fpath: str, device: Optional[torch.device] = None
-) -> Optional[Dict[str, torch.Tensor]]:
+def load_mesh_symmetry(symmetry_fpath: str, device: Optional[torch.device] = None) -> Optional[Dict[str, torch.Tensor]]:
     with PathManager.open(symmetry_fpath, "rb") as hFile:
         symmetry_loaded = pickle.load(hFile)
         symmetry = {
-            "vertex_transforms": torch.as_tensor(
-                symmetry_loaded["vertex_transforms"], dtype=torch.long
-            ).to(device),
+            "vertex_transforms": torch.as_tensor(symmetry_loaded["vertex_transforms"], dtype=torch.long).to(device),
         }
         return symmetry
     return None

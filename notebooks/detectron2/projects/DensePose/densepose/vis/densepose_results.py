@@ -26,9 +26,7 @@ class DensePoseResultsVisualizer:
         boxes_xywh = boxes_xywh.cpu().numpy()
         context = self.create_visualization_context(image_bgr)
         for i, result in enumerate(densepose_result):
-            iuv_array = torch.cat(
-                (result.labels[None].type(torch.float32), result.uv * 255.0)
-            ).type(torch.uint8)
+            iuv_array = torch.cat((result.labels[None].type(torch.float32), result.uv * 255.0)).type(torch.uint8)
             self.visualize_iuv_arr(context, iuv_array.cpu().numpy(), boxes_xywh[i])
         image_bgr = self.context_to_image_bgr(context)
         return image_bgr
@@ -57,9 +55,7 @@ class DensePoseMaskedColormapResultsVisualizer(DensePoseResultsVisualizer):
         val_scale=1.0,
         **kwargs,
     ):
-        self.mask_visualizer = MatrixVisualizer(
-            inplace=inplace, cmap=cmap, val_scale=val_scale, alpha=alpha
-        )
+        self.mask_visualizer = MatrixVisualizer(inplace=inplace, cmap=cmap, val_scale=val_scale, alpha=alpha)
         self.data_extractor = data_extractor
         self.segm_extractor = segm_extractor
 
@@ -154,9 +150,7 @@ class DensePoseResultsCustomContourVisualizer(DensePoseResultsVisualizer):
             self.linewidths = [1] * len(self.levels)
         self.plot_args = kwargs
         img_colors_bgr = cv2.applyColorMap((self.levels * 255).astype(np.uint8), cmap)
-        self.level_colors_bgr = [
-            [int(v) for v in img_color_bgr.ravel()] for img_color_bgr in img_colors_bgr
-        ]
+        self.level_colors_bgr = [[int(v) for v in img_color_bgr.ravel()] for img_color_bgr in img_colors_bgr]
 
     def visualize_iuv_arr(self, context, iuv_arr: np.ndarray, bbox_xywh: Boxes) -> None:
         image_bgr = self.get_image_bgr_from_context(context)

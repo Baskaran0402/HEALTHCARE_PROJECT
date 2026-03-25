@@ -42,7 +42,6 @@ model.roi_heads.update(
         for (w1, w2) in [(10, 5), (20, 10), (30, 15)]
     ],
     proposal_matchers=[
-        L(Matcher)(thresholds=[th], labels=[0, 1], allow_low_quality_matches=False)
-        for th in [0.5, 0.6, 0.7]
+        L(Matcher)(thresholds=[th], labels=[0, 1], allow_low_quality_matches=False) for th in [0.5, 0.6, 0.7]
     ],
 )

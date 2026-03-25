@@ -145,9 +145,7 @@ class LVISEvaluator(DatasetEvaluator):
         # LVIS evaluator can be used to evaluate results for COCO dataset categories.
         # In this case `_metadata` variable will have a field with COCO-specific category mapping.
         if hasattr(self._metadata, "thing_dataset_id_to_contiguous_id"):
-            reverse_id_mapping = {
-                v: k for k, v in self._metadata.thing_dataset_id_to_contiguous_id.items()
-            }
+            reverse_id_mapping = {v: k for k, v in self._metadata.thing_dataset_id_to_contiguous_id.items()}
             for result in lvis_results:
                 result["category_id"] = reverse_id_mapping[result["category_id"]]
         else:
@@ -262,9 +260,7 @@ def _evaluate_box_proposals(dataset_predictions, lvis_api, thresholds=None, area
 
         ann_ids = lvis_api.get_ann_ids(img_ids=[prediction_dict["image_id"]])
         anno = lvis_api.load_anns(ann_ids)
-        gt_boxes = [
-            BoxMode.convert(obj["bbox"], BoxMode.XYWH_ABS, BoxMode.XYXY_ABS) for obj in anno
-        ]
+        gt_boxes = [BoxMode.convert(obj["bbox"], BoxMode.XYWH_ABS, BoxMode.XYXY_ABS) for obj in anno]
         gt_boxes = torch.as_tensor(gt_boxes).reshape(-1, 4)  # guard against no boxes
         gt_boxes = Boxes(gt_boxes)
         gt_areas = torch.as_tensor([obj["area"] for obj in anno])
@@ -305,9 +301,7 @@ def _evaluate_box_proposals(dataset_predictions, lvis_api, thresholds=None, area
 
         # append recorded iou coverage level
         gt_overlaps.append(_gt_overlaps)
-    gt_overlaps = (
-        torch.cat(gt_overlaps, dim=0) if len(gt_overlaps) else torch.zeros(0, dtype=torch.float32)
-    )
+    gt_overlaps = torch.cat(gt_overlaps, dim=0) if len(gt_overlaps) else torch.zeros(0, dtype=torch.float32)
     gt_overlaps, _ = torch.sort(gt_overlaps)
 
     if thresholds is None:
@@ -328,9 +322,7 @@ def _evaluate_box_proposals(dataset_predictions, lvis_api, thresholds=None, area
     }
 
 
-def _evaluate_predictions_on_lvis(
-    lvis_gt, lvis_results, iou_type, max_dets_per_image=None, class_names=None
-):
+def _evaluate_predictions_on_lvis(lvis_gt, lvis_results, iou_type, max_dets_per_image=None, class_names=None):
     """
     Args:
         iou_type (str):

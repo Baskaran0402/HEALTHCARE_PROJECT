@@ -322,9 +322,7 @@ class SimpleTrainer(TrainerBase):
 
         if self.async_write_metrics:
             # write metrics asynchronically
-            self.concurrent_executor.submit(
-                self._write_metrics, loss_dict, data_time, iter=self.iter
-            )
+            self.concurrent_executor.submit(self._write_metrics, loss_dict, data_time, iter=self.iter)
         else:
             self._write_metrics(loss_dict, data_time)
 
@@ -401,19 +399,14 @@ class SimpleTrainer(TrainerBase):
             storage.put_scalar("data_time", data_time, cur_iter=cur_iter)
 
             # average the rest metrics
-            metrics_dict = {
-                k: np.mean([x[k] for x in all_metrics_dict]) for k in all_metrics_dict[0].keys()
-            }
+            metrics_dict = {k: np.mean([x[k] for x in all_metrics_dict]) for k in all_metrics_dict[0].keys()}
             total_losses_reduced = sum(metrics_dict.values())
             if not np.isfinite(total_losses_reduced):
                 raise FloatingPointError(
-                    f"Loss became infinite or NaN at iteration={cur_iter}!\n"
-                    f"loss_dict = {metrics_dict}"
+                    f"Loss became infinite or NaN at iteration={cur_iter}!\n" f"loss_dict = {metrics_dict}"
                 )
 
-            storage.put_scalar(
-                "{}total_loss".format(prefix), total_losses_reduced, cur_iter=cur_iter
-            )
+            storage.put_scalar("{}total_loss".format(prefix), total_losses_reduced, cur_iter=cur_iter)
             if len(metrics_dict) > 1:
                 storage.put_scalars(cur_iter=cur_iter, **metrics_dict)
 
@@ -461,9 +454,7 @@ class AMPTrainer(SimpleTrainer):
             assert not (model.device_ids and len(model.device_ids) > 1), unsupported
         assert not isinstance(model, DataParallel), unsupported
 
-        super().__init__(
-            model, data_loader, optimizer, gather_metric_period, zero_grad_before_forward
-        )
+        super().__init__(model, data_loader, optimizer, gather_metric_period, zero_grad_before_forward)
 
         if grad_scaler is None:
             from torch.cuda.amp import GradScaler
@@ -508,9 +499,7 @@ class AMPTrainer(SimpleTrainer):
 
         if self.async_write_metrics:
             # write metrics asynchronically
-            self.concurrent_executor.submit(
-                self._write_metrics, loss_dict, data_time, iter=self.iter
-            )
+            self.concurrent_executor.submit(self._write_metrics, loss_dict, data_time, iter=self.iter)
         else:
             self._write_metrics(loss_dict, data_time)
 

@@ -68,9 +68,7 @@ class Decoder(nn.Module):
                 weight_init.c2_msra_fill(conv)
                 head_ops.append(conv)
                 if feature_strides[in_feature] != self.common_stride:
-                    head_ops.append(
-                        nn.Upsample(scale_factor=2, mode="bilinear", align_corners=False)
-                    )
+                    head_ops.append(nn.Upsample(scale_factor=2, mode="bilinear", align_corners=False))
             self.scale_heads.append(nn.Sequential(*head_ops))
             self.add_module(in_feature, self.scale_heads[-1])
         self.predictor = Conv2d(conv_dims, num_classes, kernel_size=1, stride=1, padding=0)
@@ -123,9 +121,7 @@ class DensePoseROIHeads(StandardROIHeads):
             pooler_type=dp_pooler_type,
         )
         self.densepose_head = build_densepose_head(cfg, in_channels)
-        self.densepose_predictor = build_densepose_predictor(
-            cfg, self.densepose_head.n_out_channels
-        )
+        self.densepose_predictor = build_densepose_predictor(cfg, self.densepose_head.n_out_channels)
         self.densepose_losses = build_densepose_losses(cfg)
         self.embedder = build_densepose_embedder(cfg)
 
@@ -199,9 +195,7 @@ class DensePoseROIHeads(StandardROIHeads):
             losses.update(self._forward_densepose(features, instances))
         return instances, losses
 
-    def forward_with_given_boxes(
-        self, features: Dict[str, torch.Tensor], instances: List[Instances]
-    ):
+    def forward_with_given_boxes(self, features: Dict[str, torch.Tensor], instances: List[Instances]):
         """
         Use the given boxes in `instances` to produce other (non-box) per-ROI outputs.
 

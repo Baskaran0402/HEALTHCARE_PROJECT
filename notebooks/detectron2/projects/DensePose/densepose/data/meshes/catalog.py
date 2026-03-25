@@ -29,10 +29,7 @@ class _MeshCatalog(UserDict):
     def __setitem__(self, key, value):
         if key in self:
             logger = logging.getLogger(__name__)
-            logger.warning(
-                f"Overwriting mesh catalog entry '{key}': old value {self[key]}"
-                f", new value {value}"
-            )
+            logger.warning(f"Overwriting mesh catalog entry '{key}': old value {self[key]}" f", new value {value}")
             mesh_id = self.mesh_ids[key]
         else:
             self.max_mesh_id += 1

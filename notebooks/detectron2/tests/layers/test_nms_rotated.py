@@ -87,9 +87,7 @@ class TestNMSRotated(unittest.TestCase):
             assert torch.allclose(boxes, backup), "boxes modified by batched_nms"
             backup = rotated_boxes.clone()
             keep = batched_nms_rotated(rotated_boxes, scores, idxs, iou)
-            assert torch.allclose(
-                rotated_boxes, backup
-            ), "rotated_boxes modified by batched_nms_rotated"
+            assert torch.allclose(rotated_boxes, backup), "rotated_boxes modified by batched_nms_rotated"
             # Occasionally the gap can be large if there are many IOU on the threshold boundary
             self.assertLessEqual(nms_edit_distance(keep, keep_ref), 5, err_msg.format(iou))
 

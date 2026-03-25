@@ -226,9 +226,7 @@ class CommonMetricPrinter(EventWriter):
             # estimate eta on our own - more noisy
             eta_string = None
             if self._last_write is not None:
-                estimate_iter_time = (time.perf_counter() - self._last_write[1]) / (
-                    iteration - self._last_write[0]
-                )
+                estimate_iter_time = (time.perf_counter() - self._last_write[1]) / (iteration - self._last_write[0])
                 eta_seconds = estimate_iter_time * (self._max_iter - iteration - 1)
                 eta_string = str(datetime.timedelta(seconds=int(eta_seconds)))
             self._last_write = (iteration, time.perf_counter())
@@ -244,9 +242,7 @@ class CommonMetricPrinter(EventWriter):
             return
 
         try:
-            avg_data_time = storage.history("data_time").avg(
-                storage.count_samples("data_time", self._window_size)
-            )
+            avg_data_time = storage.history("data_time").avg(storage.count_samples("data_time", self._window_size))
             last_data_time = storage.history("data_time").latest()
         except KeyError:
             # they may not exist in the first few iterations (due to warmup)
@@ -280,37 +276,23 @@ class CommonMetricPrinter(EventWriter):
                 iter=iteration,
                 losses="  ".join(
                     [
-                        "{}: {:.4g}".format(
-                            k, v.median(storage.count_samples(k, self._window_size))
-                        )
+                        "{}: {:.4g}".format(k, v.median(storage.count_samples(k, self._window_size)))
                         for k, v in storage.histories().items()
                         if "loss" in k
                     ]
                 ),
                 non_losses="  ".join(
                     [
-                        "{}: {:.4g}".format(
-                            k, v.median(storage.count_samples(k, self._window_size))
-                        )
+                        "{}: {:.4g}".format(k, v.median(storage.count_samples(k, self._window_size)))
                         for k, v in storage.histories().items()
                         if "[metric]" in k
                     ]
                 ),
-                avg_time=(
-                    "time: {:.4f}  ".format(avg_iter_time) if avg_iter_time is not None else ""
-                ),
-                last_time=(
-                    "last_time: {:.4f}  ".format(last_iter_time)
-                    if last_iter_time is not None
-                    else ""
-                ),
-                avg_data_time=(
-                    "data_time: {:.4f}  ".format(avg_data_time) if avg_data_time is not None else ""
-                ),
+                avg_time=("time: {:.4f}  ".format(avg_iter_time) if avg_iter_time is not None else ""),
+                last_time=("last_time: {:.4f}  ".format(last_iter_time) if last_iter_time is not None else ""),
+                avg_data_time=("data_time: {:.4f}  ".format(avg_data_time) if avg_data_time is not None else ""),
                 last_data_time=(
-                    "last_data_time: {:.4f}  ".format(last_data_time)
-                    if last_data_time is not None
-                    else ""
+                    "last_data_time: {:.4f}  ".format(last_data_time) if last_data_time is not None else ""
                 ),
                 lr=lr,
                 memory="max_mem: {:.0f}M".format(max_mem_mb) if max_mem_mb is not None else "",
@@ -377,9 +359,7 @@ class EventStorage:
         existing_hint = self._smoothing_hints.get(name)
 
         if existing_hint is not None:
-            assert (
-                existing_hint == smoothing_hint
-            ), "Scalar {} was put with a different smoothing_hint!".format(name)
+            assert existing_hint == smoothing_hint, "Scalar {} was put with a different smoothing_hint!".format(name)
         else:
             self._smoothing_hints[name] = smoothing_hint
 
@@ -465,11 +445,7 @@ class EventStorage:
         result = {}
         for k, (v, itr) in self._latest_scalars.items():
             result[k] = (
-                (
-                    self._history[k].median(self.count_samples(k, window_size))
-                    if self._smoothing_hints[k]
-                    else v
-                ),
+                (self._history[k].median(self.count_samples(k, window_size)) if self._smoothing_hints[k] else v),
                 itr,
             )
         return result

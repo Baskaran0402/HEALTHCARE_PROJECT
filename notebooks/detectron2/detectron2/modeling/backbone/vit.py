@@ -349,9 +349,7 @@ class ViT(Backbone):
     def forward(self, x):
         x = self.patch_embed(x)
         if self.pos_embed is not None:
-            x = x + get_abs_pos(
-                self.pos_embed, self.pretrain_use_cls_token, (x.shape[1], x.shape[2])
-            )
+            x = x + get_abs_pos(self.pos_embed, self.pretrain_use_cls_token, (x.shape[1], x.shape[2]))
 
         for blk in self.blocks:
             x = blk(x)

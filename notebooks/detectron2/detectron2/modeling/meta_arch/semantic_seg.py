@@ -186,9 +186,7 @@ class SemSegFPNHead(nn.Module):
         self.loss_weight = loss_weight
 
         self.scale_heads = []
-        for in_feature, stride, channels in zip(
-            self.in_features, feature_strides, feature_channels
-        ):
+        for in_feature, stride, channels in zip(self.in_features, feature_strides, feature_channels):
             head_ops = []
             head_length = max(1, int(np.log2(stride) - np.log2(self.common_stride)))
             for k in range(head_length):
@@ -206,9 +204,7 @@ class SemSegFPNHead(nn.Module):
                 weight_init.c2_msra_fill(conv)
                 head_ops.append(conv)
                 if stride != self.common_stride:
-                    head_ops.append(
-                        nn.Upsample(scale_factor=2, mode="bilinear", align_corners=False)
-                    )
+                    head_ops.append(nn.Upsample(scale_factor=2, mode="bilinear", align_corners=False))
             self.scale_heads.append(nn.Sequential(*head_ops))
             self.add_module(in_feature, self.scale_heads[-1])
         self.predictor = Conv2d(conv_dims, num_classes, kernel_size=1, stride=1, padding=0)
@@ -217,9 +213,7 @@ class SemSegFPNHead(nn.Module):
     @classmethod
     def from_config(cls, cfg, input_shape: Dict[str, ShapeSpec]):
         return {
-            "input_shape": {
-                k: v for k, v in input_shape.items() if k in cfg.MODEL.SEM_SEG_HEAD.IN_FEATURES
-            },
+            "input_shape": {k: v for k, v in input_shape.items() if k in cfg.MODEL.SEM_SEG_HEAD.IN_FEATURES},
             "ignore_value": cfg.MODEL.SEM_SEG_HEAD.IGNORE_VALUE,
             "num_classes": cfg.MODEL.SEM_SEG_HEAD.NUM_CLASSES,
             "conv_dims": cfg.MODEL.SEM_SEG_HEAD.CONVS_DIM,
@@ -238,9 +232,7 @@ class SemSegFPNHead(nn.Module):
         if self.training:
             return None, self.losses(x, targets)
         else:
-            x = F.interpolate(
-                x, scale_factor=self.common_stride, mode="bilinear", align_corners=False
-            )
+            x = F.interpolate(x, scale_factor=self.common_stride, mode="bilinear", align_corners=False)
             return x, {}
 
     def layers(self, features):
@@ -260,8 +252,6 @@ class SemSegFPNHead(nn.Module):
             mode="bilinear",
             align_corners=False,
         )
-        loss = F.cross_entropy(
-            predictions, targets, reduction="mean", ignore_index=self.ignore_value
-        )
+        loss = F.cross_entropy(predictions, targets, reduction="mean", ignore_index=self.ignore_value)
         losses = {"loss_sem_seg": loss * self.loss_weight}
         return losses

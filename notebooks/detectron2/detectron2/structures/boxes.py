@@ -58,8 +58,7 @@ class BoxMode(IntEnum):
         single_box = isinstance(box, (list, tuple))
         if single_box:
             assert len(box) == 4 or len(box) == 5, (
-                "BoxMode.convert takes either a k-tuple/list or an Nxk array/tensor,"
-                " where k == 4 or 5"
+                "BoxMode.convert takes either a k-tuple/list or an Nxk array/tensor," " where k == 4 or 5"
             )
             arr = torch.tensor(box)[None, :]
         else:
@@ -75,9 +74,7 @@ class BoxMode(IntEnum):
         ], "Relative mode not yet supported!"
 
         if from_mode == BoxMode.XYWHA_ABS and to_mode == BoxMode.XYXY_ABS:
-            assert (
-                arr.shape[-1] == 5
-            ), "The last dimension of input shape must be 5 for XYWHA format"
+            assert arr.shape[-1] == 5, "The last dimension of input shape must be 5 for XYWHA format"
             original_dtype = arr.dtype
             arr = arr.double()
 
@@ -114,9 +111,7 @@ class BoxMode(IntEnum):
                 arr[:, 3] -= arr[:, 1]
             else:
                 raise NotImplementedError(
-                    "Conversion from BoxMode {} to {} is not supported yet".format(
-                        from_mode, to_mode
-                    )
+                    "Conversion from BoxMode {} to {} is not supported yet".format(from_mode, to_mode)
                 )
 
         if single_box:
@@ -372,9 +367,7 @@ def pairwise_ioa(boxes1: Boxes, boxes2: Boxes) -> torch.Tensor:
     inter = pairwise_intersection(boxes1, boxes2)
 
     # handle empty boxes
-    ioa = torch.where(
-        inter > 0, inter / area2, torch.zeros(1, dtype=inter.dtype, device=inter.device)
-    )
+    ioa = torch.where(inter > 0, inter / area2, torch.zeros(1, dtype=inter.dtype, device=inter.device))
     return ioa
 
 
@@ -409,9 +402,7 @@ def matched_pairwise_iou(boxes1: Boxes, boxes2: Boxes) -> torch.Tensor:
     Returns:
         Tensor: iou, sized [N].
     """
-    assert len(boxes1) == len(
-        boxes2
-    ), "boxlists should have the same" "number of entries, got {}, {}".format(
+    assert len(boxes1) == len(boxes2), "boxlists should have the same" "number of entries, got {}, {}".format(
         len(boxes1), len(boxes2)
     )
     area1 = boxes1.area()  # [N]

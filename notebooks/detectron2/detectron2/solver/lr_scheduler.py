@@ -109,8 +109,7 @@ class LRMultiplier(LRScheduler):
         """
         if not isinstance(multiplier, ParamScheduler):
             raise ValueError(
-                "_LRMultiplier(multiplier=) must be an instance of fvcore "
-                f"ParamScheduler. Got {multiplier} instead."
+                "_LRMultiplier(multiplier=) must be an instance of fvcore " f"ParamScheduler. Got {multiplier} instead."
             )
         self._multiplier = multiplier
         self._max_iter = max_iter
@@ -149,13 +148,9 @@ class WarmupMultiStepLR(LRScheduler):
         warmup_method: str = "linear",
         last_epoch: int = -1,
     ):
-        logger.warning(
-            "WarmupMultiStepLR is deprecated! Use LRMultipilier with fvcore ParamScheduler instead!"
-        )
+        logger.warning("WarmupMultiStepLR is deprecated! Use LRMultipilier with fvcore ParamScheduler instead!")
         if not list(milestones) == sorted(milestones):
-            raise ValueError(
-                "Milestones should be a list of" " increasing integers. Got {}", milestones
-            )
+            raise ValueError("Milestones should be a list of" " increasing integers. Got {}", milestones)
         self.milestones = milestones
         self.gamma = gamma
         self.warmup_factor = warmup_factor
@@ -187,9 +182,7 @@ class WarmupCosineLR(LRScheduler):
         warmup_method: str = "linear",
         last_epoch: int = -1,
     ):
-        logger.warning(
-            "WarmupCosineLR is deprecated! Use LRMultipilier with fvcore ParamScheduler instead!"
-        )
+        logger.warning("WarmupCosineLR is deprecated! Use LRMultipilier with fvcore ParamScheduler instead!")
         self.max_iters = max_iters
         self.warmup_factor = warmup_factor
         self.warmup_iters = warmup_iters
@@ -206,10 +199,7 @@ class WarmupCosineLR(LRScheduler):
         # instead of at 0. In the case that warmup_iters << max_iters the two are
         # very close to each other.
         return [
-            base_lr
-            * warmup_factor
-            * 0.5
-            * (1.0 + math.cos(math.pi * self.last_epoch / self.max_iters))
+            base_lr * warmup_factor * 0.5 * (1.0 + math.cos(math.pi * self.last_epoch / self.max_iters))
             for base_lr in self.base_lrs
         ]
 
@@ -218,9 +208,7 @@ class WarmupCosineLR(LRScheduler):
         return self.get_lr()
 
 
-def _get_warmup_factor_at_iter(
-    method: str, iter: int, warmup_iters: int, warmup_factor: float
-) -> float:
+def _get_warmup_factor_at_iter(method: str, iter: int, warmup_iters: int, warmup_factor: float) -> float:
     """
     Return the learning rate warmup factor at a specific iteration.
     See :paper:`ImageNet in 1h` for more details.

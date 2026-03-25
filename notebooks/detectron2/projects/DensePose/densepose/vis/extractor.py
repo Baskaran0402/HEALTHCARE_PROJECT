@@ -116,9 +116,7 @@ class DensePoseOutputsExtractor:
         self,
         instances: Instances,
         select=None,
-    ) -> Tuple[
-        Optional[DensePoseEmbeddingPredictorOutput], Optional[torch.Tensor], Optional[List[int]]
-    ]:
+    ) -> Tuple[Optional[DensePoseEmbeddingPredictorOutput], Optional[torch.Tensor], Optional[List[int]]]:
         if not (instances.has("pred_densepose") and instances.has("pred_boxes")):
             return None, None, None
 

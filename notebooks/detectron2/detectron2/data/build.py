@@ -67,9 +67,7 @@ def filter_images_with_only_crowd_annotations(dataset_dicts):
     num_after = len(dataset_dicts)
     logger = logging.getLogger(__name__)
     logger.info(
-        "Removed {} images with no usable annotations. {} images left.".format(
-            num_before - num_after, num_after
-        )
+        "Removed {} images with no usable annotations. {} images left.".format(num_before - num_after, num_after)
     )
     return dataset_dicts
 
@@ -89,21 +87,13 @@ def filter_images_with_few_keypoints(dataset_dicts, min_keypoints_per_image):
     def visible_keypoints_in_image(dic):
         # Each keypoints field has the format [x1, y1, v1, ...], where v is visibility
         annotations = dic["annotations"]
-        return sum(
-            (np.array(ann["keypoints"][2::3]) > 0).sum()
-            for ann in annotations
-            if "keypoints" in ann
-        )
+        return sum((np.array(ann["keypoints"][2::3]) > 0).sum() for ann in annotations if "keypoints" in ann)
 
-    dataset_dicts = [
-        x for x in dataset_dicts if visible_keypoints_in_image(x) >= min_keypoints_per_image
-    ]
+    dataset_dicts = [x for x in dataset_dicts if visible_keypoints_in_image(x) >= min_keypoints_per_image]
     num_after = len(dataset_dicts)
     logger = logging.getLogger(__name__)
     logger.info(
-        "Removed {} images with fewer than {} keypoints.".format(
-            num_before - num_after, min_keypoints_per_image
-        )
+        "Removed {} images with fewer than {} keypoints.".format(num_before - num_after, min_keypoints_per_image)
     )
     return dataset_dicts
 
@@ -173,9 +163,7 @@ def print_instances_class_histogram(dataset_dicts, class_names):
     histogram = np.zeros((num_classes,), dtype=int)
     for entry in dataset_dicts:
         annos = entry["annotations"]
-        classes = np.asarray(
-            [x["category_id"] for x in annos if not x.get("iscrowd", 0)], dtype=int
-        )
+        classes = np.asarray([x["category_id"] for x in annos if not x.get("iscrowd", 0)], dtype=int)
         if len(classes):
             assert classes.min() >= 0, f"Got an invalid category_id={classes.min()}"
             assert (
@@ -191,9 +179,7 @@ def print_instances_class_histogram(dataset_dicts, class_names):
             return x[:11] + ".."
         return x
 
-    data = list(
-        itertools.chain(*[[short_name(class_names[i]), int(v)] for i, v in enumerate(histogram)])
-    )
+    data = list(itertools.chain(*[[short_name(class_names[i]), int(v)] for i, v in enumerate(histogram)]))
     total_num_instances = sum(data[1::2])
     data.extend([None] * (N_COLS - (len(data) % N_COLS)))
     if num_classes > 1:
@@ -208,8 +194,7 @@ def print_instances_class_histogram(dataset_dicts, class_names):
     )
     log_first_n(
         logging.INFO,
-        "Distribution of instances among all {} categories:\n".format(num_classes)
-        + colored(table, "cyan"),
+        "Distribution of instances among all {} categories:\n".format(num_classes) + colored(table, "cyan"),
         key="message",
     )
 
@@ -330,18 +315,14 @@ def build_batch_data_loader(
     """
     if single_gpu_batch_size:
         if total_batch_size:
-            raise ValueError(
-                """total_batch_size and single_gpu_batch_size are mutually incompatible.
-                Please specify only one. """
-            )
+            raise ValueError("""total_batch_size and single_gpu_batch_size are mutually incompatible.
+                Please specify only one. """)
         batch_size = single_gpu_batch_size
     else:
         world_size = get_world_size()
         assert (
             total_batch_size > 0 and total_batch_size % world_size == 0
-        ), "Total batch size ({}) must be divisible by the number of gpus ({}).".format(
-            total_batch_size, world_size
-        )
+        ), "Total batch size ({}) must be divisible by the number of gpus ({}).".format(total_batch_size, world_size)
         batch_size = total_batch_size // world_size
     logger = logging.getLogger(__name__)
     logger.info("Making batched data loader with batch_size=%d", batch_size)
@@ -411,22 +392,15 @@ def _build_weighted_sampler(cfg, enable_category_balance=False):
             name: get_detection_dataset_dicts(
                 [name],
                 filter_empty=cfg.DATALOADER.FILTER_EMPTY_ANNOTATIONS,
-                min_keypoints=(
-                    cfg.MODEL.ROI_KEYPOINT_HEAD.MIN_KEYPOINTS_PER_IMAGE
-                    if cfg.MODEL.KEYPOINT_ON
-                    else 0
-                ),
-                proposal_files=(
-                    cfg.DATASETS.PROPOSAL_FILES_TRAIN if cfg.MODEL.LOAD_PROPOSALS else None
-                ),
+                min_keypoints=(cfg.MODEL.ROI_KEYPOINT_HEAD.MIN_KEYPOINTS_PER_IMAGE if cfg.MODEL.KEYPOINT_ON else 0),
+                proposal_files=(cfg.DATASETS.PROPOSAL_FILES_TRAIN if cfg.MODEL.LOAD_PROPOSALS else None),
             )
             for name in cfg.DATASETS.TRAIN
         }
     )
     # Repeat factor for every sample in the dataset
     repeat_factors = [
-        [dataset_repeat_factors[dsname]] * len(dataset_name_to_dicts[dsname])
-        for dsname in cfg.DATASETS.TRAIN
+        [dataset_repeat_factors[dsname]] * len(dataset_name_to_dicts[dsname]) for dsname in cfg.DATASETS.TRAIN
     ]
 
     repeat_factors = list(itertools.chain.from_iterable(repeat_factors))
@@ -451,16 +425,10 @@ def _build_weighted_sampler(cfg, enable_category_balance=False):
         repeat_factors = torch.mul(category_repeat_factors, repeat_factors)
         repeat_factors = repeat_factors / torch.min(repeat_factors)
         logger.info(
-            "Using WeightedCategoryTrainingSampler with repeat_factors={}".format(
-                cfg.DATASETS.TRAIN_REPEAT_FACTOR
-            )
+            "Using WeightedCategoryTrainingSampler with repeat_factors={}".format(cfg.DATASETS.TRAIN_REPEAT_FACTOR)
         )
     else:
-        logger.info(
-            "Using WeightedTrainingSampler with repeat_factors={}".format(
-                cfg.DATASETS.TRAIN_REPEAT_FACTOR
-            )
-        )
+        logger.info("Using WeightedTrainingSampler with repeat_factors={}".format(cfg.DATASETS.TRAIN_REPEAT_FACTOR))
 
     sampler = RepeatFactorTrainingSampler(repeat_factors)
     return sampler
@@ -471,9 +439,7 @@ def _train_loader_from_config(cfg, mapper=None, *, dataset=None, sampler=None):
         dataset = get_detection_dataset_dicts(
             cfg.DATASETS.TRAIN,
             filter_empty=cfg.DATALOADER.FILTER_EMPTY_ANNOTATIONS,
-            min_keypoints=(
-                cfg.MODEL.ROI_KEYPOINT_HEAD.MIN_KEYPOINTS_PER_IMAGE if cfg.MODEL.KEYPOINT_ON else 0
-            ),
+            min_keypoints=(cfg.MODEL.ROI_KEYPOINT_HEAD.MIN_KEYPOINTS_PER_IMAGE if cfg.MODEL.KEYPOINT_ON else 0),
             proposal_files=cfg.DATASETS.PROPOSAL_FILES_TRAIN if cfg.MODEL.LOAD_PROPOSALS else None,
         )
         _log_api_usage("dataset." + cfg.DATASETS.TRAIN[0])
@@ -497,9 +463,7 @@ def _train_loader_from_config(cfg, mapper=None, *, dataset=None, sampler=None):
                 )
                 sampler = RepeatFactorTrainingSampler(repeat_factors, seed=cfg.SEED)
             elif sampler_name == "RandomSubsetTrainingSampler":
-                sampler = RandomSubsetTrainingSampler(
-                    len(dataset), cfg.DATALOADER.RANDOM_SUBSET_RATIO
-                )
+                sampler = RandomSubsetTrainingSampler(len(dataset), cfg.DATALOADER.RANDOM_SUBSET_RATIO)
             elif sampler_name == "WeightedTrainingSampler":
                 sampler = _build_weighted_sampler(cfg)
             elif sampler_name == "WeightedCategoryTrainingSampler":
@@ -595,10 +559,7 @@ def _test_loader_from_config(cfg, dataset_name, mapper=None):
         dataset_name,
         filter_empty=False,
         proposal_files=(
-            [
-                cfg.DATASETS.PROPOSAL_FILES_TEST[list(cfg.DATASETS.TEST).index(x)]
-                for x in dataset_name
-            ]
+            [cfg.DATASETS.PROPOSAL_FILES_TEST[list(cfg.DATASETS.TEST).index(x)] for x in dataset_name]
             if cfg.MODEL.LOAD_PROPOSALS
             else None
         ),
@@ -609,11 +570,7 @@ def _test_loader_from_config(cfg, dataset_name, mapper=None):
         "dataset": dataset,
         "mapper": mapper,
         "num_workers": cfg.DATALOADER.NUM_WORKERS,
-        "sampler": (
-            InferenceSampler(len(dataset))
-            if not isinstance(dataset, torchdata.IterableDataset)
-            else None
-        ),
+        "sampler": (InferenceSampler(len(dataset)) if not isinstance(dataset, torchdata.IterableDataset) else None),
     }
 
 

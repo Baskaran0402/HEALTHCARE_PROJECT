@@ -80,14 +80,10 @@ class Trainer(DefaultTrainer):
                 "coco_2017_val_panoptic": "coco_2017_val",
                 "coco_2017_val_100_panoptic": "coco_2017_val_100",
             }
-            evaluator_list.append(
-                COCOEvaluator(dataset_name_mapper[dataset_name], output_dir=output_folder)
-            )
+            evaluator_list.append(COCOEvaluator(dataset_name_mapper[dataset_name], output_dir=output_folder))
         if len(evaluator_list) == 0:
             raise NotImplementedError(
-                "no Evaluator for the dataset {} with the type {}".format(
-                    dataset_name, evaluator_type
-                )
+                "no Evaluator for the dataset {} with the type {}".format(dataset_name, evaluator_type)
             )
         elif len(evaluator_list) == 1:
             return evaluator_list[0]
@@ -149,9 +145,7 @@ def main(args):
 
     if args.eval_only:
         model = Trainer.build_model(cfg)
-        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(
-            cfg.MODEL.WEIGHTS, resume=args.resume
-        )
+        DetectionCheckpointer(model, save_dir=cfg.OUTPUT_DIR).resume_or_load(cfg.MODEL.WEIGHTS, resume=args.resume)
         res = Trainer.test(cfg, model)
         return res
 

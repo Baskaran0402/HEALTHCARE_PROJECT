@@ -42,9 +42,7 @@ model = L(RetinaNet)(
         offset=0.0,
     ),
     box2box_transform=L(Box2BoxTransform)(weights=[1.0, 1.0, 1.0, 1.0]),
-    anchor_matcher=L(Matcher)(
-        thresholds=[0.4, 0.5], labels=[0, -1, 1], allow_low_quality_matches=True
-    ),
+    anchor_matcher=L(Matcher)(thresholds=[0.4, 0.5], labels=[0, -1, 1], allow_low_quality_matches=True),
     num_classes=80,
     head_in_features=["p3", "p4", "p5", "p6", "p7"],
     focal_loss_alpha=0.25,

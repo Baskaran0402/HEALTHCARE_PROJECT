@@ -21,12 +21,7 @@ class RotatedCOCOeval(COCOeval):
             if box_list == []:  # cannot decide the box_dim
                 return False
             return np.all(
-                np.array(
-                    [
-                        (len(obj) == 5) and ((type(obj) is list) or (type(obj) is np.ndarray))
-                        for obj in box_list
-                    ]
-                )
+                np.array([(len(obj) == 5) and ((type(obj) is list) or (type(obj) is np.ndarray)) for obj in box_list])
             )
         return False
 
@@ -47,11 +42,7 @@ class RotatedCOCOeval(COCOeval):
             if input_box_dim == 4 and output_box_dim == 5:
                 box_tensor = BoxMode.convert(box_tensor, BoxMode.XYWH_ABS, BoxMode.XYWHA_ABS)
             else:
-                raise Exception(
-                    "Unable to convert from {}-dim box to {}-dim box".format(
-                        input_box_dim, output_box_dim
-                    )
-                )
+                raise Exception("Unable to convert from {}-dim box to {}-dim box".format(input_box_dim, output_box_dim))
         return box_tensor
 
     def compute_iou_dt_gt(self, dt, gt, is_crowd):
@@ -157,9 +148,7 @@ class RotatedCOCOEvaluator(COCOEvaluator):
 
         # unmap the category ids for COCO
         if hasattr(self._metadata, "thing_dataset_id_to_contiguous_id"):
-            reverse_id_mapping = {
-                v: k for k, v in self._metadata.thing_dataset_id_to_contiguous_id.items()
-            }
+            reverse_id_mapping = {v: k for k, v in self._metadata.thing_dataset_id_to_contiguous_id.items()}
             for result in coco_results:
                 result["category_id"] = reverse_id_mapping[result["category_id"]]
 
@@ -186,9 +175,7 @@ class RotatedCOCOEvaluator(COCOEvaluator):
         )
 
         task = "bbox"
-        res = self._derive_coco_results(
-            coco_eval, task, class_names=self._metadata.get("thing_classes")
-        )
+        res = self._derive_coco_results(coco_eval, task, class_names=self._metadata.get("thing_classes"))
         self._results[task] = res
 
     def _evaluate_predictions_on_coco(self, coco_gt, coco_results):

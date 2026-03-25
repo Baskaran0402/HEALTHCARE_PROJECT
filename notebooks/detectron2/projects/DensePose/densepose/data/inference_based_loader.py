@@ -156,14 +156,8 @@ class InferenceBasedLoader:
                 model_output_i["instances"].dataset_classes = torch.tensor(
                     [instance_class] * len(model_output_i["instances"])
                 )
-            model_output_filtered = (
-                model_output if self.data_filter is None else self.data_filter(model_output)
-            )
-            data = (
-                model_output_filtered
-                if self.data_sampler is None
-                else self.data_sampler(model_output_filtered)
-            )
+            model_output_filtered = model_output if self.data_filter is None else self.data_filter(model_output)
+            data = model_output_filtered if self.data_sampler is None else self.data_sampler(model_output_filtered)
             for data_i in data:
                 if len(data_i["instances"]):
                     data_batches.append(data_i)

@@ -169,9 +169,7 @@ def configurable(init_func=None, *, from_config=None):
 
     if init_func is not None:
         assert (
-            inspect.isfunction(init_func)
-            and from_config is None
-            and init_func.__name__ == "__init__"
+            inspect.isfunction(init_func) and from_config is None and init_func.__name__ == "__init__"
         ), "Incorrect use of @configurable. Check API documentation for examples."
 
         @functools.wraps(init_func)
@@ -179,9 +177,7 @@ def configurable(init_func=None, *, from_config=None):
             try:
                 from_config_func = type(self).from_config
             except AttributeError as e:
-                raise AttributeError(
-                    "Class with @configurable must have a 'from_config' classmethod."
-                ) from e
+                raise AttributeError("Class with @configurable must have a 'from_config' classmethod.") from e
             if not inspect.ismethod(from_config_func):
                 raise TypeError("Class with @configurable must have a 'from_config' classmethod.")
 
@@ -196,9 +192,7 @@ def configurable(init_func=None, *, from_config=None):
     else:
         if from_config is None:
             return configurable  # @configurable() is made equivalent to @configurable
-        assert inspect.isfunction(
-            from_config
-        ), "from_config argument of configurable must be a function!"
+        assert inspect.isfunction(from_config), "from_config argument of configurable must be a function!"
 
         def wrapper(orig_func):
             @functools.wraps(orig_func)
@@ -230,8 +224,7 @@ def _get_args_from_config(from_config_func, *args, **kwargs):
             name = f"{from_config_func.__self__}.from_config"
         raise TypeError(f"{name} must take 'cfg' as the first argument!")
     support_var_arg = any(
-        param.kind in [param.VAR_POSITIONAL, param.VAR_KEYWORD]
-        for param in signature.parameters.values()
+        param.kind in [param.VAR_POSITIONAL, param.VAR_KEYWORD] for param in signature.parameters.values()
     )
     if support_var_arg:  # forward all arguments to from_config, if from_config accepts them
         ret = from_config_func(*args, **kwargs)

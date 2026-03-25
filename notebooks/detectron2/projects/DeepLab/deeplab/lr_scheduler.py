@@ -47,10 +47,7 @@ class WarmupPolyLR(LRScheduler):
         )
         if self.constant_ending > 0 and warmup_factor == 1.0:
             # Constant ending lr.
-            if (
-                math.pow((1.0 - self.last_epoch / self.max_iters), self.power)
-                < self.constant_ending
-            ):
+            if math.pow((1.0 - self.last_epoch / self.max_iters), self.power) < self.constant_ending:
                 return [base_lr * self.constant_ending for base_lr in self.base_lrs]
         return [
             base_lr * warmup_factor * math.pow((1.0 - self.last_epoch / self.max_iters), self.power)

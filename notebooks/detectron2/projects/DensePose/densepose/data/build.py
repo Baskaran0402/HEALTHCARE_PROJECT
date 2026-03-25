@@ -68,9 +68,7 @@ def _compute_num_images_per_worker(cfg: CfgNode) -> int:
     )
     assert (
         images_per_batch >= num_workers
-    ), "SOLVER.IMS_PER_BATCH ({}) must be larger than the number of workers ({}).".format(
-        images_per_batch, num_workers
-    )
+    ), "SOLVER.IMS_PER_BATCH ({}) must be larger than the number of workers ({}).".format(images_per_batch, num_workers)
     images_per_worker = images_per_batch // num_workers
     return images_per_worker
 
@@ -173,9 +171,7 @@ def _maybe_create_keypoints_keep_instance_predicate(cfg: CfgNode) -> Optional[In
 
     def has_sufficient_num_keypoints(instance: Instance) -> bool:
         num_kpts = sum(
-            (np.array(ann["keypoints"][2::3]) > 0).sum()
-            for ann in instance["annotations"]
-            if "keypoints" in ann
+            (np.array(ann["keypoints"][2::3]) > 0).sum() for ann in instance["annotations"] if "keypoints" in ann
         )
         return num_kpts >= min_num_keypoints
 
@@ -251,9 +247,7 @@ def _get_test_keep_instance_predicate(cfg: CfgNode):
     return general_keep_predicate
 
 
-def _maybe_filter_and_map_categories(
-    dataset_name: str, dataset_dicts: List[Instance]
-) -> List[Instance]:
+def _maybe_filter_and_map_categories(dataset_name: str, dataset_dicts: List[Instance]) -> List[Instance]:
     meta = MetadataCatalog.get(dataset_name)
     category_id_map = meta.thing_dataset_id_to_contiguous_id
     filtered_dataset_dicts = []
@@ -275,18 +269,12 @@ def _add_category_whitelists_to_metadata(cfg: CfgNode) -> None:
         meta = MetadataCatalog.get(dataset_name)
         meta.whitelisted_categories = whitelisted_cat_ids
         logger = logging.getLogger(__name__)
-        logger.info(
-            "Whitelisted categories for dataset {}: {}".format(
-                dataset_name, meta.whitelisted_categories
-            )
-        )
+        logger.info("Whitelisted categories for dataset {}: {}".format(dataset_name, meta.whitelisted_categories))
 
 
 def _add_category_maps_to_metadata(cfg: CfgNode) -> None:
     for dataset_name, category_map in cfg.DATASETS.CATEGORY_MAPS.items():
-        category_map = {
-            int(cat_id_src): int(cat_id_dst) for cat_id_src, cat_id_dst in category_map.items()
-        }
+        category_map = {int(cat_id_src): int(cat_id_dst) for cat_id_src, cat_id_dst in category_map.items()}
         meta = MetadataCatalog.get(dataset_name)
         meta.category_map = category_map
         logger = logging.getLogger(__name__)
@@ -299,11 +287,7 @@ def _add_category_info_to_bootstrapping_metadata(dataset_name: str, dataset_cfg:
     meta.categories = dataset_cfg.CATEGORIES
     meta.max_count_per_category = dataset_cfg.MAX_COUNT_PER_CATEGORY
     logger = logging.getLogger(__name__)
-    logger.info(
-        "Category to class mapping for dataset {}: {}".format(
-            dataset_name, meta.category_to_class_mapping
-        )
-    )
+    logger.info("Category to class mapping for dataset {}: {}".format(dataset_name, meta.category_to_class_mapping))
 
 
 def _maybe_add_class_to_mesh_name_map_to_metadata(dataset_names: List[str], cfg: CfgNode) -> None:
@@ -320,9 +304,7 @@ def _merge_categories(dataset_names: Collection[str]) -> _MergedCategoriesT:
         meta = MetadataCatalog.get(dataset_name)
         whitelisted_categories = meta.get("whitelisted_categories")
         category_map = meta.get("category_map", {})
-        cat_ids = (
-            whitelisted_categories if whitelisted_categories is not None else meta.categories.keys()
-        )
+        cat_ids = whitelisted_categories if whitelisted_categories is not None else meta.categories.keys()
         for cat_id in cat_ids:
             cat_name = meta.categories[cat_id]
             cat_id_mapped = category_map.get(cat_id, cat_id)
@@ -357,16 +339,11 @@ def _warn_if_merged_different_categories(merged_categories: _MergedCategoriesT) 
     for cat_id in merged_categories:
         merged_categories_i = merged_categories[cat_id]
         first_cat_name = merged_categories_i[0].name
-        if len(merged_categories_i) > 1 and not all(
-            cat.name == first_cat_name for cat in merged_categories_i[1:]
-        ):
+        if len(merged_categories_i) > 1 and not all(cat.name == first_cat_name for cat in merged_categories_i[1:]):
             cat_summary_str = ", ".join(
                 [f"{cat.id} ({cat.name}) from {cat.dataset_name}" for cat in merged_categories_i]
             )
-            logger.warning(
-                f"Merged category {cat_id} corresponds to the following categories: "
-                f"{cat_summary_str}"
-            )
+            logger.warning(f"Merged category {cat_id} corresponds to the following categories: " f"{cat_summary_str}")
 
 
 def combine_detection_dataset_dicts(
@@ -397,9 +374,7 @@ def combine_detection_dataset_dicts(
     # cat_id -> [(orig_cat_id, cat_name, dataset_name)]
     merged_categories = _merge_categories(dataset_names)
     _warn_if_merged_different_categories(merged_categories)
-    merged_category_names = [
-        merged_categories[cat_id][0].mapped_name for cat_id in sorted(merged_categories)
-    ]
+    merged_category_names = [merged_categories[cat_id][0].mapped_name for cat_id in sorted(merged_categories)]
     # map to contiguous category IDs
     _add_category_id_to_contiguous_id_maps_to_metadata(merged_categories)
     # load annotations and dataset metadata
@@ -414,14 +389,10 @@ def combine_detection_dataset_dicts(
 
     if keep_instance_predicate is not None:
         all_datasets_dicts_plain = [
-            d
-            for d in itertools.chain.from_iterable(dataset_name_to_dicts.values())
-            if keep_instance_predicate(d)
+            d for d in itertools.chain.from_iterable(dataset_name_to_dicts.values()) if keep_instance_predicate(d)
         ]
     else:
-        all_datasets_dicts_plain = list(
-            itertools.chain.from_iterable(dataset_name_to_dicts.values())
-        )
+        all_datasets_dicts_plain = list(itertools.chain.from_iterable(dataset_name_to_dicts.values()))
     return all_datasets_dicts_plain
 
 
@@ -712,9 +683,7 @@ def build_video_list_dataset(meta: Metadata, cfg: CfgNode):
         transform = build_transform(cfg.TRANSFORM, data_type="image")
         video_list = video_list_from_file(video_list_fpath, video_base_path)
         keyframe_helper_fpath = getattr(cfg, "KEYFRAME_HELPER", None)
-        return VideoKeyframeDataset(
-            video_list, category, frame_selector, transform, keyframe_helper_fpath
-        )
+        return VideoKeyframeDataset(video_list, category, frame_selector, transform, keyframe_helper_fpath)
 
 
 class _BootstrapDatasetFactoryCatalog(UserDict):

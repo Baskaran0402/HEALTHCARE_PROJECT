@@ -37,9 +37,7 @@ class DensePoseChartPredictorOutput:
         """
         return self.coarse_segm.size(0)
 
-    def __getitem__(
-        self, item: Union[int, slice, torch.BoolTensor]
-    ) -> "DensePoseChartPredictorOutput":
+    def __getitem__(self, item: Union[int, slice, torch.BoolTensor]) -> "DensePoseChartPredictorOutput":
         """
         Get outputs for the selected instance(s)
 

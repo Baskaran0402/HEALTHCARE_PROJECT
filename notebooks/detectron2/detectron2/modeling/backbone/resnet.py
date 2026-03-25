@@ -391,9 +391,7 @@ class ResNet(Backbone):
         if out_features is not None:
             # Avoid keeping unused layers in this module. They consume extra memory
             # and may cause allreduce to fail
-            num_stages = max(
-                [{"res2": 1, "res3": 2, "res4": 3, "res5": 4}.get(f, 0) for f in out_features]
-            )
+            num_stages = max([{"res2": 1, "res3": 2, "res4": 3, "res5": 4}.get(f, 0) for f in out_features])
             stages = stages[:num_stages]
         for i, blocks in enumerate(stages):
             assert len(blocks) > 0, len(blocks)
@@ -407,9 +405,7 @@ class ResNet(Backbone):
             self.stage_names.append(name)
             self.stages.append(stage)
 
-            self._out_feature_strides[name] = current_stride = int(
-                current_stride * np.prod([k.stride for k in blocks])
-            )
+            self._out_feature_strides[name] = current_stride = int(current_stride * np.prod([k.stride for k in blocks]))
             self._out_feature_channels[name] = curr_channels = blocks[-1].out_channels
         self.stage_names = tuple(self.stage_names)  # Make it static for scripting
 
@@ -459,9 +455,7 @@ class ResNet(Backbone):
 
     def output_shape(self):
         return {
-            name: ShapeSpec(
-                channels=self._out_feature_channels[name], stride=self._out_feature_strides[name]
-            )
+            name: ShapeSpec(channels=self._out_feature_channels[name], stride=self._out_feature_strides[name])
             for name in self._out_features
         }
 
@@ -529,8 +523,7 @@ class ResNet(Backbone):
             for k, v in kwargs.items():
                 if k.endswith("_per_block"):
                     assert len(v) == num_blocks, (
-                        f"Argument '{k}' of make_stage should have the "
-                        f"same length as num_blocks={num_blocks}."
+                        f"Argument '{k}' of make_stage should have the " f"same length as num_blocks={num_blocks}."
                     )
                     newk = k[: -len("_per_block")]
                     assert newk not in kwargs, f"Cannot call make_stage with both {k} and {newk}!"
@@ -538,9 +531,7 @@ class ResNet(Backbone):
                 else:
                     curr_kwargs[k] = v
 
-            blocks.append(
-                block_class(in_channels=in_channels, out_channels=out_channels, **curr_kwargs)
-            )
+            blocks.append(block_class(in_channels=in_channels, out_channels=out_channels, **curr_kwargs))
             in_channels = out_channels
         return blocks
 
@@ -653,9 +644,7 @@ def build_resnet_backbone(cfg, input_shape):
 
     if depth in [18, 34]:
         assert out_channels == 64, "Must set MODEL.RESNETS.RES2_OUT_CHANNELS = 64 for R18/R34"
-        assert not any(
-            deform_on_per_stage
-        ), "MODEL.RESNETS.DEFORM_ON_PER_STAGE unsupported for R18/R34"
+        assert not any(deform_on_per_stage), "MODEL.RESNETS.DEFORM_ON_PER_STAGE unsupported for R18/R34"
         assert res5_dilation == 1, "Must set MODEL.RESNETS.RES5_DILATION = 1 for R18/R34"
         assert num_groups == 1, "Must set MODEL.RESNETS.NUM_GROUPS = 1 for R18/R34"
 

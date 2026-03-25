@@ -66,9 +66,7 @@ class DensePoseDataFilter:
             # filter out any target without suitable annotation
             if self.keep_masks:
                 gt_masks = (
-                    proposals_per_image.gt_masks
-                    if hasattr(proposals_per_image, "gt_masks")
-                    else [None] * N_gt_boxes
+                    proposals_per_image.gt_masks if hasattr(proposals_per_image, "gt_masks") else [None] * N_gt_boxes
                 )
             else:
                 gt_masks = [None] * N_gt_boxes

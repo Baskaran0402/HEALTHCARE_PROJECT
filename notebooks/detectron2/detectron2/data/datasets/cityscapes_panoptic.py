@@ -34,9 +34,7 @@ def get_cityscapes_panoptic_files(image_dir, gt_dir, json_info):
 
     for ann in json_info["annotations"]:
         image_file = image_dict.get(ann["image_id"], None)
-        assert image_file is not None, "No image {} found for annotation {}".format(
-            ann["image_id"], ann["file_name"]
-        )
+        assert image_file is not None, "No image {} found for annotation {}".format(ann["image_id"], ann["file_name"])
         label_file = os.path.join(gt_dir, ann["file_name"])
         segments_info = ann["segments_info"]
 
@@ -67,13 +65,9 @@ def load_cityscapes_panoptic(image_dir, gt_dir, gt_json, meta):
 
     def _convert_category_id(segment_info, meta):
         if segment_info["category_id"] in meta["thing_dataset_id_to_contiguous_id"]:
-            segment_info["category_id"] = meta["thing_dataset_id_to_contiguous_id"][
-                segment_info["category_id"]
-            ]
+            segment_info["category_id"] = meta["thing_dataset_id_to_contiguous_id"][segment_info["category_id"]]
         else:
-            segment_info["category_id"] = meta["stuff_dataset_id_to_contiguous_id"][
-                segment_info["category_id"]
-            ]
+            segment_info["category_id"] = meta["stuff_dataset_id_to_contiguous_id"][segment_info["category_id"]]
         return segment_info
 
     assert os.path.exists(
@@ -84,16 +78,12 @@ def load_cityscapes_panoptic(image_dir, gt_dir, gt_json, meta):
     files = get_cityscapes_panoptic_files(image_dir, gt_dir, json_info)
     ret = []
     for image_file, label_file, segments_info in files:
-        sem_label_file = (
-            image_file.replace("leftImg8bit", "gtFine").split(".")[0] + "_labelTrainIds.png"
-        )
+        sem_label_file = image_file.replace("leftImg8bit", "gtFine").split(".")[0] + "_labelTrainIds.png"
         segments_info = [_convert_category_id(x, meta) for x in segments_info]
         ret.append(
             {
                 "file_name": image_file,
-                "image_id": "_".join(
-                    os.path.splitext(os.path.basename(image_file))[0].split("_")[:3]
-                ),
+                "image_id": "_".join(os.path.splitext(os.path.basename(image_file))[0].split("_")[:3]),
                 "sem_seg_file_name": sem_label_file,
                 "pan_seg_file_name": label_file,
                 "segments_info": segments_info,
@@ -172,9 +162,7 @@ def register_all_cityscapes_panoptic(root):
         gt_dir = os.path.join(root, gt_dir)
         gt_json = os.path.join(root, gt_json)
 
-        DatasetCatalog.register(
-            key, lambda x=image_dir, y=gt_dir, z=gt_json: load_cityscapes_panoptic(x, y, z, meta)
-        )
+        DatasetCatalog.register(key, lambda x=image_dir, y=gt_dir, z=gt_json: load_cityscapes_panoptic(x, y, z, meta))
         MetadataCatalog.get(key).set(
             panoptic_root=gt_dir,
             image_root=image_dir,

@@ -83,9 +83,7 @@ class DensePoseDeepLabHead(nn.Module):
 class ASPPConv(nn.Sequential):
     def __init__(self, in_channels, out_channels, dilation):
         modules = [
-            nn.Conv2d(
-                in_channels, out_channels, 3, padding=dilation, dilation=dilation, bias=False
-            ),
+            nn.Conv2d(in_channels, out_channels, 3, padding=dilation, dilation=dilation, bias=False),
             nn.GroupNorm(32, out_channels),
             nn.ReLU(),
         ]
@@ -146,9 +144,7 @@ class ASPP(nn.Module):
 # https://github.com/AlexHex7/Non-local_pytorch/blob/master/lib/non_local_embedded_gaussian.py
 # See https://arxiv.org/abs/1711.07971 for details
 class _NonLocalBlockND(nn.Module):
-    def __init__(
-        self, in_channels, inter_channels=None, dimension=3, sub_sample=True, bn_layer=True
-    ):
+    def __init__(self, in_channels, inter_channels=None, dimension=3, sub_sample=True, bn_layer=True):
         super(_NonLocalBlockND, self).__init__()
 
         assert dimension in [1, 2, 3]

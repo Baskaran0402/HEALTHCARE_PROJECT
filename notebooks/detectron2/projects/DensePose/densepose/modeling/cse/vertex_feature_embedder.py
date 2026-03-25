@@ -23,9 +23,7 @@ class VertexFeatureEmbedder(nn.Module):
     Vertex embeddings are computed as F * E = tensor of size [N, D]
     """
 
-    def __init__(
-        self, num_vertices: int, feature_dim: int, embed_dim: int, train_features: bool = False
-    ):
+    def __init__(self, num_vertices: int, feature_dim: int, embed_dim: int, train_features: bool = False):
         """
         Initialize embedder, set random embeddings
 
@@ -72,6 +70,4 @@ class VertexFeatureEmbedder(nn.Module):
             data = pickle.load(hFile)
             for name in ["features", "embeddings"]:
                 if name in data:
-                    getattr(self, name).copy_(
-                        torch.tensor(data[name]).float().to(device=getattr(self, name).device)
-                    )
+                    getattr(self, name).copy_(torch.tensor(data[name]).float().to(device=getattr(self, name).device))

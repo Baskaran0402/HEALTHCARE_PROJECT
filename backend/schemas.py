@@ -351,6 +351,7 @@ class DoctorResponse(DoctorBase):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 # ============================================================
 # Doctor Consultation Schemas
 # ============================================================
@@ -400,6 +401,7 @@ class DoctorConsultationResponse(DoctorConsultationBase):
     rating: Optional[int] = None
     patient_feedback: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
+
 
 # ============================================================
 # Messaging Schemas

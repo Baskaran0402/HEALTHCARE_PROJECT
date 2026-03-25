@@ -142,11 +142,7 @@ class DensePoseBaseSampler:
             where S = DensePoseDataRelative.MASK_SIZE
         """
         sz = DensePoseDataRelative.MASK_SIZE
-        S = (
-            F.interpolate(output.coarse_segm, (sz, sz), mode="bilinear", align_corners=False)
-            .argmax(dim=1)
-            .long()
-        )
+        S = F.interpolate(output.coarse_segm, (sz, sz), mode="bilinear", align_corners=False).argmax(dim=1).long()
         I = (
             (
                 F.interpolate(

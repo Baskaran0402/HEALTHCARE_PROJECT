@@ -37,9 +37,7 @@ class ImageListDataset(Dataset):
             self.category_list = category_list
         else:
             self.category_list = [category_list] * len(image_list)
-        assert len(image_list) == len(
-            self.category_list
-        ), "length of image and category lists must be equal"
+        assert len(image_list) == len(self.category_list), "length of image and category lists must be equal"
         self.image_list = image_list
         self.transform = transform
 

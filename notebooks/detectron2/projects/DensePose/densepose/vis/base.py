@@ -47,9 +47,7 @@ class MatrixVisualizer:
         _EPSILON = 1e-6
         if np.any(matrix_scaled > 255 + _EPSILON):
             logger = logging.getLogger(__name__)
-            logger.warning(
-                f"Matrix has values > {255 + _EPSILON} after " f"scaling, clipping to [0..255]"
-            )
+            logger.warning(f"Matrix has values > {255 + _EPSILON} after " f"scaling, clipping to [0..255]")
         matrix_scaled_8u = matrix_scaled.clip(0, 255).astype(np.uint8)
         matrix_vis = cv2.applyColorMap(matrix_scaled_8u, self.cmap)
         matrix_vis[mask_bg] = image_target_bgr[y : y + h, x : x + w, :][mask_bg]
@@ -145,8 +143,7 @@ class TextVisualizer:
         if self.frame_color_transparency < 1.0:
             t = self.frame_thickness
             image_bgr[y - t : y + txt_h + t, x - t : x + txt_w + t, :] = (
-                image_bgr[y - t : y + txt_h + t, x - t : x + txt_w + t, :]
-                * self.frame_color_transparency
+                image_bgr[y - t : y + txt_h + t, x - t : x + txt_w + t, :] * self.frame_color_transparency
                 + np.array(self.frame_color_bgr) * (1.0 - self.frame_color_transparency)
             ).astype(float)
         if self.fill_color_transparency < 1.0:
@@ -167,9 +164,7 @@ class TextVisualizer:
         return image_bgr
 
     def get_text_size_wh(self, txt):
-        ((txt_w, txt_h), _) = cv2.getTextSize(
-            txt, self.font_face, self.font_scale, self.font_line_thickness
-        )
+        (txt_w, txt_h), _ = cv2.getTextSize(txt, self.font_face, self.font_scale, self.font_line_thickness)
         return txt_w, txt_h
 
 

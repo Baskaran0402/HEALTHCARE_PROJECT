@@ -250,9 +250,7 @@ class ImplicitPointHead(nn.Module):
         num_instances = pred_params.size(0)
         num_layers = len(num_weight_params)
 
-        params_splits = list(
-            torch.split_with_sizes(pred_params, num_weight_params + num_bias_params, dim=1)
-        )
+        params_splits = list(torch.split_with_sizes(pred_params, num_weight_params + num_bias_params, dim=1))
 
         weight_splits = params_splits[:num_layers]
         bias_splits = params_splits[num_layers:]

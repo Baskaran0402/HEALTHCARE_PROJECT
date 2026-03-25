@@ -2,6 +2,7 @@ from backend.database import SessionLocal
 from backend.models import User, UserSession
 import sys
 
+
 def purge_user(email):
     db = SessionLocal()
     try:
@@ -20,6 +21,7 @@ def purge_user(email):
         db.rollback()
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     purge_user("2022ad0128@svce.ac.in")

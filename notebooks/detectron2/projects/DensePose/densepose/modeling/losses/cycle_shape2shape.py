@@ -25,16 +25,12 @@ class ShapeToShapeCycleLoss(nn.Module):
     def __init__(self, cfg: CfgNode):
         super().__init__()
         self.shape_names = list(cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.EMBEDDERS.keys())
-        self.all_shape_pairs = [
-            (x, y) for i, x in enumerate(self.shape_names) for y in self.shape_names[i + 1 :]
-        ]
+        self.all_shape_pairs = [(x, y) for i, x in enumerate(self.shape_names) for y in self.shape_names[i + 1 :]]
         random.shuffle(self.all_shape_pairs)
         self.cur_pos = 0
         self.norm_p = cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.SHAPE_TO_SHAPE_CYCLE_LOSS.NORM_P
         self.temperature = cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.SHAPE_TO_SHAPE_CYCLE_LOSS.TEMPERATURE
-        self.max_num_vertices = (
-            cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.SHAPE_TO_SHAPE_CYCLE_LOSS.MAX_NUM_VERTICES
-        )
+        self.max_num_vertices = cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.SHAPE_TO_SHAPE_CYCLE_LOSS.MAX_NUM_VERTICES
 
     def _sample_random_pair(self) -> Tuple[str, str]:
         """
@@ -84,9 +80,7 @@ class ShapeToShapeCycleLoss(nn.Module):
                 mesh vertices (N = number of selected vertices)
         """
         embeddings = embedder(mesh_name)
-        indices = sample_random_indices(
-            embeddings.shape[0], self.max_num_vertices, embeddings.device
-        )
+        indices = sample_random_indices(embeddings.shape[0], self.max_num_vertices, embeddings.device)
         mesh = create_mesh(mesh_name, embeddings.device)
         geodists = mesh.geodists
         if indices is not None:
@@ -94,9 +88,7 @@ class ShapeToShapeCycleLoss(nn.Module):
             geodists = geodists[torch.meshgrid(indices, indices)]
         return embeddings, geodists
 
-    def _forward_one_pair(
-        self, embedder: nn.Module, mesh_name_1: str, mesh_name_2: str
-    ) -> torch.Tensor:
+    def _forward_one_pair(self, embedder: nn.Module, mesh_name_1: str, mesh_name_2: str) -> torch.Tensor:
         """
         Do a forward pass with a selected pair of meshes
         Args:

@@ -199,11 +199,12 @@ class HealthAnalysisService:
                 "concerns": assessment.primary_concerns,
                 "timestamp": datetime.utcnow().isoformat(),
                 "assessment_id": assessment.id,
-                "patient_id": patient.id
+                "patient_id": patient.id,
             }
 
             # Broadcast to a global alerts room for staff
             import asyncio
+
             asyncio.create_task(manager.broadcast(json.dumps(alert_payload), "institutional_alerts"))
 
         # 10. Refresh and return
@@ -247,19 +248,11 @@ class HealthAnalysisService:
 
         # Medical History (Default to False/0 if missing)
         patient_state.hypertension = (
-            int(request.medical_data.hypertension)
-            if request.medical_data.hypertension is not None
-            else 0
+            int(request.medical_data.hypertension) if request.medical_data.hypertension is not None else 0
         )
-        patient_state.diabetes = (
-            int(request.medical_data.diabetes)
-            if request.medical_data.diabetes is not None
-            else 0
-        )
+        patient_state.diabetes = int(request.medical_data.diabetes) if request.medical_data.diabetes is not None else 0
         patient_state.heart_disease = (
-            int(request.medical_data.heart_disease)
-            if request.medical_data.heart_disease is not None
-            else 0
+            int(request.medical_data.heart_disease) if request.medical_data.heart_disease is not None else 0
         )
 
         # Lifestyle

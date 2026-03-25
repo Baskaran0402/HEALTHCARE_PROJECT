@@ -27,7 +27,7 @@ class BaseHungarianTracker(BaseTracker):
         max_lost_frame_count: int = 0,
         min_box_rel_dim: float = 0.02,
         min_instance_period: int = 1,
-        **kwargs
+        **kwargs,
     ):
         """
         Args:
@@ -100,9 +100,7 @@ class BaseHungarianTracker(BaseTracker):
         assert matched_idx.size == matched_prev_idx.size
         for i in range(matched_idx.size):
             instances.ID[matched_idx[i]] = self._prev_instances.ID[matched_prev_idx[i]]
-            instances.ID_period[matched_idx[i]] = (
-                self._prev_instances.ID_period[matched_prev_idx[i]] + 1
-            )
+            instances.ID_period[matched_idx[i]] = self._prev_instances.ID_period[matched_prev_idx[i]] + 1
             instances.lost_frame_count[matched_idx[i]] = 0
         return instances
 
@@ -115,9 +113,7 @@ class BaseHungarianTracker(BaseTracker):
             instances.lost_frame_count[idx] = 0
         return instances
 
-    def _process_unmatched_prev_idx(
-        self, instances: Instances, matched_prev_idx: np.ndarray
-    ) -> Instances:
+    def _process_unmatched_prev_idx(self, instances: Instances, matched_prev_idx: np.ndarray) -> Instances:
         untracked_instances = Instances(
             image_size=instances.image_size,
             pred_boxes=[],
@@ -149,9 +145,7 @@ class BaseHungarianTracker(BaseTracker):
             untracked_instances.scores.append(float(prev_scores[idx]))
             untracked_instances.ID.append(self._prev_instances.ID[idx])
             untracked_instances.ID_period.append(self._prev_instances.ID_period[idx])
-            untracked_instances.lost_frame_count.append(
-                self._prev_instances.lost_frame_count[idx] + 1
-            )
+            untracked_instances.lost_frame_count.append(self._prev_instances.lost_frame_count[idx] + 1)
             if instances.has("pred_masks"):
                 untracked_instances.pred_masks.append(prev_masks[idx].numpy().astype(np.uint8))
 

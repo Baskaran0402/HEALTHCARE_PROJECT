@@ -38,7 +38,7 @@ def get_dashboard_metrics(db: Session = Depends(get_db)):
         "total_patients": total_patients,
         "total_consultations": total_consultations,
         "trajectory": trajectory,
-        "distribution": distribution
+        "distribution": distribution,
     }
 
 
@@ -54,15 +54,9 @@ def get_throughput(range_type: str = Query("7D", alias="range"), db: Session = D
     data = []
     for i in range(days_count):
         date = base_date - timedelta(days=i)
-        data.append({
-            "timestamp": date.strftime("%Y-%m-%d"),
-            "val": random.randint(20, 100)
-        })
+        data.append({"timestamp": date.strftime("%Y-%m-%d"), "val": random.randint(20, 100)})
 
-    return {
-        "range": range_type,
-        "data": sorted(data, key=lambda x: x["timestamp"])
-    }
+    return {"range": range_type, "data": sorted(data, key=lambda x: x["timestamp"])}
 
 
 @router.get("/logs", response_model=List[Dict[str, Any]])

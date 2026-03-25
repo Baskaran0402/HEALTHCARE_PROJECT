@@ -84,9 +84,7 @@ def keypoint_rcnn_loss(pred_keypoint_logits, instances, normalizer):
     N, K, H, W = pred_keypoint_logits.shape
     pred_keypoint_logits = pred_keypoint_logits.view(N * K, H * W)
 
-    keypoint_loss = F.cross_entropy(
-        pred_keypoint_logits[valid], keypoint_targets[valid], reduction="sum"
-    )
+    keypoint_loss = F.cross_entropy(pred_keypoint_logits[valid], keypoint_targets[valid], reduction="sum")
 
     # If a normalizer isn't specified, normalize by the number of visible keypoints in the minibatch
     if normalizer is None:
@@ -163,15 +161,11 @@ class BaseKeypointRCNNHead(nn.Module):
             "loss_weight": cfg.MODEL.ROI_KEYPOINT_HEAD.LOSS_WEIGHT,
             "num_keypoints": cfg.MODEL.ROI_KEYPOINT_HEAD.NUM_KEYPOINTS,
         }
-        normalize_by_visible = (
-            cfg.MODEL.ROI_KEYPOINT_HEAD.NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS
-        )  # noqa
+        normalize_by_visible = cfg.MODEL.ROI_KEYPOINT_HEAD.NORMALIZE_LOSS_BY_VISIBLE_KEYPOINTS  # noqa
         if not normalize_by_visible:
             batch_size_per_image = cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE
             positive_sample_fraction = cfg.MODEL.ROI_HEADS.POSITIVE_FRACTION
-            ret["loss_normalizer"] = (
-                ret["num_keypoints"] * batch_size_per_image * positive_sample_fraction
-            )
+            ret["loss_normalizer"] = ret["num_keypoints"] * batch_size_per_image * positive_sample_fraction
         else:
             ret["loss_normalizer"] = "visible"
         return ret
@@ -193,13 +187,8 @@ class BaseKeypointRCNNHead(nn.Module):
         x = self.layers(x)
         if self.training:
             num_images = len(instances)
-            normalizer = (
-                None if self.loss_normalizer == "visible" else num_images * self.loss_normalizer
-            )
-            return {
-                "loss_keypoint": keypoint_rcnn_loss(x, instances, normalizer=normalizer)
-                * self.loss_weight
-            }
+            normalizer = None if self.loss_normalizer == "visible" else num_images * self.loss_normalizer
+            return {"loss_keypoint": keypoint_rcnn_loss(x, instances, normalizer=normalizer) * self.loss_weight}
         else:
             keypoint_rcnn_inference(x, instances)
             return instances

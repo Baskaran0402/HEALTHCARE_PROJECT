@@ -21,9 +21,7 @@ class DeepLabCE(nn.Module):
         super(DeepLabCE, self).__init__()
         self.top_k_percent_pixels = top_k_percent_pixels
         self.ignore_label = ignore_label
-        self.criterion = nn.CrossEntropyLoss(
-            weight=weight, ignore_index=ignore_label, reduction="none"
-        )
+        self.criterion = nn.CrossEntropyLoss(weight=weight, ignore_index=ignore_label, reduction="none")
 
     def forward(self, logits, labels, weights=None):
         if weights is None:

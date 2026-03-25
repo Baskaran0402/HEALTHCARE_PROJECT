@@ -162,9 +162,7 @@ def get_sample_inputs(args):
         # get a sample data
         original_image = detection_utils.read_image(args.sample_image, format=cfg.INPUT.FORMAT)
         # Do same preprocessing as DefaultPredictor
-        aug = T.ResizeShortestEdge(
-            [cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST
-        )
+        aug = T.ResizeShortestEdge([cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST)
         height, width = original_image.shape[:2]
         image = aug.get_transform(original_image).apply_image(original_image)
         image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
@@ -228,8 +226,7 @@ def main() -> None:
     # run evaluation with the converted model
     if args.run_eval:
         assert exported_model is not None, (
-            "Python inference is not yet implemented for "
-            f"export_method={args.export_method}, format={args.format}."
+            "Python inference is not yet implemented for " f"export_method={args.export_method}, format={args.format}."
         )
         logger.info("Running evaluation ... this takes a long time if you export to CPU.")
         dataset = cfg.DATASETS.TEST[0]

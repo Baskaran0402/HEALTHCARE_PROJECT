@@ -25,12 +25,7 @@ class ToMaskConverter(BaseConverter):
     # pyre-fixme[14]: `convert` overrides method defined in `BaseConverter`
     #  inconsistently.
     def convert(
-        cls,
-        densepose_predictor_outputs: Any,
-        boxes: Boxes,
-        image_size_hw: ImageSizeType,
-        *args,
-        **kwargs
+        cls, densepose_predictor_outputs: Any, boxes: Boxes, image_size_hw: ImageSizeType, *args, **kwargs
     ) -> BitMasks:
         """
         Convert DensePose predictor outputs to BitMasks using some registered
@@ -46,6 +41,4 @@ class ToMaskConverter(BaseConverter):
         Return:
             An instance of `BitMasks`. If no suitable converter was found, raises KeyError
         """
-        return super(ToMaskConverter, cls).convert(
-            densepose_predictor_outputs, boxes, image_size_hw, *args, **kwargs
-        )
+        return super(ToMaskConverter, cls).convert(densepose_predictor_outputs, boxes, image_size_hw, *args, **kwargs)

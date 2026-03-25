@@ -243,15 +243,11 @@ class BBoxIOUTracker(BaseTracker):
             untracked_instances.scores.append(float(prev_scores[idx]))
             untracked_instances.ID.append(self._prev_instances.ID[idx])
             untracked_instances.ID_period.append(self._prev_instances.ID_period[idx])
-            untracked_instances.lost_frame_count.append(
-                self._prev_instances.lost_frame_count[idx] + 1
-            )
+            untracked_instances.lost_frame_count.append(self._prev_instances.lost_frame_count[idx] + 1)
             if instances.has("pred_masks"):
                 untracked_instances.pred_masks.append(prev_masks[idx].numpy().astype(np.uint8))
             if instances.has("pred_keypoints"):
-                untracked_instances.pred_keypoints.append(
-                    prev_keypoints[idx].numpy().astype(np.uint8)
-                )
+                untracked_instances.pred_keypoints.append(prev_keypoints[idx].numpy().astype(np.uint8))
             if instances.has("pred_keypoint_heatmaps"):
                 untracked_instances.pred_keypoint_heatmaps.append(
                     prev_keypoint_heatmaps[idx].numpy().astype(np.float32)
@@ -264,9 +260,7 @@ class BBoxIOUTracker(BaseTracker):
         if instances.has("pred_keypoints"):
             untracked_instances.pred_keypoints = torch.IntTensor(untracked_instances.pred_keypoints)
         if instances.has("pred_keypoint_heatmaps"):
-            untracked_instances.pred_keypoint_heatmaps = torch.FloatTensor(
-                untracked_instances.pred_keypoint_heatmaps
-            )
+            untracked_instances.pred_keypoint_heatmaps = torch.FloatTensor(untracked_instances.pred_keypoint_heatmaps)
 
         return Instances.cat(
             [

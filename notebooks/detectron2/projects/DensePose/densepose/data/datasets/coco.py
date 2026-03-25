@@ -189,9 +189,7 @@ def _verify_annotations_have_unique_ids(json_file: str, anns: List[List[Dict[str
         # Therefore we explicitly white-list them
         return
     ann_ids = [ann["id"] for anns_per_image in anns for ann in anns_per_image]
-    assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique!".format(
-        json_file
-    )
+    assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique!".format(json_file)
 
 
 def _maybe_add_bbox(obj: Dict[str, Any], ann_dict: Dict[str, Any]):
@@ -412,15 +410,11 @@ def register_dataset(dataset_data: CocoDatasetInfo, datasets_root: Optional[str]
 
     DatasetCatalog.register(dataset_data.name, load_annotations)
     MetadataCatalog.get(dataset_data.name).set(
-        json_file=annotations_fpath,
-        image_root=images_root,
-        **get_metadata(DENSEPOSE_METADATA_URL_PREFIX)
+        json_file=annotations_fpath, image_root=images_root, **get_metadata(DENSEPOSE_METADATA_URL_PREFIX)
     )
 
 
-def register_datasets(
-    datasets_data: Iterable[CocoDatasetInfo], datasets_root: Optional[str] = None
-):
+def register_datasets(datasets_data: Iterable[CocoDatasetInfo], datasets_root: Optional[str] = None):
     """
     Registers provided COCO DensePose datasets
 

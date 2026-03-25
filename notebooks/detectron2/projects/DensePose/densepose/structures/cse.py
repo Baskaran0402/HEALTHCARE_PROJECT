@@ -26,9 +26,7 @@ class DensePoseEmbeddingPredictorOutput:
         """
         return self.coarse_segm.size(0)
 
-    def __getitem__(
-        self, item: Union[int, slice, torch.BoolTensor]
-    ) -> "DensePoseEmbeddingPredictorOutput":
+    def __getitem__(self, item: Union[int, slice, torch.BoolTensor]) -> "DensePoseEmbeddingPredictorOutput":
         """
         Get outputs for the selected instance(s)
 
@@ -41,9 +39,7 @@ class DensePoseEmbeddingPredictorOutput:
                 embedding=self.embedding[item].unsqueeze(0),
             )
         else:
-            return DensePoseEmbeddingPredictorOutput(
-                coarse_segm=self.coarse_segm[item], embedding=self.embedding[item]
-            )
+            return DensePoseEmbeddingPredictorOutput(coarse_segm=self.coarse_segm[item], embedding=self.embedding[item])
 
     def to(self, device: torch.device):
         """

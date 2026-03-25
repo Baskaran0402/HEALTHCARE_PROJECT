@@ -8,7 +8,6 @@ from detectron2.config import LazyCall as L
 from detectron2.modeling.backbone import RegNet
 from detectron2.modeling.backbone.regnet import SimpleStem, ResBottleneckBlock
 
-
 # Replace default ResNet with RegNetX-4GF from the DDS paper. Config source:
 # https://github.com/facebookresearch/pycls/blob/2c152a6e5d913e898cca4f0a758f41e6b976714d/configs/dds_baselines/regnetx/RegNetX-4.0GF_dds_8gpu.yaml#L4-L9  # noqa
 model.backbone.bottom_up = L(RegNet)(
@@ -27,8 +26,6 @@ model.backbone.bottom_up = L(RegNet)(
 model.pixel_std = [57.375, 57.120, 58.395]
 
 optimizer.weight_decay = 5e-5
-train.init_checkpoint = (
-    "https://dl.fbaipublicfiles.com/pycls/dds_baselines/160906383/RegNetX-4.0GF_dds_8gpu.pyth"
-)
+train.init_checkpoint = "https://dl.fbaipublicfiles.com/pycls/dds_baselines/160906383/RegNetX-4.0GF_dds_8gpu.pyth"
 # RegNets benefit from enabling cudnn benchmark mode
 train.cudnn_benchmark = True

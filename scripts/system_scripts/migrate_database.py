@@ -21,29 +21,21 @@ def run_migration():
     try:
         # Check if columns already exist
         print("\n1. Checking existing schema...")
-        result = db.execute(
-            text(
-                """
+        result = db.execute(text("""
             SELECT column_name
             FROM information_schema.columns
             WHERE table_name = 'patients'
-        """
-            )
-        )
+        """))
         existing_columns = [row[0] for row in result]
         print(f"   Existing columns: {', '.join(existing_columns)}")
 
         # Add name column if it doesn't exist
         if "name" not in existing_columns:
             print("\n2. Adding 'name' column...")
-            db.execute(
-                text(
-                    """
+            db.execute(text("""
                 ALTER TABLE patients
                 ADD COLUMN name VARCHAR(200)
-            """
-                )
-            )
+            """))
             db.commit()
             print("   ✅ 'name' column added successfully")
         else:
@@ -52,14 +44,10 @@ def run_migration():
         # Add medical_record_number column if it doesn't exist
         if "medical_record_number" not in existing_columns:
             print("\n3. Adding 'medical_record_number' column...")
-            db.execute(
-                text(
-                    """
+            db.execute(text("""
                 ALTER TABLE patients
                 ADD COLUMN medical_record_number VARCHAR(50) UNIQUE
-            """
-                )
-            )
+            """))
             db.commit()
             print("   ✅ 'medical_record_number' column added successfully")
         else:
@@ -67,26 +55,18 @@ def run_migration():
 
         # Update existing records with placeholder names
         print("\n4. Updating existing records...")
-        result = db.execute(
-            text(
-                """
+        result = db.execute(text("""
             SELECT COUNT(*) FROM patients WHERE name IS NULL
-        """
-            )
-        )
+        """))
         null_count = result.scalar()
 
         if null_count > 0:
             print(f"   Found {null_count} records without names")
-            db.execute(
-                text(
-                    """
+            db.execute(text("""
                 UPDATE patients
                 SET name = 'Patient-' || SUBSTRING(id, 1, 8)
                 WHERE name IS NULL
-            """
-                )
-            )
+            """))
             db.commit()
             print(f"   ✅ Updated {null_count} records with placeholder names")
         else:
@@ -96,14 +76,10 @@ def run_migration():
         if "name" in existing_columns:
             print("\n5. Setting 'name' column to NOT NULL...")
             try:
-                db.execute(
-                    text(
-                        """
+                db.execute(text("""
                     ALTER TABLE patients
                     ALTER COLUMN name SET NOT NULL
-                """
-                    )
-                )
+                """))
                 db.commit()
                 print("   ✅ 'name' column set to NOT NULL")
             except Exception as e:
@@ -115,16 +91,12 @@ def run_migration():
 
         # Show final schema
         print("\n📊 Final schema for 'patients' table:")
-        result = db.execute(
-            text(
-                """
+        result = db.execute(text("""
             SELECT column_name, data_type, is_nullable
             FROM information_schema.columns
             WHERE table_name = 'patients'
             ORDER BY ordinal_position
-        """
-            )
-        )
+        """))
 
         for row in result:
             nullable = "NULL" if row[2] == "YES" else "NOT NULL"

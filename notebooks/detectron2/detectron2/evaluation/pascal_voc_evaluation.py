@@ -37,9 +37,7 @@ class PascalVOCDetectionEvaluator(DatasetEvaluator):
         meta = MetadataCatalog.get(dataset_name)
 
         # Too many tiny files, download all to local for speed.
-        annotation_dir_local = PathManager.get_local_path(
-            os.path.join(meta.dirname, "Annotations/")
-        )
+        annotation_dir_local = PathManager.get_local_path(os.path.join(meta.dirname, "Annotations/"))
         self._anno_file_template = os.path.join(annotation_dir_local, "{}.xml")
         self._image_set_path = os.path.join(meta.dirname, "ImageSets", "Main", meta.split + ".txt")
         self._class_names = meta.thing_classes
@@ -63,9 +61,7 @@ class PascalVOCDetectionEvaluator(DatasetEvaluator):
                 # The inverse of data loading logic in `datasets/pascal_voc.py`
                 xmin += 1
                 ymin += 1
-                self._predictions[cls].append(
-                    f"{image_id} {score:.3f} {xmin:.1f} {ymin:.1f} {xmax:.1f} {ymax:.1f}"
-                )
+                self._predictions[cls].append(f"{image_id} {score:.3f} {xmin:.1f} {ymin:.1f} {xmax:.1f} {ymax:.1f}")
 
     def evaluate(self):
         """

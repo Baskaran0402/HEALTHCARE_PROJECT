@@ -93,11 +93,7 @@ if __name__ == "__main__":
         repeat = 1
     s = "instances_train2017"
     for version in range(repeat):
-        print(
-            "Start sampling {} points per instance for annotations {}.".format(
-                num_points_per_instance, s
-            )
-        )
+        print("Start sampling {} points per instance for annotations {}.".format(num_points_per_instance, s))
         get_point_annotations(
             os.path.join(dataset_dir, "{}.json".format(s)),
             os.path.join(

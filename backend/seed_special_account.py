@@ -40,7 +40,7 @@ def seed_special_account():
                 password="SpecialPassword123!",
                 role="super_admin",
                 first_name="Special",
-                last_name="Account"
+                last_name="Account",
             )
             hashed_pw = auth.get_password_hash(user_create.password)
             db_user = models.User(
@@ -52,7 +52,7 @@ def seed_special_account():
                 first_name=user_create.first_name,
                 last_name=user_create.last_name,
                 is_active=True,
-                is_approved=True
+                is_approved=True,
             )
             db.add(db_user)
             db.commit()

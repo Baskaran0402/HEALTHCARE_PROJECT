@@ -103,15 +103,11 @@ def launch(main_func, nprocs, args=()):
     port = _find_free_port()
     dist_url = f"tcp://127.0.0.1:{port}"
     # dist_url = "env://"
-    mp.spawn(
-        distributed_worker, nprocs=nprocs, args=(main_func, nprocs, dist_url, args), daemon=False
-    )
+    mp.spawn(distributed_worker, nprocs=nprocs, args=(main_func, nprocs, dist_url, args), daemon=False)
 
 
 def distributed_worker(local_rank, main_func, nprocs, dist_url, args):
-    dist.init_process_group(
-        backend="gloo", init_method=dist_url, world_size=nprocs, rank=local_rank
-    )
+    dist.init_process_group(backend="gloo", init_method=dist_url, world_size=nprocs, rank=local_rank)
     comm.synchronize()
     assert comm._LOCAL_PROCESS_GROUP is None
     pg = dist.new_group(list(range(nprocs)))
@@ -158,8 +154,7 @@ def ram_read_write_worker():
             )
             for field_name in schema:
                 assert field_name in record, (
-                    f"Process {rank}: multi storage record, rank {j}, id {i}: "
-                    f"field {field_name} not in the record"
+                    f"Process {rank}: multi storage record, rank {j}, id {i}: " f"field {field_name} not in the record"
                 )
 
                 assert record_gt[field_name].shape == record[field_name].shape, (
@@ -219,8 +214,7 @@ def file_read_write_worker(rank_to_fpath):
             )
             for field_name in schema:
                 assert field_name in record, (
-                    f"Process {rank}: multi storage record, rank {j}, id {i}: "
-                    f"field {field_name} not in the record"
+                    f"Process {rank}: multi storage record, rank {j}, id {i}: " f"field {field_name} not in the record"
                 )
 
                 assert record_gt[field_name].shape == record[field_name].shape, (
@@ -250,7 +244,5 @@ class TestMultiProcessFileTensorStorage(unittest.TestCase):
     def test_read_write_1(self):
         with ExitStack() as stack:
             # WARNING: opens the files several times! may not work on all platforms
-            rank_to_fpath = {
-                i: stack.enter_context(tempfile.NamedTemporaryFile()).name for i in range(8)
-            }
+            rank_to_fpath = {i: stack.enter_context(tempfile.NamedTemporaryFile()).name for i in range(8)}
             launch(file_read_write_worker, 8, (rank_to_fpath,))

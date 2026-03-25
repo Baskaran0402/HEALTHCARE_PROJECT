@@ -252,18 +252,14 @@ class Caffe2GeneralizedRCNN(Caffe2MetaArch):
             use_heatmap_max_keypoint = cfg.EXPORT_CAFFE2.USE_HEATMAP_MAX_KEYPOINT
         except AttributeError:
             use_heatmap_max_keypoint = False
-        self.roi_heads_patcher = ROIHeadsPatcher(
-            self._wrapped_model.roi_heads, use_heatmap_max_keypoint
-        )
+        self.roi_heads_patcher = ROIHeadsPatcher(self._wrapped_model.roi_heads, use_heatmap_max_keypoint)
         if self.tensor_mode:
             self.roi_heads_patcher.patch_roi_heads()
 
     def encode_additional_info(self, predict_net, init_net):
         size_divisibility = self._wrapped_model.backbone.size_divisibility
         check_set_pb_arg(predict_net, "size_divisibility", "i", size_divisibility)
-        check_set_pb_arg(
-            predict_net, "device", "s", str.encode(str(self._wrapped_model.device), "ascii")
-        )
+        check_set_pb_arg(predict_net, "device", "s", str.encode(str(self._wrapped_model.device), "ascii"))
         check_set_pb_arg(predict_net, "meta_architecture", "s", b"GeneralizedRCNN")
 
     @mock_torch_nn_functional_interpolate()
@@ -317,21 +313,13 @@ class Caffe2RetinaNet(Caffe2MetaArch):
     def encode_additional_info(self, predict_net, init_net):
         size_divisibility = self._wrapped_model.backbone.size_divisibility
         check_set_pb_arg(predict_net, "size_divisibility", "i", size_divisibility)
-        check_set_pb_arg(
-            predict_net, "device", "s", str.encode(str(self._wrapped_model.device), "ascii")
-        )
+        check_set_pb_arg(predict_net, "device", "s", str.encode(str(self._wrapped_model.device), "ascii"))
         check_set_pb_arg(predict_net, "meta_architecture", "s", b"RetinaNet")
 
         # Inference parameters:
-        check_set_pb_arg(
-            predict_net, "score_threshold", "f", _cast_to_f32(self._wrapped_model.test_score_thresh)
-        )
-        check_set_pb_arg(
-            predict_net, "topk_candidates", "i", self._wrapped_model.test_topk_candidates
-        )
-        check_set_pb_arg(
-            predict_net, "nms_threshold", "f", _cast_to_f32(self._wrapped_model.test_nms_thresh)
-        )
+        check_set_pb_arg(predict_net, "score_threshold", "f", _cast_to_f32(self._wrapped_model.test_score_thresh))
+        check_set_pb_arg(predict_net, "topk_candidates", "i", self._wrapped_model.test_topk_candidates)
+        check_set_pb_arg(predict_net, "nms_threshold", "f", _cast_to_f32(self._wrapped_model.test_nms_thresh))
         check_set_pb_arg(
             predict_net,
             "max_detections_per_image",
@@ -359,18 +347,14 @@ class Caffe2RetinaNet(Caffe2MetaArch):
     @staticmethod
     def get_outputs_converter(predict_net, init_net):
         self = types.SimpleNamespace()
-        serialized_anchor_generator = io.BytesIO(
-            get_pb_arg_vals(predict_net, "serialized_anchor_generator", None)
-        )
+        serialized_anchor_generator = io.BytesIO(get_pb_arg_vals(predict_net, "serialized_anchor_generator", None))
         self.anchor_generator = torch.load(serialized_anchor_generator)
         bbox_reg_weights = get_pb_arg_floats(predict_net, "bbox_reg_weights", None)
         self.box2box_transform = Box2BoxTransform(weights=tuple(bbox_reg_weights))
         self.test_score_thresh = get_pb_arg_valf(predict_net, "score_threshold", None)
         self.test_topk_candidates = get_pb_arg_vali(predict_net, "topk_candidates", None)
         self.test_nms_thresh = get_pb_arg_valf(predict_net, "nms_threshold", None)
-        self.max_detections_per_image = get_pb_arg_vali(
-            predict_net, "max_detections_per_image", None
-        )
+        self.max_detections_per_image = get_pb_arg_vali(predict_net, "max_detections_per_image", None)
 
         # hack to reuse inference code from RetinaNet
         for meth in [
@@ -406,9 +390,7 @@ class Caffe2RetinaNet(Caffe2MetaArch):
             # self.num_classess can be inferred
             self.num_classes = pred_logits[0].shape[1] // (pred_anchor_deltas[0].shape[1] // 4)
 
-            results = self.forward_inference(
-                dummy_images, dummy_features, [pred_logits, pred_anchor_deltas]
-            )
+            results = self.forward_inference(dummy_images, dummy_features, [pred_logits, pred_anchor_deltas])
             return meta_arch.GeneralizedRCNN._postprocess(results, batched_inputs, image_sizes)
 
         return f

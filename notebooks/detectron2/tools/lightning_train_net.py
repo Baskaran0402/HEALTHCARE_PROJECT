@@ -83,11 +83,7 @@ class TrainingModule(LightningModule):
             self.storage.__enter__()
             self.iteration_timer.trainer = weakref.proxy(self)
             self.iteration_timer.before_step()
-            self.writers = (
-                default_writers(self.cfg.OUTPUT_DIR, self.max_iter)
-                if comm.is_main_process()
-                else {}
-            )
+            self.writers = default_writers(self.cfg.OUTPUT_DIR, self.max_iter) if comm.is_main_process() else {}
 
         loss_dict = self.model(batch)
         SimpleTrainer.write_metrics(loss_dict, data_time)

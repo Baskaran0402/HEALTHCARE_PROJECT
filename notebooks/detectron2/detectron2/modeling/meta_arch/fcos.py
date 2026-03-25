@@ -51,9 +51,7 @@ class FCOS(DenseDetector):
                 within which all anchor points are labeled positive.
             Other arguments mean the same as in :class:`RetinaNet`.
         """
-        super().__init__(
-            backbone, head, head_in_features, pixel_mean=pixel_mean, pixel_std=pixel_std
-        )
+        super().__init__(backbone, head, head_in_features, pixel_mean=pixel_mean, pixel_std=pixel_std)
 
         self.num_classes = num_classes
 
@@ -90,9 +88,7 @@ class FCOS(DenseDetector):
         )
         anchors = self.anchor_generator(features)
         gt_labels, gt_boxes = self.label_anchors(anchors, gt_instances)
-        return self.losses(
-            anchors, pred_logits, gt_labels, pred_anchor_deltas, gt_boxes, pred_centerness
-        )
+        return self.losses(anchors, pred_logits, gt_labels, pred_anchor_deltas, gt_boxes, pred_centerness)
 
     @torch.no_grad()
     def _match_anchors(self, gt_boxes: Boxes, anchors: List[Boxes]):
@@ -140,9 +136,7 @@ class FCOS(DenseDetector):
         # Multilevel anchor matching in FCOS: each anchor is only responsible
         # for certain scale range.
         pairwise_dist = pairwise_dist.max(dim=2).values
-        match_quality_matrix &= (pairwise_dist > lower_bound[None, :]) & (
-            pairwise_dist < upper_bound[None, :]
-        )
+        match_quality_matrix &= (pairwise_dist > lower_bound[None, :]) & (pairwise_dist < upper_bound[None, :])
         # Match the GT box with minimum area, if there are multiple GT matches.
         gt_areas = gt_boxes.area()  # (M, )
 
@@ -190,9 +184,7 @@ class FCOS(DenseDetector):
 
         return gt_labels, matched_gt_boxes
 
-    def losses(
-        self, anchors, pred_logits, gt_labels, pred_anchor_deltas, gt_boxes, pred_centerness
-    ):
+    def losses(self, anchors, pred_logits, gt_labels, pred_anchor_deltas, gt_boxes, pred_centerness):
         """
         This method is almost identical to :meth:`RetinaNet.losses`, with an extra
         "loss_centerness" in the returned dict.
@@ -270,9 +262,7 @@ class FCOS(DenseDetector):
                 for x, y in zip(pred_logits, pred_centerness)
             ]
             deltas_per_image = [x[img_idx] for x in pred_anchor_deltas]
-            results_per_image = self.inference_single_image(
-                anchors, scores_per_image, deltas_per_image, image_size
-            )
+            results_per_image = self.inference_single_image(anchors, scores_per_image, deltas_per_image, image_size)
             results.append(results_per_image)
         return results
 
@@ -294,9 +284,7 @@ class FCOS(DenseDetector):
             self.test_topk_candidates,
             image_size,
         )
-        keep = batched_nms(
-            pred.pred_boxes.tensor, pred.scores, pred.pred_classes, self.test_nms_thresh
-        )
+        keep = batched_nms(pred.pred_boxes.tensor, pred.scores, pred.pred_classes, self.test_nms_thresh)
         return pred[keep[: self.max_detections_per_image]]
 
 

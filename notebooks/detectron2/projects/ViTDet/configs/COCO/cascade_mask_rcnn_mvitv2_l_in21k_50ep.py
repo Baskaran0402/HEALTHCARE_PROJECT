@@ -16,7 +16,5 @@ model.backbone.bottom_up.drop_path_rate = 0.5
 train.init_checkpoint = "detectron2://ImageNetPretrained/mvitv2/MViTv2_L_in21k.pyth"
 
 train.max_iter = train.max_iter // 2  # 100ep -> 50ep
-lr_multiplier.scheduler.milestones = [
-    milestone // 2 for milestone in lr_multiplier.scheduler.milestones
-]
+lr_multiplier.scheduler.milestones = [milestone // 2 for milestone in lr_multiplier.scheduler.milestones]
 lr_multiplier.scheduler.num_updates = train.max_iter

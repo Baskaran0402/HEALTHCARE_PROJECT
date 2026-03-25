@@ -196,9 +196,7 @@ class RepeatFactorTrainingSampler(Sampler):
             for cat_id, cat_freq in category_freq.items()
         }
         for cat_id in sorted(category_rep.keys()):
-            logger.info(
-                f"Cat ID {cat_id}: freq={category_freq[cat_id]:.2f}, rep={category_rep[cat_id]:.2f}"
-            )
+            logger.info(f"Cat ID {cat_id}: freq={category_freq[cat_id]:.2f}, rep={category_rep[cat_id]:.2f}")
 
         # 3. For each image I, compute the image-level repeat factor:
         #    r(I) = max_{c in I} r(c)

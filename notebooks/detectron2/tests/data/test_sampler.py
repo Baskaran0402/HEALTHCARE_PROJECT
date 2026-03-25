@@ -82,9 +82,7 @@ class TestRepeatFactorTrainingSampler(unittest.TestCase):
             {"annotations": []},
         ]
 
-        rep_factors = RepeatFactorTrainingSampler.repeat_factors_from_category_frequency(
-            dataset_dicts, repeat_thresh
-        )
+        rep_factors = RepeatFactorTrainingSampler.repeat_factors_from_category_frequency(dataset_dicts, repeat_thresh)
 
         expected_rep_factors = torch.tensor([math.sqrt(3 / 2), 1.0, 1.0])
         self.assertTrue(torch.allclose(rep_factors, expected_rep_factors))
@@ -104,8 +102,5 @@ class TestInferenceSampler(unittest.TestCase):
 
         for size, world_size, expected_result in zip(sizes, world_sizes, expected_results):
             with self.subTest(f"size={size}, world_size={world_size}"):
-                local_indices = [
-                    InferenceSampler._get_local_indices(size, world_size, r)
-                    for r in range(world_size)
-                ]
+                local_indices = [InferenceSampler._get_local_indices(size, world_size, r) for r in range(world_size)]
                 self.assertEqual(local_indices, expected_result)

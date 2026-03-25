@@ -43,9 +43,7 @@ class TridentConv(nn.Module):
 
         assert len({self.num_branch, len(self.paddings), len(self.dilations)}) == 1
 
-        self.weight = nn.Parameter(
-            torch.Tensor(out_channels, in_channels // groups, *self.kernel_size)
-        )
+        self.weight = nn.Parameter(torch.Tensor(out_channels, in_channels // groups, *self.kernel_size))
         if bias:
             self.bias = nn.Parameter(torch.Tensor(out_channels))
         else:

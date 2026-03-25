@@ -90,8 +90,7 @@ def default_argument_parser(epilog=None):
         argparse.ArgumentParser:
     """
     parser = argparse.ArgumentParser(
-        epilog=epilog
-        or f"""
+        epilog=epilog or f"""
 Examples:
 
 Run on single machine:
@@ -116,9 +115,7 @@ Run on multiple machines:
     parser.add_argument("--eval-only", action="store_true", help="perform evaluation only")
     parser.add_argument("--num-gpus", type=int, default=1, help="number of gpus *per machine*")
     parser.add_argument("--num-machines", type=int, default=1, help="total number of machines")
-    parser.add_argument(
-        "--machine-rank", type=int, default=0, help="the rank of this machine (unique per machine)"
-    )
+    parser.add_argument("--machine-rank", type=int, default=0, help="the rank of this machine (unique per machine)")
 
     # PyTorch still may leave orphan processes in multi-gpu training.
     # Therefore we use a deterministic way to obtain port,
@@ -246,9 +243,7 @@ def default_setup(cfg, args):
     # cudnn benchmark has large overhead. It shouldn't be used considering the small size of
     # typical validation set.
     if not (hasattr(args, "eval_only") and args.eval_only):
-        torch.backends.cudnn.benchmark = _try_get_key(
-            cfg, "CUDNN_BENCHMARK", "train.cudnn_benchmark", default=False
-        )
+        torch.backends.cudnn.benchmark = _try_get_key(cfg, "CUDNN_BENCHMARK", "train.cudnn_benchmark", default=False)
 
     fp32_precision = _try_get_key(cfg, "FLOAT32_PRECISION", "train.float32_precision", default="")
     if fp32_precision != "":
@@ -319,9 +314,7 @@ class DefaultPredictor:
         checkpointer = DetectionCheckpointer(self.model)
         checkpointer.load(cfg.MODEL.WEIGHTS)
 
-        self.aug = T.ResizeShortestEdge(
-            [cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST
-        )
+        self.aug = T.ResizeShortestEdge([cfg.INPUT.MIN_SIZE_TEST, cfg.INPUT.MIN_SIZE_TEST], cfg.INPUT.MAX_SIZE_TEST)
 
         self.input_format = cfg.INPUT.FORMAT
         assert self.input_format in ["RGB", "BGR"], self.input_format
@@ -412,9 +405,7 @@ class DefaultTrainer(TrainerBase):
         data_loader = self.build_train_loader(cfg)
 
         model = create_ddp_model(model, broadcast_buffers=False)
-        self._trainer = (AMPTrainer if cfg.SOLVER.AMP.ENABLED else SimpleTrainer)(
-            model, data_loader, optimizer
-        )
+        self._trainer = (AMPTrainer if cfg.SOLVER.AMP.ENABLED else SimpleTrainer)(model, data_loader, optimizer)
 
         self.scheduler = self.build_lr_scheduler(cfg, optimizer)
         self.checkpointer = DetectionCheckpointer(
@@ -519,9 +510,7 @@ class DefaultTrainer(TrainerBase):
         """
         super().train(self.start_iter, self.max_iter)
         if len(self.cfg.TEST.EXPECTED_RESULTS) and comm.is_main_process():
-            assert hasattr(
-                self, "_last_eval_results"
-            ), "No evaluation results obtained during training!"
+            assert hasattr(self, "_last_eval_results"), "No evaluation results obtained during training!"
             verify_results(self.cfg, self._last_eval_results)
             return self._last_eval_results
 
@@ -601,13 +590,11 @@ class DefaultTrainer(TrainerBase):
 
         It is not implemented by default.
         """
-        raise NotImplementedError(
-            """
+        raise NotImplementedError("""
 If you want DefaultTrainer to automatically run evaluation,
 please implement `build_evaluator()` in subclasses (see train_net.py for example).
 Alternatively, you can call evaluation functions yourself (see Colab balloon tutorial for example).
-"""
-        )
+""")
 
     @classmethod
     def test(cls, cfg, model, evaluators=None):
@@ -629,9 +616,7 @@ Alternatively, you can call evaluation functions yourself (see Colab balloon tut
         if isinstance(evaluators, DatasetEvaluator):
             evaluators = [evaluators]
         if evaluators is not None:
-            assert len(cfg.DATASETS.TEST) == len(evaluators), "{} != {}".format(
-                len(cfg.DATASETS.TEST), len(evaluators)
-            )
+            assert len(cfg.DATASETS.TEST) == len(evaluators), "{} != {}".format(len(cfg.DATASETS.TEST), len(evaluators))
 
         results = OrderedDict()
         for idx, dataset_name in enumerate(cfg.DATASETS.TEST):
@@ -655,9 +640,7 @@ Alternatively, you can call evaluation functions yourself (see Colab balloon tut
             if comm.is_main_process():
                 assert isinstance(
                     results_i, dict
-                ), "Evaluator must return a dict on the main process. Got {} instead.".format(
-                    results_i
-                )
+                ), "Evaluator must return a dict on the main process. Got {} instead.".format(results_i)
                 logger.info("Evaluation results for {} in csv format:".format(dataset_name))
                 print_csv_format(results_i)
 
@@ -714,9 +697,7 @@ Alternatively, you can call evaluation functions yourself (see Colab balloon tut
         frozen = cfg.is_frozen()
         cfg.defrost()
 
-        assert (
-            cfg.SOLVER.IMS_PER_BATCH % old_world_size == 0
-        ), "Invalid REFERENCE_WORLD_SIZE in config!"
+        assert cfg.SOLVER.IMS_PER_BATCH % old_world_size == 0, "Invalid REFERENCE_WORLD_SIZE in config!"
         scale = num_workers / old_world_size
         bs = cfg.SOLVER.IMS_PER_BATCH = int(round(cfg.SOLVER.IMS_PER_BATCH * scale))
         lr = cfg.SOLVER.BASE_LR = cfg.SOLVER.BASE_LR * scale

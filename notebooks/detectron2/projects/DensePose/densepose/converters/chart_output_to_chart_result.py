@@ -131,9 +131,7 @@ def resample_confidences_to_bbox(
         "coarse_segm_confidence",
     ]
     confidence_results = {key: None for key in confidence_names}
-    confidence_names = [
-        key for key in confidence_names if getattr(predictor_output, key) is not None
-    ]
+    confidence_names = [key for key in confidence_names if getattr(predictor_output, key) is not None]
     confidence_base = torch.zeros([h, w], dtype=torch.float32, device=predictor_output.u.device)
 
     # assign data from channels that correspond to the labels

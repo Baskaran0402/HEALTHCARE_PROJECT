@@ -31,6 +31,4 @@ class HFlipConverter(BaseConverter):
         Return:
             An instance of the same type as predictor_outputs
         """
-        return super(HFlipConverter, cls).convert(
-            predictor_outputs, transform_data, *args, **kwargs
-        )
+        return super(HFlipConverter, cls).convert(predictor_outputs, transform_data, *args, **kwargs)

@@ -138,9 +138,7 @@ class ResizeTransform(Transform):
             }
             mode = _PIL_RESIZE_TO_INTERPOLATE_MODE[interp_method]
             align_corners = None if mode == "nearest" else False
-            img = F.interpolate(
-                img, (self.new_h, self.new_w), mode=mode, align_corners=align_corners
-            )
+            img = F.interpolate(img, (self.new_h, self.new_w), mode=mode, align_corners=align_corners)
             shape[:2] = (self.new_h, self.new_w)
             ret = img.permute(2, 3, 0, 1).view(shape).numpy()  # nchw -> hw(c)
 
@@ -186,9 +184,7 @@ class RotationTransform(Transform):
         abs_cos, abs_sin = (abs(np.cos(np.deg2rad(angle))), abs(np.sin(np.deg2rad(angle))))
         if expand:
             # find the new width and height bounds
-            bound_w, bound_h = np.rint(
-                [h * abs_sin + w * abs_cos, h * abs_cos + w * abs_sin]
-            ).astype(int)
+            bound_w, bound_h = np.rint([h * abs_sin + w * abs_cos, h * abs_cos + w * abs_sin]).astype(int)
         else:
             bound_w, bound_h = w, h
 
@@ -238,12 +234,8 @@ class RotationTransform(Transform):
         """
         if not self.expand:  # Not possible to inverse if a part of the image is lost
             raise NotImplementedError()
-        rotation = RotationTransform(
-            self.bound_h, self.bound_w, -self.angle, True, None, self.interp
-        )
-        crop = CropTransform(
-            (rotation.bound_w - self.w) // 2, (rotation.bound_h - self.h) // 2, self.w, self.h
-        )
+        rotation = RotationTransform(self.bound_h, self.bound_w, -self.angle, True, None, self.interp)
+        crop = CropTransform((rotation.bound_w - self.w) // 2, (rotation.bound_h - self.h) // 2, self.w, self.h)
         return TransformList([rotation, crop])
 
 

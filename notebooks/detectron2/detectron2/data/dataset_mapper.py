@@ -128,9 +128,7 @@ class DatasetMapper:
             for obj in dataset_dict.pop("annotations")
             if obj.get("iscrowd", 0) == 0
         ]
-        instances = utils.annotations_to_instances(
-            annos, image_shape, mask_format=self.instance_mask_format
-        )
+        instances = utils.annotations_to_instances(annos, image_shape, mask_format=self.instance_mask_format)
 
         # After transforms such as cropping are applied, the bounding box may no longer
         # tightly bound the object. As an example, imagine a triangle object
@@ -175,9 +173,7 @@ class DatasetMapper:
         # USER: Remove if you don't use pre-computed proposals.
         # Most users would not need this feature.
         if self.proposal_topk is not None:
-            utils.transform_proposals(
-                dataset_dict, image_shape, transforms, proposal_topk=self.proposal_topk
-            )
+            utils.transform_proposals(dataset_dict, image_shape, transforms, proposal_topk=self.proposal_topk)
 
         if not self.is_train:
             # USER: Modify this if you want to keep them for some reason.

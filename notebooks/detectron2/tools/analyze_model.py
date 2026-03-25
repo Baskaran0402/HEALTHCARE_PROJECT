@@ -60,12 +60,9 @@ def do_flop(cfg):
 
     logger.info("Flops table computed from only one input sample:\n" + flop_count_table(flops))
     logger.info(
-        "Average GFlops for each type of operators:\n"
-        + str([(k, v / (idx + 1) / 1e9) for k, v in counts.items()])
+        "Average GFlops for each type of operators:\n" + str([(k, v / (idx + 1) / 1e9) for k, v in counts.items()])
     )
-    logger.info(
-        "Total GFlops: {:.1f}±{:.1f}".format(np.mean(total_flops) / 1e9, np.std(total_flops) / 1e9)
-    )
+    logger.info("Total GFlops: {:.1f}±{:.1f}".format(np.mean(total_flops) / 1e9, np.std(total_flops) / 1e9))
 
 
 def do_activation(cfg):
@@ -86,15 +83,8 @@ def do_activation(cfg):
         count = activation_count_operators(model, data)
         counts += count
         total_activations.append(sum(count.values()))
-    logger.info(
-        "(Million) Activations for Each Type of Operators:\n"
-        + str([(k, v / idx) for k, v in counts.items()])
-    )
-    logger.info(
-        "Total (Million) Activations: {}±{}".format(
-            np.mean(total_activations), np.std(total_activations)
-        )
-    )
+    logger.info("(Million) Activations for Each Type of Operators:\n" + str([(k, v / idx) for k, v in counts.items()]))
+    logger.info("Total (Million) Activations: {}±{}".format(np.mean(total_activations), np.std(total_activations)))
 
 
 def do_parameter(cfg):
@@ -115,8 +105,7 @@ def do_structure(cfg):
 
 def main() -> None:
     global cfg, args
-    parser = default_argument_parser(
-        epilog="""
+    parser = default_argument_parser(epilog="""
 Examples:
 
 To show parameters of a model:
@@ -129,8 +118,7 @@ are needed to count them:
 $ ./analyze_model.py --num-inputs 100 --tasks flop \\
     --config-file ../configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_1x.yaml \\
     MODEL.WEIGHTS /path/to/model.pkl
-"""
-    )
+""")
     parser.add_argument(
         "--tasks",
         choices=["flop", "activation", "parameter", "structure"],
@@ -142,8 +130,7 @@ $ ./analyze_model.py --num-inputs 100 --tasks flop \\
         "--num-inputs",
         default=100,
         type=int,
-        help="number of inputs used to compute statistics for flops/activations, "
-        "both are data dependent.",
+        help="number of inputs used to compute statistics for flops/activations, " "both are data dependent.",
     )
     args = parser.parse_args()
     assert not args.eval_only
@@ -157,7 +144,9 @@ $ ./analyze_model.py --num-inputs 100 --tasks flop \\
             "activation": do_activation,
             "parameter": do_parameter,
             "structure": do_structure,
-        }[task](cfg)
+        }[
+            task
+        ](cfg)
 
 
 if __name__ == "__main__":

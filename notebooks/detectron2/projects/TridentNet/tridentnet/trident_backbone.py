@@ -190,9 +190,7 @@ def build_trident_resnet_backbone(cfg, input_shape):
             "dilation": dilation,
         }
         if stage_idx == trident_stage_idx:
-            assert not deform_on_per_stage[
-                idx
-            ], "Not support deformable conv in Trident blocks yet."
+            assert not deform_on_per_stage[idx], "Not support deformable conv in Trident blocks yet."
             stage_kargs["block_class"] = TridentBottleneckBlock
             stage_kargs["num_branch"] = num_branch
             stage_kargs["dilations"] = branch_dilations
@@ -205,9 +203,7 @@ def build_trident_resnet_backbone(cfg, input_shape):
         else:
             stage_kargs["block_class"] = BottleneckBlock
         blocks = (
-            make_trident_stage(**stage_kargs)
-            if stage_idx == trident_stage_idx
-            else ResNet.make_stage(**stage_kargs)
+            make_trident_stage(**stage_kargs) if stage_idx == trident_stage_idx else ResNet.make_stage(**stage_kargs)
         )
         in_channels = out_channels
         out_channels *= 2

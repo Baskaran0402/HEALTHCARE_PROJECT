@@ -44,9 +44,9 @@ class TestBox2BoxTransform(unittest.TestCase):
 
 
 def random_rotated_boxes(mean_box, std_length, std_angle, N):
-    return torch.cat(
-        [torch.rand(N, 4) * std_length, torch.rand(N, 1) * std_angle], dim=1
-    ) + torch.tensor(mean_box, dtype=torch.float)
+    return torch.cat([torch.rand(N, 4) * std_length, torch.rand(N, 1) * std_angle], dim=1) + torch.tensor(
+        mean_box, dtype=torch.float
+    )
 
 
 class TestBox2BoxTransformRotated(unittest.TestCase):

@@ -75,9 +75,7 @@ class DensePoseChartPredictor(nn.Module):
             tensor of shape (N, C, Hout, Wout), where Hout and Wout are computed
                 by applying the scale factor to H and W
         """
-        return interpolate(
-            tensor_nchw, scale_factor=self.scale_factor, mode="bilinear", align_corners=False
-        )
+        return interpolate(tensor_nchw, scale_factor=self.scale_factor, mode="bilinear", align_corners=False)
 
     def forward(self, head_outputs: torch.Tensor):
         """

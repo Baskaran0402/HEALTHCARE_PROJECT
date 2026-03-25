@@ -84,21 +84,14 @@ def list_keyframes(video_fpath: str, video_stream_idx: int = 0) -> FrameTsList:
             return keyframes
     except OSError as e:
         logger = logging.getLogger(__name__)
-        logger.warning(
-            f"List keyframes: Error opening video file container {video_fpath}, " f"OS error: {e}"
-        )
+        logger.warning(f"List keyframes: Error opening video file container {video_fpath}, " f"OS error: {e}")
     except RuntimeError as e:
         logger = logging.getLogger(__name__)
-        logger.warning(
-            f"List keyframes: Error opening video file container {video_fpath}, "
-            f"Runtime error: {e}"
-        )
+        logger.warning(f"List keyframes: Error opening video file container {video_fpath}, " f"Runtime error: {e}")
     return []
 
 
-def read_keyframes(
-    video_fpath: str, keyframes: FrameTsList, video_stream_idx: int = 0
-) -> FrameList:  # pyre-ignore[11]
+def read_keyframes(video_fpath: str, keyframes: FrameTsList, video_stream_idx: int = 0) -> FrameList:  # pyre-ignore[11]
     """
     Reads keyframe data from a video file.
 
@@ -150,14 +143,10 @@ def read_keyframes(
             return frames
     except OSError as e:
         logger = logging.getLogger(__name__)
-        logger.warning(
-            f"Read keyframes: Error opening video file container {video_fpath}, OS error: {e}"
-        )
+        logger.warning(f"Read keyframes: Error opening video file container {video_fpath}, OS error: {e}")
     except RuntimeError as e:
         logger = logging.getLogger(__name__)
-        logger.warning(
-            f"Read keyframes: Error opening video file container {video_fpath}, Runtime error: {e}"
-        )
+        logger.warning(f"Read keyframes: Error opening video file container {video_fpath}, Runtime error: {e}")
     return []
 
 
@@ -202,13 +191,9 @@ def read_keyframe_helper_data(fpath: str):
             keyframes_idx = header.index("keyframes")
             for row in csv_reader:
                 video_id = int(row[video_id_idx])
-                assert (
-                    video_id not in video_id_to_keyframes
-                ), f"Duplicate keyframes entry for video {fpath}"
+                assert video_id not in video_id_to_keyframes, f"Duplicate keyframes entry for video {fpath}"
                 video_id_to_keyframes[video_id] = (
-                    [int(v) for v in row[keyframes_idx][1:-1].split(",")]
-                    if len(row[keyframes_idx]) > 2
-                    else []
+                    [int(v) for v in row[keyframes_idx][1:-1].split(",")] if len(row[keyframes_idx]) > 2 else []
                 )
     except Exception as e:
         logger = logging.getLogger(__name__)
@@ -252,16 +237,12 @@ class VideoKeyframeDataset(Dataset):
             self.category_list = category_list
         else:
             self.category_list = [category_list] * len(video_list)
-        assert len(video_list) == len(
-            self.category_list
-        ), "length of video and category lists must be equal"
+        assert len(video_list) == len(self.category_list), "length of video and category lists must be equal"
         self.video_list = video_list
         self.frame_selector = frame_selector
         self.transform = transform
         self.keyframe_helper_data = (
-            read_keyframe_helper_data(keyframe_helper_fpath)
-            if keyframe_helper_fpath is not None
-            else None
+            read_keyframe_helper_data(keyframe_helper_fpath) if keyframe_helper_fpath is not None else None
         )
 
     def __getitem__(self, idx: int) -> Dict[str, Any]:

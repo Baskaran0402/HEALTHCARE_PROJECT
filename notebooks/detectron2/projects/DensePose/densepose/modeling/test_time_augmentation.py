@@ -29,9 +29,7 @@ class DensePoseDatasetMapperTTA(DatasetMapperTTA):
             dic = copy.deepcopy(dataset_dict)
             # In DatasetMapperTTA, there is a pre_tfm transform (resize or no-op) that is
             # added at the beginning of each TransformList. That's '.transforms[0]'.
-            dic["transforms"] = TransformList(
-                [ret[-1]["transforms"].transforms[0]] + tfms.transforms
-            )
+            dic["transforms"] = TransformList([ret[-1]["transforms"].transforms[0]] + tfms.transforms)
             dic["image"] = torch_image
             ret.append(dic)
         return ret
@@ -74,9 +72,7 @@ class DensePoseGeneralizedRCNNWithTTA(GeneralizedRCNNWithTTA):
 
         if self.cfg.MODEL.MASK_ON or self.cfg.MODEL.DENSEPOSE_ON:
             # Use the detected boxes to obtain new fields
-            augmented_instances = self._rescale_detected_boxes(
-                augmented_inputs, merged_instances, tfms
-            )
+            augmented_instances = self._rescale_detected_boxes(augmented_inputs, merged_instances, tfms)
             # run forward on the detected boxes
             outputs = self._batch_inference(augmented_inputs, augmented_instances)
             # Delete now useless variables to avoid being out of memory
@@ -123,14 +119,10 @@ class DensePoseGeneralizedRCNNWithTTA(GeneralizedRCNNWithTTA):
                     setattr(
                         output.pred_densepose,
                         attr,
-                        _inverse_rotation(
-                            getattr(output.pred_densepose, attr), output.pred_boxes.tensor, t
-                        ),
+                        _inverse_rotation(getattr(output.pred_densepose, attr), output.pred_boxes.tensor, t),
                     )
             if any(isinstance(t, HFlipTransform) for t in tfm.transforms):
-                output.pred_densepose = HFlipConverter.convert(
-                    output.pred_densepose, self._transform_data
-                )
+                output.pred_densepose = HFlipConverter.convert(output.pred_densepose, self._transform_data)
             self._incremental_avg_dp(outputs[0].pred_densepose, output.pred_densepose, idx)
         return outputs[0].pred_densepose
 
@@ -175,9 +167,7 @@ def _inverse_rotation(densepose_attrs, boxes, transform):
         densepose_attr = densepose_attr[:, :, l_bds[i][1] : r_bds[1], l_bds[i][0] : r_bds[0]]
         if min(densepose_attr.shape) > 0:
             # Interpolate back to the original size of the densepose attribute
-            densepose_attr = F.interpolate(
-                densepose_attr, densepose_attrs.shape[-2:], mode="bilinear"
-            )
+            densepose_attr = F.interpolate(densepose_attr, densepose_attrs.shape[-2:], mode="bilinear")
             # Adding a very small probability to the background class to fill padded zones
             densepose_attr[:, 0] += 1e-10
             densepose_attrs[i] = densepose_attr

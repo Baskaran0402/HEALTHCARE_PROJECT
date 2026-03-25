@@ -18,9 +18,7 @@ def request_consultation(
 ):
     # Resolve the patient profile from the authenticated user.
     # The frontend may send the User.id, but the FK requires the Patient profile id.
-    patient = db.query(models.Patient).filter(
-        models.Patient.user_id == current_user.id
-    ).first()
+    patient = db.query(models.Patient).filter(models.Patient.user_id == current_user.id).first()
 
     if not patient:
         # Auto-create a minimal patient profile if the user hasn't done an assessment yet
@@ -37,9 +35,7 @@ def request_consultation(
         db.refresh(patient)
 
     # Always use the resolved patient profile id — never trust the frontend value
-    consultation_data = schemas.DoctorConsultationCreate(
-        **{**consultation.model_dump(), "patient_id": patient.id}
-    )
+    consultation_data = schemas.DoctorConsultationCreate(**{**consultation.model_dump(), "patient_id": patient.id})
     return crud.create_doctor_consultation(db=db, consultation=consultation_data)
 
 

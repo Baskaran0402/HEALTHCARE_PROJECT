@@ -43,9 +43,7 @@ class TestONNXTracingExport(unittest.TestCase):
             inst = model.inference(inputs, do_postprocess=False)[0]
             return [{"instances": inst}]
 
-        self._test_model_zoo_from_config_path(
-            "COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml", inference_func
-        )
+        self._test_model_zoo_from_config_path("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml", inference_func)
 
     @skipIfOnCPUCI
     def testMaskRCNNC4(self):
@@ -53,9 +51,7 @@ class TestONNXTracingExport(unittest.TestCase):
             inputs = [{"image": image}]
             return model.inference(inputs, do_postprocess=False)[0]
 
-        self._test_model_zoo_from_config_path(
-            "COCO-InstanceSegmentation/mask_rcnn_R_50_C4_3x.yaml", inference_func
-        )
+        self._test_model_zoo_from_config_path("COCO-InstanceSegmentation/mask_rcnn_R_50_C4_3x.yaml", inference_func)
 
     @skipIfOnCPUCI
     def testCascadeRCNN(self):
@@ -63,17 +59,13 @@ class TestONNXTracingExport(unittest.TestCase):
             inputs = [{"image": image}]
             return model.inference(inputs, do_postprocess=False)[0]
 
-        self._test_model_zoo_from_config_path(
-            "Misc/cascade_mask_rcnn_R_50_FPN_3x.yaml", inference_func
-        )
+        self._test_model_zoo_from_config_path("Misc/cascade_mask_rcnn_R_50_FPN_3x.yaml", inference_func)
 
     def testRetinaNet(self):
         def inference_func(model, image):
             return model.forward([{"image": image}])[0]["instances"]
 
-        self._test_model_zoo_from_config_path(
-            "COCO-Detection/retinanet_R_50_FPN_3x.yaml", inference_func
-        )
+        self._test_model_zoo_from_config_path("COCO-Detection/retinanet_R_50_FPN_3x.yaml", inference_func)
 
     @skipIfOnCPUCI
     def testMaskRCNNFPN_batched(self):
@@ -215,9 +207,7 @@ class TestONNXTracingExport(unittest.TestCase):
         model = model_zoo.get(config_path, trained=True)
         image = get_sample_coco_image()
         inputs = tuple(image.clone() for _ in range(batch))
-        return self._test_model(
-            model, inputs, inference_func, opset_version, save_onnx_graph_path, **export_kwargs
-        )
+        return self._test_model(model, inputs, inference_func, opset_version, save_onnx_graph_path, **export_kwargs)
 
     def _test_model_from_config_path(
         self,
@@ -238,6 +228,4 @@ class TestONNXTracingExport(unittest.TestCase):
         model = build_model(cfg)
         image = get_sample_coco_image()
         inputs = tuple(image.clone() for _ in range(batch))
-        return self._test_model(
-            model, inputs, inference_func, opset_version, save_onnx_graph_path, **export_kwargs
-        )
+        return self._test_model(model, inputs, inference_func, opset_version, save_onnx_graph_path, **export_kwargs)

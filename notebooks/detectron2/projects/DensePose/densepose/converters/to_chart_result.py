@@ -51,9 +51,7 @@ class ToChartResultConverterWithConfidences(BaseConverter):
     @classmethod
     # pyre-fixme[14]: `convert` overrides method defined in `BaseConverter`
     #  inconsistently.
-    def convert(
-        cls, predictor_outputs: Any, boxes: Boxes, *args, **kwargs
-    ) -> DensePoseChartResultWithConfidences:
+    def convert(cls, predictor_outputs: Any, boxes: Boxes, *args, **kwargs) -> DensePoseChartResultWithConfidences:
         """
         Convert DensePose predictor outputs to DensePoseResult with confidences
         using some registered converter. Does recursive lookup for base classes,
@@ -67,6 +65,4 @@ class ToChartResultConverterWithConfidences(BaseConverter):
         Return:
             An instance of DensePoseResult. If no suitable converter was found, raises KeyError
         """
-        return super(ToChartResultConverterWithConfidences, cls).convert(
-            predictor_outputs, boxes, *args, **kwargs
-        )
+        return super(ToChartResultConverterWithConfidences, cls).convert(predictor_outputs, boxes, *args, **kwargs)

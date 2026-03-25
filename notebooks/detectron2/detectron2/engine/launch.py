@@ -62,9 +62,7 @@ def launch(
             dist_url = f"tcp://127.0.0.1:{port}"
         if num_machines > 1 and dist_url.startswith("file://"):
             logger = logging.getLogger(__name__)
-            logger.warning(
-                "file:// is not a reliable init_method in multi-machine jobs. Prefer tcp://"
-            )
+            logger.warning("file:// is not a reliable init_method in multi-machine jobs. Prefer tcp://")
 
         mp.start_processes(
             _distributed_worker,

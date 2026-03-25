@@ -73,9 +73,7 @@ class StandardRPNHead(nn.Module):
     """
 
     @configurable
-    def __init__(
-        self, *, in_channels: int, num_anchors: int, box_dim: int = 4, conv_dims: List[int] = (-1,)
-    ):
+    def __init__(self, *, in_channels: int, num_anchors: int, box_dim: int = 4, conv_dims: List[int] = (-1,)):
         """
         NOTE: this interface is experimental.
 
@@ -106,9 +104,7 @@ class StandardRPNHead(nn.Module):
             for k, conv_dim in enumerate(conv_dims):
                 out_channels = cur_channels if conv_dim == -1 else conv_dim
                 if out_channels <= 0:
-                    raise ValueError(
-                        f"Conv output channels should be greater than 0. Got {out_channels}"
-                    )
+                    raise ValueError(f"Conv output channels should be greater than 0. Got {out_channels}")
                 conv = self._get_rpn_conv(cur_channels, out_channels)
                 self.conv.add_module(f"conv{k}", conv)
                 cur_channels = out_channels
@@ -145,9 +141,7 @@ class StandardRPNHead(nn.Module):
         anchor_generator = build_anchor_generator(cfg, input_shape)
         num_anchors = anchor_generator.num_anchors
         box_dim = anchor_generator.box_dim
-        assert (
-            len(set(num_anchors)) == 1
-        ), "Each level must have the same number of anchors per spatial position"
+        assert len(set(num_anchors)) == 1, "Each level must have the same number of anchors per spatial position"
         return {
             "in_channels": in_channels,
             "num_anchors": num_anchors[0],
@@ -293,9 +287,7 @@ class RPN(nn.Module):
         Args:
             labels (Tensor): a vector of -1, 0, 1. Will be modified in-place and returned.
         """
-        pos_idx, neg_idx = subsample_labels(
-            label, self.batch_size_per_image, self.positive_fraction, 0
-        )
+        pos_idx, neg_idx = subsample_labels(label, self.batch_size_per_image, self.positive_fraction, 0)
         # Fill with the ignore label (-1), then set positive and negative labels
         label.fill_(-1)
         label.scatter_(0, pos_idx, 1)
@@ -469,14 +461,10 @@ class RPN(nn.Module):
         if self.training:
             assert gt_instances is not None, "RPN requires gt_instances in training!"
             gt_labels, gt_boxes = self.label_and_sample_anchors(anchors, gt_instances)
-            losses = self.losses(
-                anchors, pred_objectness_logits, gt_labels, pred_anchor_deltas, gt_boxes
-            )
+            losses = self.losses(anchors, pred_objectness_logits, gt_labels, pred_anchor_deltas, gt_boxes)
         else:
             losses = {}
-        proposals = self.predict_proposals(
-            anchors, pred_objectness_logits, pred_anchor_deltas, images.image_sizes
-        )
+        proposals = self.predict_proposals(anchors, pred_objectness_logits, pred_anchor_deltas, images.image_sizes)
         return proposals, losses
 
     def predict_proposals(

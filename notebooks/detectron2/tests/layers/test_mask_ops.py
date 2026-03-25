@@ -123,12 +123,8 @@ class TestMaskCropPaste(unittest.TestCase):
             scaled_boxes = scale_boxes(torch_gt_bbox, scale)
 
             r = results[k]
-            r["old"] = paste_mask_in_image_old(
-                padded_bitmask[0], scaled_boxes[0], height, width, threshold=0.5
-            )
-            r["aligned"] = paste_masks_in_image(
-                box_bitmask[None, :, :], Boxes(torch_gt_bbox), (height, width)
-            )[0]
+            r["old"] = paste_mask_in_image_old(padded_bitmask[0], scaled_boxes[0], height, width, threshold=0.5)
+            r["aligned"] = paste_masks_in_image(box_bitmask[None, :, :], Boxes(torch_gt_bbox), (height, width))[0]
 
         table = []
         for rasterize_method, r in results.items():

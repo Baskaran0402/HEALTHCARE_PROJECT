@@ -38,9 +38,7 @@ class DensePoseEmbeddingPredictor(nn.Module):
             dim_in, n_segm_chan, kernel_size, stride=2, padding=int(kernel_size / 2 - 1)
         )
         # embedding
-        self.embed_lowres = ConvTranspose2d(
-            dim_in, embed_size, kernel_size, stride=2, padding=int(kernel_size / 2 - 1)
-        )
+        self.embed_lowres = ConvTranspose2d(dim_in, embed_size, kernel_size, stride=2, padding=int(kernel_size / 2 - 1))
         self.scale_factor = cfg.MODEL.ROI_DENSEPOSE_HEAD.UP_SCALE
         initialize_module_params(self)
 
@@ -54,9 +52,7 @@ class DensePoseEmbeddingPredictor(nn.Module):
             tensor of shape (N, C, Hout, Wout), where Hout and Wout are computed
                 by applying the scale factor to H and W
         """
-        return interpolate(
-            tensor_nchw, scale_factor=self.scale_factor, mode="bilinear", align_corners=False
-        )
+        return interpolate(tensor_nchw, scale_factor=self.scale_factor, mode="bilinear", align_corners=False)
 
     def forward(self, head_outputs):
         """

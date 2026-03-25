@@ -73,9 +73,7 @@ class Caffe2Tracer:
         """
         from .caffe2_export import export_caffe2_detection_model
 
-        predict_net, init_net = export_caffe2_detection_model(
-            self.traceable_model, self.traceable_inputs
-        )
+        predict_net, init_net = export_caffe2_detection_model(self.traceable_model, self.traceable_inputs)
         return Caffe2Model(predict_net, init_net)
 
     def export_onnx(self):

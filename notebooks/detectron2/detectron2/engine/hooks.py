@@ -174,9 +174,7 @@ class PeriodicWriter(HookBase):
         self._period = period
 
     def after_step(self):
-        if (self.trainer.iter + 1) % self._period == 0 or (
-            self.trainer.iter == self.trainer.max_iter - 1
-        ):
+        if (self.trainer.iter + 1) % self._period == 0 or (self.trainer.iter == self.trainer.max_iter - 1):
             for writer in self._writers:
                 writer.write()
 
@@ -270,9 +268,7 @@ class BestCheckpointer(HookBase):
             if self._update_best(latest_metric, metric_iter):
                 additional_state = {"iteration": metric_iter}
                 self._checkpointer.save(f"{self._file_prefix}", **additional_state)
-                self._logger.info(
-                    f"Saved first model at {self.best_metric:0.5f} @ {self.best_iter} steps"
-                )
+                self._logger.info(f"Saved first model at {self.best_metric:0.5f} @ {self.best_iter} steps")
         elif self._compare(latest_metric, self.best_metric):
             additional_state = {"iteration": metric_iter}
             self._checkpointer.save(f"{self._file_prefix}", **additional_state)
@@ -291,11 +287,7 @@ class BestCheckpointer(HookBase):
     def after_step(self):
         # same conditions as `EvalHook`
         next_iter = self.trainer.iter + 1
-        if (
-            self._period > 0
-            and next_iter % self._period == 0
-            and next_iter != self.trainer.max_iter
-        ):
+        if self._period > 0 and next_iter % self._period == 0 and next_iter != self.trainer.max_iter:
             self._best_checking()
 
     def after_train(self):
@@ -438,9 +430,7 @@ class TorchProfiler(HookBase):
         self._profiler.__exit__(None, None, None)
         if not self._save_tensorboard:
             PathManager.mkdirs(self._output_dir)
-            out_file = os.path.join(
-                self._output_dir, "profiler-trace-iter{}.json".format(self.trainer.iter)
-            )
+            out_file = os.path.join(self._output_dir, "profiler-trace-iter{}.json".format(self.trainer.iter))
             if "://" not in out_file:
                 self._profiler.export_chrome_trace(out_file)
             else:
@@ -529,9 +519,7 @@ class EvalHook(HookBase):
         results = self._func()
 
         if results:
-            assert isinstance(
-                results, dict
-            ), "Eval function must return a dict. Got {} instead.".format(results)
+            assert isinstance(results, dict), "Eval function must return a dict. Got {} instead.".format(results)
 
             flattened_results = flatten_results_dict(results)
             for k, v in flattened_results.items():
@@ -589,9 +577,7 @@ class PreciseBN(HookBase):
         """
         self._logger = logging.getLogger(__name__)
         if len(get_bn_modules(model)) == 0:
-            self._logger.info(
-                "PreciseBN is disabled because model does not contain BN layers in training mode."
-            )
+            self._logger.info("PreciseBN is disabled because model does not contain BN layers in training mode.")
             self._disabled = True
             return
 
@@ -622,9 +608,7 @@ class PreciseBN(HookBase):
         def data_loader():
             for num_iter in itertools.count(1):
                 if num_iter % 100 == 0:
-                    self._logger.info(
-                        "Running precise-BN ... {}/{} iterations.".format(num_iter, self._num_iter)
-                    )
+                    self._logger.info("Running precise-BN ... {}/{} iterations.".format(num_iter, self._num_iter))
                 # This way we can reuse the same iterator
                 yield next(self._data_iter)
 
@@ -657,9 +641,7 @@ class TorchMemoryStats(HookBase):
         if self._runs > self._max_runs:
             return
 
-        if (self.trainer.iter + 1) % self._period == 0 or (
-            self.trainer.iter == self.trainer.max_iter - 1
-        ):
+        if (self.trainer.iter + 1) % self._period == 0 or (self.trainer.iter == self.trainer.max_iter - 1):
             if torch.cuda.is_available():
                 max_reserved_mb = torch.cuda.max_memory_reserved() / 1024.0 / 1024.0
                 reserved_mb = torch.cuda.memory_reserved() / 1024.0 / 1024.0

@@ -64,9 +64,7 @@ def find_top_rrpn_proposals(
     topk_proposals = []
     level_ids = []  # #lvl Tensor, each of shape (topk,)
     batch_idx = torch.arange(num_images, device=device)
-    for level_id, proposals_i, logits_i in zip(
-        itertools.count(), proposals, pred_objectness_logits
-    ):
+    for level_id, proposals_i, logits_i in zip(itertools.count(), proposals, pred_objectness_logits):
         Hi_Wi_A = logits_i.shape[1]
         if isinstance(Hi_Wi_A, torch.Tensor):  # it's a tensor in tracing
             num_proposals_i = torch.clamp(Hi_Wi_A, max=pre_nms_topk)
@@ -97,9 +95,7 @@ def find_top_rrpn_proposals(
         valid_mask = torch.isfinite(boxes.tensor).all(dim=1) & torch.isfinite(scores_per_img)
         if not valid_mask.all():
             if training:
-                raise FloatingPointError(
-                    "Predicted boxes or scores contain Inf/NaN. Training has diverged."
-                )
+                raise FloatingPointError("Predicted boxes or scores contain Inf/NaN. Training has diverged.")
             boxes = boxes[valid_mask]
             scores_per_img = scores_per_img[valid_mask]
             lvl = lvl[valid_mask]
@@ -137,9 +133,7 @@ class RRPN(RPN):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.anchor_boundary_thresh >= 0:
-            raise NotImplementedError(
-                "anchor_boundary_thresh is a legacy option not implemented for RRPN."
-            )
+            raise NotImplementedError("anchor_boundary_thresh is a legacy option not implemented for RRPN.")
 
     @classmethod
     def from_config(cls, cfg, input_shape: Dict[str, ShapeSpec]):

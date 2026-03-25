@@ -25,6 +25,4 @@ class MaskFromDensePoseSampler:
             Boolean Tensor of the size of the input image that has non-zero
             values at pixels that are estimated to belong to the detected object
         """
-        return ToMaskConverter.convert(
-            instances.pred_densepose, instances.pred_boxes, instances.image_size
-        )
+        return ToMaskConverter.convert(instances.pred_densepose, instances.pred_boxes, instances.image_size)

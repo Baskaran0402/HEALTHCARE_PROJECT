@@ -85,9 +85,7 @@ class TestScheduler(TestCase):
 
             p.sum().backward()
             opt.step()
-            self.assertEqual(
-                opt.param_groups[0]["lr"], cfg.SOLVER.BASE_LR * cfg.SOLVER.WARMUP_FACTOR
-            )
+            self.assertEqual(opt.param_groups[0]["lr"], cfg.SOLVER.BASE_LR * cfg.SOLVER.WARMUP_FACTOR)
 
             lrs = []
             for _ in range(cfg.SOLVER.MAX_ITER):

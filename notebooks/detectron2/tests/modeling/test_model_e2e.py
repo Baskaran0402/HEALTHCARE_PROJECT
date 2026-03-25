@@ -34,15 +34,11 @@ def typecheck_hook(model, *, in_dtype=None, out_dtype=None):
     def hook(module, input, output):
         if in_dtype is not None:
             dtypes = {x.dtype for x in flatten(input)}
-            assert (
-                dtypes == in_dtype
-            ), f"Expected input dtype of {type(module)} is {in_dtype}. Got {dtypes} instead!"
+            assert dtypes == in_dtype, f"Expected input dtype of {type(module)} is {in_dtype}. Got {dtypes} instead!"
 
         if out_dtype is not None:
             dtypes = {x.dtype for x in flatten(output)}
-            assert (
-                dtypes == out_dtype
-            ), f"Expected output dtype of {type(module)} is {out_dtype}. Got {dtypes} instead!"
+            assert dtypes == out_dtype, f"Expected output dtype of {type(module)} is {out_dtype}. Got {dtypes} instead!"
 
     with model.register_forward_hook(hook):
         yield
@@ -84,10 +80,7 @@ class InstanceModelE2ETest:
 
     def _test_train(self, input_sizes, instances):
         assert len(input_sizes) == len(instances)
-        inputs = [
-            create_model_input(torch.rand(3, s[0], s[1]), inst)
-            for s, inst in zip(input_sizes, instances)
-        ]
+        inputs = [create_model_input(torch.rand(3, s[0], s[1]), inst) for s, inst in zip(input_sizes, instances)]
         self.model.train()
         with EventStorage():
             losses = self.model(inputs)
@@ -159,10 +152,10 @@ class MaskRCNNE2ETest(InstanceModelE2ETest, unittest.TestCase):
 
         inputs = [{"image": torch.rand(3, 100, 100)}]
         self.model.eval()
-        with autocast(), typecheck_hook(
-            self.model.backbone, in_dtype=torch.float32, out_dtype=torch.float16
-        ), typecheck_hook(
-            self.model.roi_heads.box_predictor, in_dtype=torch.float16, out_dtype=torch.float16
+        with (
+            autocast(),
+            typecheck_hook(self.model.backbone, in_dtype=torch.float32, out_dtype=torch.float16),
+            typecheck_hook(self.model.roi_heads.box_predictor, in_dtype=torch.float16, out_dtype=torch.float16),
         ):
             out = self.model.inference(inputs, do_postprocess=False)[0]
             self.assertEqual(out.pred_boxes.tensor.dtype, torch.float32)
@@ -199,9 +192,11 @@ class RetinaNetE2ETest(InstanceModelE2ETest, unittest.TestCase):
 
         inputs = [{"image": torch.rand(3, 100, 100)}]
         self.model.eval()
-        with autocast(), typecheck_hook(
-            self.model.backbone, in_dtype=torch.float32, out_dtype=torch.float16
-        ), typecheck_hook(self.model.head, in_dtype=torch.float16, out_dtype=torch.float16):
+        with (
+            autocast(),
+            typecheck_hook(self.model.backbone, in_dtype=torch.float32, out_dtype=torch.float16),
+            typecheck_hook(self.model.head, in_dtype=torch.float16, out_dtype=torch.float16),
+        ):
             out = self.model(inputs)[0]["instances"]
             self.assertEqual(out.pred_boxes.tensor.dtype, torch.float32)
             self.assertEqual(out.scores.dtype, torch.float16)

@@ -16,9 +16,7 @@ model.backbone.bottom_up.use_act_checkpoint = True
 train.init_checkpoint = "detectron2://ImageNetPretrained/mvitv2/MViTv2_H_in21k.pyth"
 
 train.max_iter = train.max_iter // 2  # 100ep -> 50ep
-lr_multiplier.scheduler.milestones = [
-    milestone // 2 for milestone in lr_multiplier.scheduler.milestones
-]
+lr_multiplier.scheduler.milestones = [milestone // 2 for milestone in lr_multiplier.scheduler.milestones]
 lr_multiplier.scheduler.num_updates = train.max_iter
 lr_multiplier.warmup_length = 250 / train.max_iter
 

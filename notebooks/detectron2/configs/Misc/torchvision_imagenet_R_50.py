@@ -27,7 +27,6 @@ from detectron2.data.samplers import TrainingSampler, InferenceSampler
 from detectron2.evaluation import DatasetEvaluator
 from detectron2.utils import comm
 
-
 """
 Note: Here we put reusable code (models, evaluation, data) together with configs just as a
 proof-of-concept, to easily demonstrate what's needed to train a ImageNet classifier in detectron2.
@@ -123,9 +122,7 @@ dataloader.test = L(build_data_loader)(
 
 dataloader.evaluator = L(ClassificationAcc)()
 
-model = L(ClassificationNet)(
-    model=(ResNet)(block=Bottleneck, layers=[3, 4, 6, 3], zero_init_residual=True)
-)
+model = L(ClassificationNet)(model=(ResNet)(block=Bottleneck, layers=[3, 4, 6, 3], zero_init_residual=True))
 
 
 optimizer = L(torch.optim.SGD)(
@@ -136,9 +133,7 @@ optimizer = L(torch.optim.SGD)(
 )
 
 lr_multiplier = L(WarmupParamScheduler)(
-    scheduler=L(MultiStepParamScheduler)(
-        values=[1.0, 0.1, 0.01, 0.001], milestones=[30, 60, 90, 100]
-    ),
+    scheduler=L(MultiStepParamScheduler)(values=[1.0, 0.1, 0.01, 0.001], milestones=[30, 60, 90, 100]),
     warmup_length=1 / 100,
     warmup_factor=0.1,
 )

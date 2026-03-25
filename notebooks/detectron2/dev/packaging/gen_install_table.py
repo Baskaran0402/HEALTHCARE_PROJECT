@@ -22,10 +22,7 @@ CUDA_SUFFIX = {
 
 def gen_header(torch_versions):
     return '<table class="docutils"><tbody><th width="80"> CUDA </th>' + "".join(
-        [
-            '<th valign="bottom" align="left" width="100">torch {}</th>'.format(t)
-            for t in torch_versions
-        ]
+        ['<th valign="bottom" align="left" width="100">torch {}</th>'.format(t) for t in torch_versions]
     )
 
 
@@ -41,12 +38,8 @@ if __name__ == "__main__":
         + [("1.10", k) for k in ["11.3", "11.1", "10.2", "cpu"]]
     )
 
-    torch_versions = sorted(
-        {k[0] for k in all_versions}, key=lambda x: int(x.split(".")[1]), reverse=True
-    )
-    cuda_versions = sorted(
-        {k[1] for k in all_versions}, key=lambda x: float(x) if x != "cpu" else 0, reverse=True
-    )
+    torch_versions = sorted({k[0] for k in all_versions}, key=lambda x: int(x.split(".")[1]), reverse=True)
+    cuda_versions = sorted({k[1] for k in all_versions}, key=lambda x: float(x) if x != "cpu" else 0, reverse=True)
 
     table = gen_header(torch_versions)
     for cu in cuda_versions:

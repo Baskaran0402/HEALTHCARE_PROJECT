@@ -60,13 +60,8 @@ class DensePoseDataRelative:
             self.i = torch.as_tensor(annotation[DensePoseDataRelative.I_KEY])
             self.u = torch.as_tensor(annotation[DensePoseDataRelative.U_KEY])
             self.v = torch.as_tensor(annotation[DensePoseDataRelative.V_KEY])
-        if (
-            DensePoseDataRelative.VERTEX_IDS_KEY in annotation
-            and DensePoseDataRelative.MESH_NAME_KEY in annotation
-        ):
-            self.vertex_ids = torch.as_tensor(
-                annotation[DensePoseDataRelative.VERTEX_IDS_KEY], dtype=torch.long
-            )
+        if DensePoseDataRelative.VERTEX_IDS_KEY in annotation and DensePoseDataRelative.MESH_NAME_KEY in annotation:
+            self.vertex_ids = torch.as_tensor(annotation[DensePoseDataRelative.VERTEX_IDS_KEY], dtype=torch.long)
             self.mesh_id = MeshCatalog.get_mesh_id(annotation[DensePoseDataRelative.MESH_NAME_KEY])
         if DensePoseDataRelative.S_KEY in annotation:
             self.segm = DensePoseDataRelative.extract_segmentation_mask(annotation)
@@ -205,18 +200,12 @@ class DensePoseDataRelative:
                     self.i[annot_indices_i] = pt_label_symmetries[i + 1]
                 u_loc = (self.u[annot_indices_i] * 255).long()
                 v_loc = (self.v[annot_indices_i] * 255).long()
-                self.u[annot_indices_i] = uv_symmetries["U_transforms"][i][v_loc, u_loc].to(
-                    device=self.u.device
-                )
-                self.v[annot_indices_i] = uv_symmetries["V_transforms"][i][v_loc, u_loc].to(
-                    device=self.v.device
-                )
+                self.u[annot_indices_i] = uv_symmetries["U_transforms"][i][v_loc, u_loc].to(device=self.u.device)
+                self.v[annot_indices_i] = uv_symmetries["V_transforms"][i][v_loc, u_loc].to(device=self.v.device)
 
     def _flip_vertices(self):
         mesh_info = MeshCatalog[MeshCatalog.get_mesh_name(self.mesh_id)]
-        mesh_symmetry = (
-            load_mesh_symmetry(mesh_info.symmetry) if mesh_info.symmetry is not None else None
-        )
+        mesh_symmetry = load_mesh_symmetry(mesh_info.symmetry) if mesh_info.symmetry is not None else None
         self.vertex_ids = mesh_symmetry["vertex_transforms"][self.vertex_ids]
 
     def _transform_segm(self, transforms, dp_transform_data):

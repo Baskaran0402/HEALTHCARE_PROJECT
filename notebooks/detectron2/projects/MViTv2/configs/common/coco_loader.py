@@ -20,9 +20,7 @@ dataloader.train = L(build_detection_train_loader)(
             L(T.RandomApply)(
                 tfm_or_aug=L(T.AugmentationList)(
                     augs=[
-                        L(T.ResizeShortestEdge)(
-                            short_edge_length=[400, 500, 600], sample_style="choice"
-                        ),
+                        L(T.ResizeShortestEdge)(short_edge_length=[400, 500, 600], sample_style="choice"),
                         L(T.RandomCrop)(crop_type="absolute_range", crop_size=(384, 600)),
                     ]
                 ),

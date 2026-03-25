@@ -106,9 +106,7 @@ class Trainer(DefaultTrainer):
         if isinstance(evaluators, DatasetEvaluator):
             evaluators = [evaluators]
         if evaluators is not None:
-            assert len(cfg.DATASETS.TEST) == len(evaluators), "{} != {}".format(
-                len(cfg.DATASETS.TEST), len(evaluators)
-            )
+            assert len(cfg.DATASETS.TEST) == len(evaluators), "{} != {}".format(len(cfg.DATASETS.TEST), len(evaluators))
 
         results = OrderedDict()
         for idx, dataset_name in enumerate(cfg.DATASETS.TEST):
@@ -136,9 +134,7 @@ class Trainer(DefaultTrainer):
             if comm.is_main_process():
                 assert isinstance(
                     results_i, dict
-                ), "Evaluator must return a dict on the main process. Got {} instead.".format(
-                    results_i
-                )
+                ), "Evaluator must return a dict on the main process. Got {} instead.".format(results_i)
                 logger.info("Evaluation results for {} in csv format:".format(dataset_name))
                 print_csv_format(results_i)
 
@@ -167,9 +163,7 @@ class Trainer(DefaultTrainer):
         # elif evaluator_type == "lvis":
         #     evaluators.append(LVISEvaluator(dataset_name, output_dir=output_folder))
         evaluators.append(
-            Detectron2COCOEvaluatorAdapter(
-                dataset_name, output_dir=output_folder, distributed=distributed
-            )
+            Detectron2COCOEvaluatorAdapter(dataset_name, output_dir=output_folder, distributed=distributed)
         )
         if cfg.MODEL.DENSEPOSE_ON:
             storage = build_densepose_evaluator_storage(cfg, output_folder)
@@ -246,13 +240,9 @@ class Trainer(DefaultTrainer):
         # Only support some R-CNN models.
         logger.info("Running inference with test-time augmentation ...")
         transform_data = load_from_cfg(cfg)
-        model = DensePoseGeneralizedRCNNWithTTA(
-            cfg, model, transform_data, DensePoseDatasetMapperTTA(cfg)
-        )
+        model = DensePoseGeneralizedRCNNWithTTA(cfg, model, transform_data, DensePoseDatasetMapperTTA(cfg))
         evaluators = [
-            cls.build_evaluator(
-                cfg, name, output_folder=os.path.join(cfg.OUTPUT_DIR, "inference_TTA")
-            )
+            cls.build_evaluator(cfg, name, output_folder=os.path.join(cfg.OUTPUT_DIR, "inference_TTA"))
             for name in cfg.DATASETS.TEST
         ]
         res = cls.test(cfg, model, evaluators)  # pyre-ignore[6]

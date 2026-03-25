@@ -139,25 +139,18 @@ class HighResolutionModule(nn.Module):
             raise ValueError(error_msg)
 
         if num_branches != len(num_channels):
-            error_msg = "NUM_BRANCHES({}) <> NUM_CHANNELS({})".format(
-                num_branches, len(num_channels)
-            )
+            error_msg = "NUM_BRANCHES({}) <> NUM_CHANNELS({})".format(num_branches, len(num_channels))
             logger.error(error_msg)
             raise ValueError(error_msg)
 
         if num_branches != len(num_inchannels):
-            error_msg = "NUM_BRANCHES({}) <> NUM_INCHANNELS({})".format(
-                num_branches, len(num_inchannels)
-            )
+            error_msg = "NUM_BRANCHES({}) <> NUM_INCHANNELS({})".format(num_branches, len(num_inchannels))
             logger.error(error_msg)
             raise ValueError(error_msg)
 
     def _make_one_branch(self, branch_index, block, num_blocks, num_channels, stride=1):
         downsample = None
-        if (
-            stride != 1
-            or self.num_inchannels[branch_index] != num_channels[branch_index] * block.expansion
-        ):
+        if stride != 1 or self.num_inchannels[branch_index] != num_channels[branch_index] * block.expansion:
             downsample = nn.Sequential(
                 nn.Conv2d(
                     self.num_inchannels[branch_index],
@@ -170,9 +163,7 @@ class HighResolutionModule(nn.Module):
             )
 
         layers = []
-        layers.append(
-            block(self.num_inchannels[branch_index], num_channels[branch_index], stride, downsample)
-        )
+        layers.append(block(self.num_inchannels[branch_index], num_channels[branch_index], stride, downsample))
         self.num_inchannels[branch_index] = num_channels[branch_index] * block.expansion
         for _ in range(1, num_blocks[branch_index]):
             layers.append(block(self.num_inchannels[branch_index], num_channels[branch_index]))
@@ -312,9 +303,7 @@ class PoseHigherResolutionNet(Backbone):
         block = blocks_dict[self.stage4_cfg.BLOCK]
         num_channels = [num_channels[i] * block.expansion for i in range(len(num_channels))]
         self.transition3 = self._make_transition_layer(pre_stage_channels, num_channels)
-        self.stage4, pre_stage_channels = self._make_stage(
-            self.stage4_cfg, num_channels, multi_scale_output=True
-        )
+        self.stage4, pre_stage_channels = self._make_stage(self.stage4_cfg, num_channels, multi_scale_output=True)
 
         self._out_features = []
         self._out_feature_channels = {}
@@ -322,9 +311,7 @@ class PoseHigherResolutionNet(Backbone):
 
         for i in range(cfg.MODEL.HRNET.STAGE4.NUM_BRANCHES):
             self._out_features.append("p%d" % (i + 1))
-            self._out_feature_channels.update(
-                {self._out_features[-1]: cfg.MODEL.HRNET.STAGE4.NUM_CHANNELS[i]}
-            )
+            self._out_feature_channels.update({self._out_features[-1]: cfg.MODEL.HRNET.STAGE4.NUM_CHANNELS[i]})
             self._out_feature_strides.update({self._out_features[-1]: 1})
 
     def _get_deconv_cfg(self, deconv_kernel):
@@ -368,9 +355,7 @@ class PoseHigherResolutionNet(Backbone):
                 conv3x3s = []
                 for j in range(i + 1 - num_branches_pre):
                     inchannels = num_channels_pre_layer[-1]
-                    outchannels = (
-                        num_channels_cur_layer[i] if j == i - num_branches_pre else inchannels
-                    )
+                    outchannels = num_channels_cur_layer[i] if j == i - num_branches_pre else inchannels
                     conv3x3s.append(
                         nn.Sequential(
                             nn.Conv2d(inchannels, outchannels, 3, 2, 1, bias=False),

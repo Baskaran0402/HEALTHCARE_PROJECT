@@ -23,9 +23,7 @@ def _create_pixel_dist_matrix(grid_size: int) -> torch.Tensor:
     # at index `i` contains [row, col], where
     # row = i // grid_size
     # col = i % grid_size
-    pix_coords = (
-        torch.stack(torch.meshgrid(rows, cols), -1).reshape((grid_size * grid_size, 2)).float()
-    )
+    pix_coords = torch.stack(torch.meshgrid(rows, cols), -1).reshape((grid_size * grid_size, 2)).float()
     return squared_euclidean_distance_matrix(pix_coords, pix_coords)
 
 
@@ -60,9 +58,7 @@ class PixToShapeCycleLoss(nn.Module):
         self.use_all_meshes_not_gt_only = (
             cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.PIX_TO_SHAPE_CYCLE_LOSS.USE_ALL_MESHES_NOT_GT_ONLY
         )
-        self.num_pixels_to_sample = (
-            cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.PIX_TO_SHAPE_CYCLE_LOSS.NUM_PIXELS_TO_SAMPLE
-        )
+        self.num_pixels_to_sample = cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.PIX_TO_SHAPE_CYCLE_LOSS.NUM_PIXELS_TO_SAMPLE
         self.pix_sigma = cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.PIX_TO_SHAPE_CYCLE_LOSS.PIXEL_SIGMA
         self.temperature_pix_to_vertex = (
             cfg.MODEL.ROI_DENSEPOSE_HEAD.CSE.PIX_TO_SHAPE_CYCLE_LOSS.TEMPERATURE_PIXEL_TO_VERTEX
@@ -115,8 +111,7 @@ class PixToShapeCycleLoss(nn.Module):
             self.shape_names
             if self.use_all_meshes_not_gt_only
             else [
-                MeshCatalog.get_mesh_name(mesh_id.item())
-                for mesh_id in packed_annotations.vertex_mesh_ids_gt.unique()
+                MeshCatalog.get_mesh_name(mesh_id.item()) for mesh_id in packed_annotations.vertex_mesh_ids_gt.unique()
             ]
         )
         for pixel_embeddings, mask_gt in zip(pix_embeds, masks_gt):
@@ -125,9 +120,7 @@ class PixToShapeCycleLoss(nn.Module):
             for mesh_name in mesh_names:
                 mesh_vertex_embeddings = embedder(mesh_name)
                 # pixel indices [M]
-                pixel_indices_flattened = _sample_fg_pixels_randperm(
-                    mask_gt, self.num_pixels_to_sample
-                )
+                pixel_indices_flattened = _sample_fg_pixels_randperm(mask_gt, self.num_pixels_to_sample)
                 # pixel distances [M, M]
                 pixel_dists = self.pixel_dists.to(pixel_embeddings.device)[
                     torch.meshgrid(pixel_indices_flattened, pixel_indices_flattened)

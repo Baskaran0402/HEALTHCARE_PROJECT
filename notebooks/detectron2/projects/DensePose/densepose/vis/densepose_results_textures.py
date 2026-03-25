@@ -63,9 +63,7 @@ class DensePoseResultsVisualizerWithTexture(DensePoseResultsVisualizer):
         texture_image = np.zeros([24, N, N, self.texture_atlas.shape[-1]])
         for i in range(4):
             for j in range(6):
-                texture_image[(6 * i + j), :, :, :] = self.texture_atlas[
-                    N * j : N * (j + 1), N * i : N * (i + 1), :
-                ]
+                texture_image[(6 * i + j), :, :, :] = self.texture_atlas[N * j : N * (j + 1), N * i : N * (i + 1), :]
 
         if texture_image.shape[-1] == 4:  # Image with alpha channel
             alpha = texture_image[:, :, :, -1] / 255.0

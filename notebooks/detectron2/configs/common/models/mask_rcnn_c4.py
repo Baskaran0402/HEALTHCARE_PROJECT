@@ -34,9 +34,7 @@ model = L(GeneralizedRCNN)(
             strides=[16],
             offset=0.0,
         ),
-        anchor_matcher=L(Matcher)(
-            thresholds=[0.3, 0.7], labels=[0, -1, 1], allow_low_quality_matches=True
-        ),
+        anchor_matcher=L(Matcher)(thresholds=[0.3, 0.7], labels=[0, -1, 1], allow_low_quality_matches=True),
         box2box_transform=L(Box2BoxTransform)(weights=[1.0, 1.0, 1.0, 1.0]),
         batch_size_per_image=256,
         positive_fraction=0.5,
@@ -48,9 +46,7 @@ model = L(GeneralizedRCNN)(
         num_classes=80,
         batch_size_per_image=512,
         positive_fraction=0.25,
-        proposal_matcher=L(Matcher)(
-            thresholds=[0.5], labels=[0, 1], allow_low_quality_matches=False
-        ),
+        proposal_matcher=L(Matcher)(thresholds=[0.5], labels=[0, 1], allow_low_quality_matches=False),
         in_features=["res4"],
         pooler=L(ROIPooler)(
             output_size=14,

@@ -51,9 +51,7 @@ def extract_data_for_mask_loss_from_matches(
     num_estimated = estimated_segm.shape[0]
     assert (
         num_proposals == num_estimated
-    ), "The number of proposals {} must be equal to the number of estimates {}".format(
-        num_proposals, num_estimated
-    )
+    ), "The number of proposals {} must be equal to the number of estimates {}".format(num_proposals, num_estimated)
 
     for proposals_targets_per_image in proposals_targets:
         n_i = proposals_targets_per_image.proposal_boxes.tensor.size(0)
@@ -78,9 +76,7 @@ class MaskLoss:
     the `crop_and_resize` interface (e.g. BitMasks, PolygonMasks).
     """
 
-    def __call__(
-        self, proposals_with_gt: List[Instances], densepose_predictor_outputs: Any
-    ) -> torch.Tensor:
+    def __call__(self, proposals_with_gt: List[Instances], densepose_predictor_outputs: Any) -> torch.Tensor:
         """
         Computes segmentation loss as cross-entropy for raw unnormalized
         scores given ground truth labels.

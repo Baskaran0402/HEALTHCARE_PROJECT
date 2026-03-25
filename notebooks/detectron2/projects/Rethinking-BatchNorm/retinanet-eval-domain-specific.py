@@ -30,6 +30,4 @@ if __name__ == "__main__":
         update_bn_stats(model, instantiate(cfg.dataloader.train), 500)
 
     logger.info("Running evaluation ...")
-    inference_on_dataset(
-        model, instantiate(cfg.dataloader.test), instantiate(cfg.dataloader.evaluator)
-    )
+    inference_on_dataset(model, instantiate(cfg.dataloader.test), instantiate(cfg.dataloader.evaluator))

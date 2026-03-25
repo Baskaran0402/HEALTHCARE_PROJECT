@@ -24,9 +24,7 @@ class TridentRPN(RPN):
         """
         num_branch = self.num_branch if self.training or not self.trident_fast else 1
         # Duplicate images and gt_instances for all branches in TridentNet.
-        all_images = ImageList(
-            torch.cat([images.tensor] * num_branch), images.image_sizes * num_branch
-        )
+        all_images = ImageList(torch.cat([images.tensor] * num_branch), images.image_sizes * num_branch)
         all_gt_instances = gt_instances * num_branch if gt_instances is not None else None
 
         return super(TridentRPN, self).forward(all_images, features, all_gt_instances)

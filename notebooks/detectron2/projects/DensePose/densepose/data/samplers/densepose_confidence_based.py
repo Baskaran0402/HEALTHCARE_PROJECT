@@ -103,8 +103,6 @@ class DensePoseConfidenceBasedSampler(DensePoseBaseSampler):
         converter = ToChartResultConverterWithConfidences
         chart_result = converter.convert(instance.pred_densepose, instance.pred_boxes)
         labels, dp_result = chart_result.labels.cpu(), chart_result.uv.cpu()
-        dp_result = torch.cat(
-            (dp_result, getattr(chart_result, self.confidence_channel)[None].cpu())
-        )
+        dp_result = torch.cat((dp_result, getattr(chart_result, self.confidence_channel)[None].cpu()))
 
         return labels, dp_result

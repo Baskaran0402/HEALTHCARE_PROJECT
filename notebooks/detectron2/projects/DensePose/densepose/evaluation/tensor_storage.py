@@ -88,8 +88,7 @@ class SingleProcessTensorStorage:
         self.storage_impl.seek(record_id * self.record_size_b, os.SEEK_SET)
         data_bytes = self.storage_impl.read(self.record_size_b)
         assert len(data_bytes) == self.record_size_b, (
-            f"Expected data size {self.record_size_b} B could not be read: "
-            f"got {len(data_bytes)} B"
+            f"Expected data size {self.record_size_b} B could not be read: " f"got {len(data_bytes)} B"
         )
         record = {}
         cur_idx = 0
@@ -98,9 +97,7 @@ class SingleProcessTensorStorage:
             schema = self.data_schema[field_name]
             field_size_b = self.record_field_sizes_b[field_name]
             chunk = data_bytes[cur_idx : cur_idx + field_size_b]
-            data_np = np.frombuffer(
-                chunk, dtype=schema.dtype, count=reduce(mul, schema.shape)
-            ).reshape(schema.shape)
+            data_np = np.frombuffer(chunk, dtype=schema.dtype, count=reduce(mul, schema.shape)).reshape(schema.shape)
             record[field_name] = torch.from_numpy(data_np)
             cur_idx += field_size_b
         return record
@@ -118,9 +115,7 @@ class SingleProcessTensorStorage:
         """
         # it's important to read and write in the same order
         for field_name in sorted(self.data_schema):
-            assert (
-                field_name in data
-            ), f"Field '{field_name}' not present in data: data keys are {data.keys()}"
+            assert field_name in data, f"Field '{field_name}' not present in data: data keys are {data.keys()}"
             value = data[field_name]
             assert value.shape == self.data_schema[field_name].shape, (
                 f"Mismatched tensor shapes for field '{field_name}': "
@@ -189,8 +184,7 @@ class MultiProcessTensorStorage:
 class MultiProcessFileTensorStorage(MultiProcessTensorStorage):
     def __init__(self, data_schema: Dict[str, SizeData], rank_to_fpath: Dict[int, str], mode: str):
         rank_to_storage = {
-            rank: SingleProcessFileTensorStorage(data_schema, fpath, mode)
-            for rank, fpath in rank_to_fpath.items()
+            rank: SingleProcessFileTensorStorage(data_schema, fpath, mode) for rank, fpath in rank_to_fpath.items()
         }
         super().__init__(rank_to_storage)  # pyre-ignore[6]
 
@@ -198,8 +192,7 @@ class MultiProcessFileTensorStorage(MultiProcessTensorStorage):
 class MultiProcessRamTensorStorage(MultiProcessTensorStorage):
     def __init__(self, data_schema: Dict[str, SizeData], rank_to_buffer: Dict[int, io.BytesIO]):
         rank_to_storage = {
-            rank: SingleProcessRamTensorStorage(data_schema, buf)
-            for rank, buf in rank_to_buffer.items()
+            rank: SingleProcessRamTensorStorage(data_schema, buf) for rank, buf in rank_to_buffer.items()
         }
         super().__init__(rank_to_storage)  # pyre-ignore[6]
 
@@ -231,9 +224,7 @@ def _file_storage_gather(
     return MultiProcessFileTensorStorage(storage.data_schema, rank_to_fpath, mode)
 
 
-def storage_gather(
-    storage: SingleProcessTensorStorage, dst_rank: int = 0
-) -> Optional[MultiProcessTensorStorage]:
+def storage_gather(storage: SingleProcessTensorStorage, dst_rank: int = 0) -> Optional[MultiProcessTensorStorage]:
     if isinstance(storage, SingleProcessRamTensorStorage):
         return _ram_storage_gather(storage, dst_rank)
     elif isinstance(storage, SingleProcessFileTensorStorage):

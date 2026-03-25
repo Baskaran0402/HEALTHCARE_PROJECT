@@ -42,9 +42,7 @@ class ROIAlignTest(unittest.TestCase):
         # This is an upsampled version of [[6, 7], [11, 12]]
 
         self.assertTrue(np.allclose(output.flatten(), np.asarray(old_results).flatten()))
-        self.assertTrue(
-            np.allclose(output_correct.flatten(), np.asarray(correct_results).flatten())
-        )
+        self.assertTrue(np.allclose(output_correct.flatten(), np.asarray(correct_results).flatten()))
 
         # Also see similar issues in tensorflow at
         # https://github.com/tensorflow/tensorflow/issues/26278
@@ -144,11 +142,7 @@ def grid_sample_roi_align(input, boxes, output_size, scale, sampling_ratio):
     coords = get_point_coords_wrt_image(boxes, grid)
     coords = coords / torch.as_tensor([W, H], device=coords.device)  # R, s^2, 2
     res = point_sample(input, coords.unsqueeze(0), align_corners=False)  # 1,C, R,s^2
-    res = (
-        res.squeeze(0)
-        .permute(1, 0, 2)
-        .reshape(R, -1, output_size * sampling_ratio, output_size * sampling_ratio)
-    )
+    res = res.squeeze(0).permute(1, 0, 2).reshape(R, -1, output_size * sampling_ratio, output_size * sampling_ratio)
     res = F.avg_pool2d(res, sampling_ratio)
     return res
 

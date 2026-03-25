@@ -81,9 +81,7 @@ def _add_categories_metadata(dataset_name: str) -> None:
 
 def _verify_annotations_have_unique_ids(json_file: str, anns: List[List[Dict[str, Any]]]) -> None:
     ann_ids = [ann["id"] for anns_per_image in anns for ann in anns_per_image]
-    assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique!".format(
-        json_file
-    )
+    assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique!".format(json_file)
 
 
 def _maybe_add_bbox(obj: Dict[str, Any], ann_dict: Dict[str, Any]) -> None:
@@ -243,9 +241,7 @@ def register_dataset(dataset_data: CocoDatasetInfo, datasets_root: Optional[str]
     )
 
 
-def register_datasets(
-    datasets_data: Iterable[CocoDatasetInfo], datasets_root: Optional[str] = None
-) -> None:
+def register_datasets(datasets_data: Iterable[CocoDatasetInfo], datasets_root: Optional[str] = None) -> None:
     """
     Registers provided LVIS DensePose datasets
 

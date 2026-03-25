@@ -80,9 +80,7 @@ class PredictionToGroundTruthSampler:
           gt_attr (Optional[str]): field to store the sampled value to, if not None
           func (Optional[Callable: Any -> Any]): sampler function
         """
-        self._samplers[(prediction_attr, gt_attr)] = _Sampler(
-            src=prediction_attr, dst=gt_attr, func=func
-        )
+        self._samplers[(prediction_attr, gt_attr)] = _Sampler(src=prediction_attr, dst=gt_attr, func=func)
 
     def remove_sampler(
         self,

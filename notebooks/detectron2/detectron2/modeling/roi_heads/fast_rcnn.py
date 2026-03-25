@@ -318,9 +318,7 @@ class FastRCNNOutputLayers(nn.Module):
         scores, proposal_deltas = predictions
 
         # parse classification outputs
-        gt_classes = (
-            cat([p.gt_classes for p in proposals], dim=0) if len(proposals) else torch.empty(0)
-        )
+        gt_classes = cat([p.gt_classes for p in proposals], dim=0) if len(proposals) else torch.empty(0)
         _log_classification_stats(scores, gt_classes)
 
         # parse box regression outputs
@@ -345,9 +343,7 @@ class FastRCNNOutputLayers(nn.Module):
 
         losses = {
             "loss_cls": loss_cls,
-            "loss_box_reg": self.box_reg_loss(
-                proposal_boxes, gt_boxes, proposal_deltas, gt_classes
-            ),
+            "loss_box_reg": self.box_reg_loss(proposal_boxes, gt_boxes, proposal_deltas, gt_classes),
         }
         return {k: v * self.loss_weight.get(k, 1.0) for k, v in losses.items()}
 
@@ -400,9 +396,7 @@ class FastRCNNOutputLayers(nn.Module):
         target[range(len(gt_classes)), gt_classes] = 1
         target = target[:, :K]
 
-        cls_loss = F.binary_cross_entropy_with_logits(
-            pred_class_logits[:, :-1], target, reduction="none"
-        )
+        cls_loss = F.binary_cross_entropy_with_logits(pred_class_logits[:, :-1], target, reduction="none")
 
         if self.use_fed_loss:
             fed_loss_classes = self.get_fed_loss_classes(
@@ -435,9 +429,7 @@ class FastRCNNOutputLayers(nn.Module):
         if pred_deltas.shape[1] == box_dim:  # cls-agnostic regression
             fg_pred_deltas = pred_deltas[fg_inds]
         else:
-            fg_pred_deltas = pred_deltas.view(-1, self.num_classes, box_dim)[
-                fg_inds, gt_classes[fg_inds]
-            ]
+            fg_pred_deltas = pred_deltas.view(-1, self.num_classes, box_dim)[fg_inds, gt_classes[fg_inds]]
 
         loss_box_reg = _dense_box_regression_loss(
             [proposal_boxes[fg_inds]],
@@ -503,9 +495,7 @@ class FastRCNNOutputLayers(nn.Module):
         scores, proposal_deltas = predictions
         proposal_boxes = cat([p.proposal_boxes.tensor for p in proposals], dim=0)
         N, B = proposal_boxes.shape
-        predict_boxes = self.box2box_transform.apply_deltas(
-            proposal_deltas, proposal_boxes
-        )  # Nx(KxB)
+        predict_boxes = self.box2box_transform.apply_deltas(proposal_deltas, proposal_boxes)  # Nx(KxB)
 
         K = predict_boxes.shape[1] // B
         if K > 1:
@@ -520,9 +510,7 @@ class FastRCNNOutputLayers(nn.Module):
         num_prop_per_image = [len(p) for p in proposals]
         return predict_boxes.split(num_prop_per_image)
 
-    def predict_boxes(
-        self, predictions: Tuple[torch.Tensor, torch.Tensor], proposals: List[Instances]
-    ):
+    def predict_boxes(self, predictions: Tuple[torch.Tensor, torch.Tensor], proposals: List[Instances]):
         """
         Args:
             predictions: return values of :meth:`forward()`.
@@ -546,9 +534,7 @@ class FastRCNNOutputLayers(nn.Module):
         )  # Nx(KxB)
         return predict_boxes.split(num_prop_per_image)
 
-    def predict_probs(
-        self, predictions: Tuple[torch.Tensor, torch.Tensor], proposals: List[Instances]
-    ):
+    def predict_probs(self, predictions: Tuple[torch.Tensor, torch.Tensor], proposals: List[Instances]):
         """
         Args:
             predictions: return values of :meth:`forward()`.

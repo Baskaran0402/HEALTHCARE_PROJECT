@@ -94,11 +94,9 @@ def load_coco_json(json_file, image_root, dataset_name=None, extra_annotation_ke
         # apply this mapping as well but print a warning.
         if not (min(cat_ids) == 1 and max(cat_ids) == len(cat_ids)):
             if "coco" not in dataset_name:
-                logger.warning(
-                    """
+                logger.warning("""
 Category ids in annotations are not in [1, #categories]! We'll apply a mapping for you.
-"""
-                )
+""")
         id_map = {v: i for i, v in enumerate(cat_ids)}
         meta.thing_dataset_id_to_contiguous_id = id_map
 
@@ -142,9 +140,7 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
         # However the ratio of buggy annotations there is tiny and does not affect accuracy.
         # Therefore we explicitly white-list them.
         ann_ids = [ann["id"] for anns_per_image in anns for ann in anns_per_image]
-        assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique!".format(
-            json_file
-        )
+        assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique!".format(json_file)
 
     imgs_anns = list(zip(imgs, anns))
     logger.info("Loaded {} images in COCO format from {}".format(len(imgs_anns), json_file))
@@ -223,9 +219,7 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
 
     if num_instances_without_valid_segmentation > 0:
         logger.warning(
-            "Filtered out {} instances without valid segmentation. ".format(
-                num_instances_without_valid_segmentation
-            )
+            "Filtered out {} instances without valid segmentation. ".format(num_instances_without_valid_segmentation)
             + "There might be issues in your dataset generation process.  Please "
             "check https://detectron2.readthedocs.io/en/latest/tutorials/datasets.html carefully"
         )
@@ -294,9 +288,7 @@ def load_sem_seg(gt_root, image_root, gt_ext="png", image_ext="jpg"):
         input_files = [os.path.join(image_root, f + image_ext) for f in intersect]
         gt_files = [os.path.join(gt_root, f + gt_ext) for f in intersect]
 
-    logger.info(
-        "Loaded {} images with semantic segmentation from {}".format(len(input_files), image_root)
-    )
+    logger.info("Loaded {} images with semantic segmentation from {}".format(len(input_files), image_root))
 
     dataset_dicts = []
     for img_path, gt_path in zip(input_files, gt_files):
@@ -338,10 +330,7 @@ def convert_to_coco_dict(dataset_name):
     else:
         reverse_id_mapper = lambda contiguous_id: contiguous_id  # noqa
 
-    categories = [
-        {"id": reverse_id_mapper(id), "name": name}
-        for id, name in enumerate(metadata.thing_classes)
-    ]
+    categories = [{"id": reverse_id_mapper(id), "name": name} for id, name in enumerate(metadata.thing_classes)]
 
     logger.info("Converting dataset dicts into COCO format")
     coco_images = []
@@ -432,10 +421,7 @@ def convert_to_coco_dict(dataset_name):
 
             coco_annotations.append(coco_annotation)
 
-    logger.info(
-        "Conversion finished, "
-        f"#images: {len(coco_images)}, #annotations: {len(coco_annotations)}"
-    )
+    logger.info("Conversion finished, " f"#images: {len(coco_images)}, #annotations: {len(coco_annotations)}")
 
     info = {
         "date_created": str(datetime.datetime.now()),
@@ -512,9 +498,7 @@ def register_coco_instances(name, metadata, json_file, image_root):
 
     # 2. Optionally, add metadata about this dataset,
     # since they might be useful in evaluation, visualization or logging
-    MetadataCatalog.get(name).set(
-        json_file=json_file, image_root=image_root, evaluator_type="coco", **metadata
-    )
+    MetadataCatalog.get(name).set(json_file=json_file, image_root=image_root, evaluator_type="coco", **metadata)
 
 
 def main() -> None:

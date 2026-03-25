@@ -86,9 +86,7 @@ class TestTransforms(unittest.TestCase):
         transformed_polygons = transforms.apply_polygons([polygon])
         expected_polygon = np.array([[934.0, 33.0], [934.0, 80.0], [896.0, 80.0], [896.0, 33.0]])
         self.assertEqual(1, len(transformed_polygons))
-        err_msg = "transformed_polygon = {}, expected {}".format(
-            transformed_polygons[0], expected_polygon
-        )
+        err_msg = "transformed_polygon = {}, expected {}".format(transformed_polygons[0], expected_polygon)
         self.assertTrue(polygon_allclose(transformed_polygons[0], expected_polygon), err_msg)
 
     def test_apply_rotated_boxes_unequal_scaling_factor(self):
@@ -183,9 +181,7 @@ class TestTransforms(unittest.TestCase):
         # define two augmentations with different args
         class TG1(T.Augmentation):
             def get_transform(self, image, sem_seg):
-                return T.ResizeTransform(
-                    input_shape[0], input_shape[1], output_shape[0], output_shape[1]
-                )
+                return T.ResizeTransform(input_shape[0], input_shape[1], output_shape[0], output_shape[1])
 
         class TG2(T.Augmentation):
             def get_transform(self, image):
@@ -244,9 +240,7 @@ class TestTransforms(unittest.TestCase):
 
     def test_resize_shorted_edge_scriptable(self):
         def f(image):
-            newh, neww = T.ResizeShortestEdge.get_output_shape(
-                image.shape[-2], image.shape[-1], 80, 133
-            )
+            newh, neww = T.ResizeShortestEdge.get_output_shape(image.shape[-2], image.shape[-1], 80, 133)
             return F.interpolate(image.unsqueeze(0), size=(newh, neww))
 
         input = torch.randn(3, 10, 10)

@@ -56,13 +56,9 @@ class COCOPanopticEvaluator(DatasetEvaluator):
             # the model produces panoptic category id directly. No more conversion needed
             return segment_info
         if isthing is True:
-            segment_info["category_id"] = self._thing_contiguous_id_to_dataset_id[
-                segment_info["category_id"]
-            ]
+            segment_info["category_id"] = self._thing_contiguous_id_to_dataset_id[segment_info["category_id"]]
         else:
-            segment_info["category_id"] = self._stuff_contiguous_id_to_dataset_id[
-                segment_info["category_id"]
-            ]
+            segment_info["category_id"] = self._stuff_contiguous_id_to_dataset_id[segment_info["category_id"]]
         return segment_info
 
     def process(self, inputs, outputs):
@@ -84,9 +80,7 @@ class COCOPanopticEvaluator(DatasetEvaluator):
                         # VOID region.
                         continue
                     pred_class = panoptic_label // label_divisor
-                    isthing = (
-                        pred_class in self._metadata.thing_dataset_id_to_contiguous_id.values()
-                    )
+                    isthing = pred_class in self._metadata.thing_dataset_id_to_contiguous_id.values()
                     segments_info.append(
                         {
                             "id": int(panoptic_label) + 1,
@@ -171,9 +165,7 @@ def _print_panoptic_results(pq_res):
     for name in ["All", "Things", "Stuff"]:
         row = [name] + [pq_res[name][k] * 100 for k in ["pq", "sq", "rq"]] + [pq_res[name]["n"]]
         data.append(row)
-    table = tabulate(
-        data, headers=headers, tablefmt="pipe", floatfmt=".3f", stralign="center", numalign="center"
-    )
+    table = tabulate(data, headers=headers, tablefmt="pipe", floatfmt=".3f", stralign="center", numalign="center")
     logger.info("Panoptic Evaluation Results:\n" + table)
 
 
@@ -193,7 +185,5 @@ if __name__ == "__main__":
     from panopticapi.evaluation import pq_compute
 
     with contextlib.redirect_stdout(io.StringIO()):
-        pq_res = pq_compute(
-            args.gt_json, args.pred_json, gt_folder=args.gt_dir, pred_folder=args.pred_dir
-        )
+        pq_res = pq_compute(args.gt_json, args.pred_json, gt_folder=args.gt_dir, pred_folder=args.pred_dir)
         _print_panoptic_results(pq_res)

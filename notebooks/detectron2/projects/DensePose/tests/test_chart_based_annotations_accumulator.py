@@ -45,17 +45,10 @@ class TestChartBasedAnnotationsAccumulator(unittest.TestCase):
         instances.gt_densepose = DensePoseList(annotations, instances.gt_boxes, image_shape)
         accumulator = ChartBasedAnnotationsAccumulator()
         accumulator.accumulate(instances)
-        bbox_xywh_est = BoxMode.convert(
-            instances.proposal_boxes.tensor.clone(), BoxMode.XYXY_ABS, BoxMode.XYWH_ABS
-        )
-        bbox_xywh_gt = BoxMode.convert(
-            instances.gt_boxes.tensor.clone(), BoxMode.XYXY_ABS, BoxMode.XYWH_ABS
-        )
+        bbox_xywh_est = BoxMode.convert(instances.proposal_boxes.tensor.clone(), BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
+        bbox_xywh_gt = BoxMode.convert(instances.gt_boxes.tensor.clone(), BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
         expected_values = {
-            "s_gt": [
-                torch.zeros((3, DensePoseDataRelative.MASK_SIZE, DensePoseDataRelative.MASK_SIZE))
-            ]
-            * n_instances,
+            "s_gt": [torch.zeros((3, DensePoseDataRelative.MASK_SIZE, DensePoseDataRelative.MASK_SIZE))] * n_instances,
             "bbox_xywh_est": bbox_xywh_est.split(1),
             "bbox_xywh_gt": bbox_xywh_gt.split(1),
             "point_bbox_with_dp_indices": [torch.tensor([i]) for i in range(n_instances)],

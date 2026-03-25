@@ -115,9 +115,7 @@ class COCOEvaluator(DatasetEvaluator):
         self._max_dets_per_image = max_dets_per_image
 
         if tasks is not None and isinstance(tasks, CfgNode):
-            kpt_oks_sigmas = (
-                tasks.TEST.KEYPOINT_OKS_SIGMAS if not kpt_oks_sigmas else kpt_oks_sigmas
-            )
+            kpt_oks_sigmas = tasks.TEST.KEYPOINT_OKS_SIGMAS if not kpt_oks_sigmas else kpt_oks_sigmas
             self._logger.warn(
                 "COCO Evaluator instantiated using config, this is deprecated behavior."
                 " Please pass in explicit arguments instead."
@@ -131,10 +129,7 @@ class COCOEvaluator(DatasetEvaluator):
         self._metadata = MetadataCatalog.get(dataset_name)
         if not hasattr(self._metadata, "json_file"):
             if output_dir is None:
-                raise ValueError(
-                    "output_dir must be provided to COCOEvaluator "
-                    "for datasets not in COCO format."
-                )
+                raise ValueError("output_dir must be provided to COCOEvaluator " "for datasets not in COCO format.")
             self._logger.info(f"Trying to convert '{dataset_name}' to COCO format ...")
 
             cache_path = os.path.join(output_dir, f"{dataset_name}_coco_format.json")
@@ -256,9 +251,7 @@ class COCOEvaluator(DatasetEvaluator):
             return
 
         self._logger.info(
-            "Evaluating predictions with {} COCO API...".format(
-                "unofficial" if self._use_fast_impl else "official"
-            )
+            "Evaluating predictions with {} COCO API...".format("unofficial" if self._use_fast_impl else "official")
         )
         for task in sorted(tasks):
             assert task in {"bbox", "segm", "keypoints"}, f"Got unknown task: {task}!"
@@ -276,9 +269,7 @@ class COCOEvaluator(DatasetEvaluator):
                 else None  # cocoapi does not handle empty results very well
             )
 
-            res = self._derive_coco_results(
-                coco_eval, task, class_names=self._metadata.get("thing_classes")
-            )
+            res = self._derive_coco_results(coco_eval, task, class_names=self._metadata.get("thing_classes"))
             self._results[task] = res
 
     def _eval_box_proposals(self, predictions):
@@ -349,9 +340,7 @@ class COCOEvaluator(DatasetEvaluator):
             metric: float(coco_eval.stats[idx] * 100 if coco_eval.stats[idx] >= 0 else "nan")
             for idx, metric in enumerate(metrics)
         }
-        self._logger.info(
-            "Evaluation results for {}: \n".format(iou_type) + create_small_table(results)
-        )
+        self._logger.info("Evaluation results for {}: \n".format(iou_type) + create_small_table(results))
         if not np.isfinite(sum(results.values())):
             self._logger.info("Some metrics cannot be computed and is shown as NaN.")
 
@@ -415,8 +404,7 @@ def instances_to_coco_json(instances, img_id):
         # use RLE to encode the masks, because they are too large and takes memory
         # since this evaluator stores outputs of the entire dataset
         rles = [
-            mask_util.encode(np.array(mask[:, :, None], order="F", dtype="uint8"))[0]
-            for mask in instances.pred_masks
+            mask_util.encode(np.array(mask[:, :, None], order="F", dtype="uint8"))[0] for mask in instances.pred_masks
         ]
         for rle in rles:
             # "counts" is an array encoded by mask_util as a byte-stream. Python3's
@@ -497,9 +485,7 @@ def _evaluate_box_proposals(dataset_predictions, coco_api, thresholds=None, area
         ann_ids = coco_api.getAnnIds(imgIds=prediction_dict["image_id"])
         anno = coco_api.loadAnns(ann_ids)
         gt_boxes = [
-            BoxMode.convert(obj["bbox"], BoxMode.XYWH_ABS, BoxMode.XYXY_ABS)
-            for obj in anno
-            if obj["iscrowd"] == 0
+            BoxMode.convert(obj["bbox"], BoxMode.XYWH_ABS, BoxMode.XYXY_ABS) for obj in anno if obj["iscrowd"] == 0
         ]
         gt_boxes = torch.as_tensor(gt_boxes).reshape(-1, 4)  # guard against no boxes
         gt_boxes = Boxes(gt_boxes)
@@ -541,9 +527,7 @@ def _evaluate_box_proposals(dataset_predictions, coco_api, thresholds=None, area
 
         # append recorded iou coverage level
         gt_overlaps.append(_gt_overlaps)
-    gt_overlaps = (
-        torch.cat(gt_overlaps, dim=0) if len(gt_overlaps) else torch.zeros(0, dtype=torch.float32)
-    )
+    gt_overlaps = torch.cat(gt_overlaps, dim=0) if len(gt_overlaps) else torch.zeros(0, dtype=torch.float32)
     gt_overlaps, _ = torch.sort(gt_overlaps)
 
     if thresholds is None:
@@ -649,9 +633,7 @@ class COCOevalMaxDets(COCOeval):
             titleStr = "Average Precision" if ap == 1 else "Average Recall"
             typeStr = "(AP)" if ap == 1 else "(AR)"
             iouStr = (
-                "{:0.2f}:{:0.2f}".format(p.iouThrs[0], p.iouThrs[-1])
-                if iouThr is None
-                else "{:0.2f}".format(iouThr)
+                "{:0.2f}:{:0.2f}".format(p.iouThrs[0], p.iouThrs[-1]) if iouThr is None else "{:0.2f}".format(iouThr)
             )
 
             aind = [i for i, aRng in enumerate(p.areaRngLbl) if aRng == areaRng]

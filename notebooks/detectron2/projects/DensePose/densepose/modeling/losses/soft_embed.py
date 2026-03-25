@@ -80,9 +80,7 @@ class SoftEmbeddingLoss:
             mesh_name = MeshCatalog.get_mesh_name(mesh_id)
             # valid points are those that fall into estimated bbox
             # and correspond to the current mesh
-            j_valid = interpolator.j_valid * (  # pyre-ignore[16]
-                packed_annotations.vertex_mesh_ids_gt == mesh_id
-            )
+            j_valid = interpolator.j_valid * (packed_annotations.vertex_mesh_ids_gt == mesh_id)  # pyre-ignore[16]
             if not torch.any(j_valid):
                 continue
             # extract estimated embeddings for valid points
@@ -106,9 +104,7 @@ class SoftEmbeddingLoss:
             # softmax values of geodesic distances for GT mesh vertices
             # -> tensor [J, K]
             mesh = create_mesh(mesh_name, mesh_vertex_embeddings.device)
-            geodist_softmax_values = F.softmax(
-                mesh.geodists[vertex_indices_i] / (-self.geodist_gauss_sigma), dim=1
-            )
+            geodist_softmax_values = F.softmax(mesh.geodists[vertex_indices_i] / (-self.geodist_gauss_sigma), dim=1)
             # logsoftmax values for valid points
             # -> tensor [J, K]
             embdist_logsoftmax_values = F.log_softmax(
@@ -122,9 +118,7 @@ class SoftEmbeddingLoss:
         #  function.
         for mesh_name in embedder.mesh_names:
             if mesh_name not in losses:
-                losses[mesh_name] = self.fake_value(
-                    densepose_predictor_outputs, embedder, mesh_name
-                )
+                losses[mesh_name] = self.fake_value(densepose_predictor_outputs, embedder, mesh_name)
         return losses
 
     def fake_values(self, densepose_predictor_outputs: Any, embedder: nn.Module):

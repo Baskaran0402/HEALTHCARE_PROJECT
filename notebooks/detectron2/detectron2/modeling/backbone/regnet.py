@@ -275,9 +275,7 @@ class AnyNet(Backbone):
         self.stages_and_names = []
         prev_w = stem_width
 
-        for i, (d, w, s, b, g) in enumerate(
-            zip(depths, widths, strides, bottleneck_ratios, group_widths)
-        ):
+        for i, (d, w, s, b, g) in enumerate(zip(depths, widths, strides, bottleneck_ratios, group_widths)):
             params = {"bot_mul": b, "group_w": g, "se_r": se_ratio}
             stage = AnyStage(prev_w, w, s, d, block_class, norm, activation_class, params)
             name = "s{}".format(i + 1)
@@ -323,9 +321,7 @@ class AnyNet(Backbone):
 
     def output_shape(self):
         return {
-            name: ShapeSpec(
-                channels=self._out_feature_channels[name], stride=self._out_feature_strides[name]
-            )
+            name: ShapeSpec(channels=self._out_feature_channels[name], stride=self._out_feature_strides[name])
             for name in self._out_features
         }
 
@@ -443,9 +439,7 @@ class RegNet(AnyNet):
             group_widths=gs,
             bottleneck_ratios=bs,
             se_ratio=se_ratio,
-            activation_class=(
-                default_activation_class if activation_class is None else activation_class
-            ),
+            activation_class=(default_activation_class if activation_class is None else activation_class),
             freeze_at=freeze_at,
             norm=norm,
             out_features=out_features,

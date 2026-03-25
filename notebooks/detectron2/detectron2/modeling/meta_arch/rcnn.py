@@ -113,9 +113,7 @@ class GeneralizedRCNN(nn.Module):
             anno_img = v_gt.get_image()
             box_size = min(len(prop.proposal_boxes), max_vis_prop)
             v_pred = Visualizer(img, None)
-            v_pred = v_pred.overlay_instances(
-                boxes=prop.proposal_boxes[0:box_size].tensor.cpu().numpy()
-            )
+            v_pred = v_pred.overlay_instances(boxes=prop.proposal_boxes[0:box_size].tensor.cpu().numpy())
             prop_img = v_pred.get_image()
             vis_img = np.concatenate((anno_img, prop_img), axis=1)
             vis_img = vis_img.transpose(2, 0, 1)
@@ -240,9 +238,7 @@ class GeneralizedRCNN(nn.Module):
         """
         # note: private function; subject to changes
         processed_results = []
-        for results_per_image, input_per_image, image_size in zip(
-            instances, batched_inputs, image_sizes
-        ):
+        for results_per_image, input_per_image, image_size in zip(instances, batched_inputs, image_sizes):
             height = input_per_image.get("height", image_size[0])
             width = input_per_image.get("width", image_size[1])
             r = detector_postprocess(results_per_image, height, width)
@@ -318,9 +314,7 @@ class ProposalNetwork(nn.Module):
         if "instances" in batched_inputs[0]:
             gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
         elif "targets" in batched_inputs[0]:
-            log_first_n(
-                logging.WARN, "'targets' in the model inputs is now renamed to 'instances'!", n=10
-            )
+            log_first_n(logging.WARN, "'targets' in the model inputs is now renamed to 'instances'!", n=10)
             gt_instances = [x["targets"].to(self.device) for x in batched_inputs]
         else:
             gt_instances = None
@@ -331,9 +325,7 @@ class ProposalNetwork(nn.Module):
             return proposal_losses
 
         processed_results = []
-        for results_per_image, input_per_image, image_size in zip(
-            proposals, batched_inputs, images.image_sizes
-        ):
+        for results_per_image, input_per_image, image_size in zip(proposals, batched_inputs, images.image_sizes):
             height = input_per_image.get("height", image_size[0])
             width = input_per_image.get("width", image_size[1])
             r = detector_postprocess(results_per_image, height, width)

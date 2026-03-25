@@ -9,9 +9,7 @@ from .cascade_mask_rcnn_vitdet_b_100ep import (
     get_vit_lr_decay_rate,
 )
 
-train.init_checkpoint = (
-    "detectron2://ImageNetPretrained/MAE/mae_pretrain_vit_huge_p14to16.pth?matching_heuristics=True"
-)
+train.init_checkpoint = "detectron2://ImageNetPretrained/MAE/mae_pretrain_vit_huge_p14to16.pth?matching_heuristics=True"
 
 model.backbone.net.embed_dim = 1280
 model.backbone.net.depth = 32
@@ -27,7 +25,5 @@ optimizer.params.overrides = {}
 optimizer.params.weight_decay_norm = None
 
 train.max_iter = train.max_iter * 3 // 4  # 100ep -> 75ep
-lr_multiplier.scheduler.milestones = [
-    milestone * 3 // 4 for milestone in lr_multiplier.scheduler.milestones
-]
+lr_multiplier.scheduler.milestones = [milestone * 3 // 4 for milestone in lr_multiplier.scheduler.milestones]
 lr_multiplier.scheduler.num_updates = train.max_iter

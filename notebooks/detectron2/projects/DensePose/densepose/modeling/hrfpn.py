@@ -68,9 +68,7 @@ class HRFPN(Backbone):
         self.share_conv = share_conv
 
         if self.share_conv:
-            self.fpn_conv = nn.Conv2d(
-                in_channels=out_channels, out_channels=out_channels, kernel_size=3, padding=1
-            )
+            self.fpn_conv = nn.Conv2d(in_channels=out_channels, out_channels=out_channels, kernel_size=3, padding=1)
         else:
             self.fpn_conv = nn.ModuleList()
             for _ in range(self.n_out_features):
@@ -149,9 +147,7 @@ class HRFPN(Backbone):
         for i in range(self.n_out_features):
             outs.append(self.reduction_pooling_conv[i](out))
         for i in range(len(outs)):  # Make shapes consistent
-            outs[-1 - i] = outs[-1 - i][
-                :, :, : outs[-1].shape[2] * 2**i, : outs[-1].shape[3] * 2**i
-            ]
+            outs[-1 - i] = outs[-1 - i][:, :, : outs[-1].shape[2] * 2**i, : outs[-1].shape[3] * 2**i]
         outputs = []
         for i in range(len(outs)):
             if self.share_conv:

@@ -91,9 +91,7 @@ def mask_rcnn_loss(pred_mask_logits: torch.Tensor, instances: List[Instances], v
     mask_incorrect = (pred_mask_logits > 0.0) != gt_masks_bool
     mask_accuracy = 1 - (mask_incorrect.sum().item() / max(mask_incorrect.numel(), 1.0))
     num_positive = gt_masks_bool.sum().item()
-    false_positive = (mask_incorrect & ~gt_masks_bool).sum().item() / max(
-        gt_masks_bool.numel() - num_positive, 1.0
-    )
+    false_positive = (mask_incorrect & ~gt_masks_bool).sum().item() / max(gt_masks_bool.numel() - num_positive, 1.0)
     false_negative = (mask_incorrect & gt_masks_bool).sum().item() / max(num_positive, 1.0)
 
     storage = get_event_storage()
@@ -143,9 +141,7 @@ def mask_rcnn_inference(pred_mask_logits: torch.Tensor, pred_instances: List[Ins
         num_masks = pred_mask_logits.shape[0]
         class_pred = cat([i.pred_classes for i in pred_instances])
         device = (
-            class_pred.device
-            if torch.jit.is_scripting()
-            else ("cpu" if torch.jit.is_tracing() else class_pred.device)
+            class_pred.device if torch.jit.is_scripting() else ("cpu" if torch.jit.is_tracing() else class_pred.device)
         )
         indices = move_device_like(torch.arange(num_masks, device=device), class_pred)
         mask_probs_pred = pred_mask_logits[indices, class_pred][:, None].sigmoid()
@@ -253,9 +249,7 @@ class MaskRCNNConvUpsampleHead(BaseMaskRCNNHead, nn.Sequential):
             self.conv_norm_relus.append(conv)
             cur_channels = conv_dim
 
-        self.deconv = ConvTranspose2d(
-            cur_channels, conv_dims[-1], kernel_size=2, stride=2, padding=0
-        )
+        self.deconv = ConvTranspose2d(cur_channels, conv_dims[-1], kernel_size=2, stride=2, padding=0)
         self.add_module("deconv_relu", nn.ReLU())
         cur_channels = conv_dims[-1]
 

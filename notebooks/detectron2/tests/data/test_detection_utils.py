@@ -44,9 +44,7 @@ class TestTransformAnnotations(unittest.TestCase):
             copy.deepcopy(anno),
             transforms,
             (400, 400),
-            keypoint_hflip_indices=detection_utils.create_keypoint_hflip_indices(
-                ["keypoints_coco_2017_train"]
-            ),
+            keypoint_hflip_indices=detection_utils.create_keypoint_hflip_indices(["keypoints_coco_2017_train"]),
         )
         # The first keypoint is nose
         self.assertTrue(np.allclose(output["keypoints"][0, 0], 400 - anno["keypoints"][0, 0]))
@@ -74,9 +72,7 @@ class TestTransformAnnotations(unittest.TestCase):
             "keypoints": keypoints,
         }
 
-        output = detection_utils.transform_instance_annotations(
-            copy.deepcopy(anno), transforms, (10, 10)
-        )
+        output = detection_utils.transform_instance_annotations(copy.deepcopy(anno), transforms, (10, 10))
         # box is shifted and cropped
         self.assertTrue((output["bbox"] == np.asarray([0, 0, 0, 10])).all())
         # keypoints are no longer visible
@@ -93,22 +89,16 @@ class TestTransformAnnotations(unittest.TestCase):
             "segmentation": mask_util.encode(mask[:, :, None])[0],
             "category_id": 3,
         }
-        output = detection_utils.transform_instance_annotations(
-            copy.deepcopy(anno), transforms, (300, 400)
-        )
+        output = detection_utils.transform_instance_annotations(copy.deepcopy(anno), transforms, (300, 400))
         mask = output["segmentation"]
         self.assertTrue((mask[:, 200:] == 1).all())
         self.assertTrue((mask[:, :200] == 0).all())
 
-        inst = detection_utils.annotations_to_instances(
-            [output, output], (400, 400), mask_format="bitmask"
-        )
+        inst = detection_utils.annotations_to_instances([output, output], (400, 400), mask_format="bitmask")
         self.assertTrue(isinstance(inst.gt_masks, BitMasks))
 
     def test_transform_RLE_resize(self):
-        transforms = T.TransformList(
-            [T.HFlipTransform(400), T.ScaleTransform(300, 400, 400, 400, "bilinear")]
-        )
+        transforms = T.TransformList([T.HFlipTransform(400), T.ScaleTransform(300, 400, 400, 400, "bilinear")])
         mask = np.zeros((300, 400), order="F").astype("uint8")
         mask[:, :200] = 1
 
@@ -118,13 +108,9 @@ class TestTransformAnnotations(unittest.TestCase):
             "segmentation": mask_util.encode(mask[:, :, None])[0],
             "category_id": 3,
         }
-        output = detection_utils.transform_instance_annotations(
-            copy.deepcopy(anno), transforms, (400, 400)
-        )
+        output = detection_utils.transform_instance_annotations(copy.deepcopy(anno), transforms, (400, 400))
 
-        inst = detection_utils.annotations_to_instances(
-            [output, output], (400, 400), mask_format="bitmask"
-        )
+        inst = detection_utils.annotations_to_instances([output, output], (400, 400), mask_format="bitmask")
         self.assertTrue(isinstance(inst.gt_masks, BitMasks))
 
     def test_gen_crop(self):
@@ -140,13 +126,9 @@ class TestTransformAnnotations(unittest.TestCase):
 
     def test_read_sem_seg(self):
         cityscapes_dir = MetadataCatalog.get("cityscapes_fine_sem_seg_val").gt_dir
-        sem_seg_gt_path = os.path.join(
-            cityscapes_dir, "frankfurt", "frankfurt_000001_083852_gtFine_labelIds.png"
-        )
+        sem_seg_gt_path = os.path.join(cityscapes_dir, "frankfurt", "frankfurt_000001_083852_gtFine_labelIds.png")
         if not PathManager.exists(sem_seg_gt_path):
-            raise unittest.SkipTest(
-                "Semantic segmentation ground truth {} not found.".format(sem_seg_gt_path)
-            )
+            raise unittest.SkipTest("Semantic segmentation ground truth {} not found.".format(sem_seg_gt_path))
         sem_seg = detection_utils.read_image(sem_seg_gt_path, "L")
         self.assertEqual(sem_seg.ndim, 3)
         self.assertEqual(sem_seg.shape[2], 1)

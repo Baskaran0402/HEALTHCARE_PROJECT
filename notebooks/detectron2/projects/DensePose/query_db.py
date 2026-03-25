@@ -60,9 +60,7 @@ class EntrywiseAction(Action):
     @classmethod
     def add_arguments(cls: type, parser: argparse.ArgumentParser):
         super(EntrywiseAction, cls).add_arguments(parser)
-        parser.add_argument(
-            "dataset", metavar="<dataset>", help="Dataset name (e.g. densepose_coco_2014_train)"
-        )
+        parser.add_argument("dataset", metavar="<dataset>", help="Dataset name (e.g. densepose_coco_2014_train)")
         parser.add_argument(
             "selector",
             metavar="<selector>",
@@ -70,9 +68,7 @@ class EntrywiseAction(Action):
             "field2[:type]=value_min-value_max...] which selects all "
             "entries from the dataset that satisfy the constraints",
         )
-        parser.add_argument(
-            "--max-entries", metavar="N", help="Maximum number of entries to process", type=int
-        )
+        parser.add_argument("--max-entries", metavar="N", help="Maximum number of entries to process", type=int)
 
     @classmethod
     def execute(cls: type, args: argparse.Namespace):
@@ -196,9 +192,7 @@ class ShowAction(EntrywiseAction):
         return context
 
     @classmethod
-    def _extract_data_for_visualizers_from_entry(
-        cls: type, vis_specs: List[str], entry: Dict[str, Any]
-    ):
+    def _extract_data_for_visualizers_from_entry(cls: type, vis_specs: List[str], entry: Dict[str, Any]):
         dp_list = []
         bbox_list = []
         for annotation in entry["annotations"]:

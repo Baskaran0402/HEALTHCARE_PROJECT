@@ -81,14 +81,10 @@ class DeepLabV3PlusHead(nn.Module):
         self.use_depthwise_separable_conv = use_depthwise_separable_conv
         # fmt: on
 
-        assert (
-            len(project_channels) == len(self.in_features) - 1
-        ), "Expected {} project_channels, got {}".format(
+        assert len(project_channels) == len(self.in_features) - 1, "Expected {} project_channels, got {}".format(
             len(self.in_features) - 1, len(project_channels)
         )
-        assert len(decoder_channels) == len(
-            self.in_features
-        ), "Expected {} decoder_channels, got {}".format(
+        assert len(decoder_channels) == len(self.in_features), "Expected {} decoder_channels, got {}".format(
             len(self.in_features), len(decoder_channels)
         )
         self.decoder = nn.ModuleDict()
@@ -174,9 +170,7 @@ class DeepLabV3PlusHead(nn.Module):
             self.decoder[self.in_features[idx]] = decoder_stage
 
         if not self.decoder_only:
-            self.predictor = Conv2d(
-                decoder_channels[0], num_classes, kernel_size=1, stride=1, padding=0
-            )
+            self.predictor = Conv2d(decoder_channels[0], num_classes, kernel_size=1, stride=1, padding=0)
             nn.init.normal_(self.predictor.weight, 0, 0.001)
             nn.init.constant_(self.predictor.bias, 0)
 
@@ -194,13 +188,11 @@ class DeepLabV3PlusHead(nn.Module):
             train_size = cfg.INPUT.CROP.SIZE
         else:
             train_size = None
-        decoder_channels = [cfg.MODEL.SEM_SEG_HEAD.CONVS_DIM] * (
-            len(cfg.MODEL.SEM_SEG_HEAD.IN_FEATURES) - 1
-        ) + [cfg.MODEL.SEM_SEG_HEAD.ASPP_CHANNELS]
+        decoder_channels = [cfg.MODEL.SEM_SEG_HEAD.CONVS_DIM] * (len(cfg.MODEL.SEM_SEG_HEAD.IN_FEATURES) - 1) + [
+            cfg.MODEL.SEM_SEG_HEAD.ASPP_CHANNELS
+        ]
         ret = dict(
-            input_shape={
-                k: v for k, v in input_shape.items() if k in cfg.MODEL.SEM_SEG_HEAD.IN_FEATURES
-            },
+            input_shape={k: v for k, v in input_shape.items() if k in cfg.MODEL.SEM_SEG_HEAD.IN_FEATURES},
             project_channels=cfg.MODEL.SEM_SEG_HEAD.PROJECT_CHANNELS,
             aspp_dilations=cfg.MODEL.SEM_SEG_HEAD.ASPP_DILATIONS,
             aspp_dropout=cfg.MODEL.SEM_SEG_HEAD.ASPP_DROPOUT,
@@ -229,9 +221,7 @@ class DeepLabV3PlusHead(nn.Module):
         if self.training:
             return None, self.losses(y, targets)
         else:
-            y = F.interpolate(
-                y, scale_factor=self.common_stride, mode="bilinear", align_corners=False
-            )
+            y = F.interpolate(y, scale_factor=self.common_stride, mode="bilinear", align_corners=False)
             return y, {}
 
     def layers(self, features):
@@ -252,9 +242,7 @@ class DeepLabV3PlusHead(nn.Module):
         return y
 
     def losses(self, predictions, targets):
-        predictions = F.interpolate(
-            predictions, scale_factor=self.common_stride, mode="bilinear", align_corners=False
-        )
+        predictions = F.interpolate(predictions, scale_factor=self.common_stride, mode="bilinear", align_corners=False)
         loss = self.loss(predictions, targets)
         losses = {"loss_sem_seg": loss * self.loss_weight}
         return losses
@@ -334,15 +322,11 @@ class DeepLabV3Head(nn.Module):
         if self.training:
             return None, self.losses(x, targets)
         else:
-            x = F.interpolate(
-                x, scale_factor=self.common_stride, mode="bilinear", align_corners=False
-            )
+            x = F.interpolate(x, scale_factor=self.common_stride, mode="bilinear", align_corners=False)
             return x, {}
 
     def losses(self, predictions, targets):
-        predictions = F.interpolate(
-            predictions, scale_factor=self.common_stride, mode="bilinear", align_corners=False
-        )
+        predictions = F.interpolate(predictions, scale_factor=self.common_stride, mode="bilinear", align_corners=False)
         loss = self.loss(predictions, targets)
         losses = {"loss_sem_seg": loss * self.loss_weight}
         return losses

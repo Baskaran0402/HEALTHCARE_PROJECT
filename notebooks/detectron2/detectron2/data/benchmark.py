@@ -32,9 +32,7 @@ class _EmptyMapDataset(torch.utils.data.Dataset):
         return [0]
 
 
-def iter_benchmark(
-    iterator, num_iter: int, warmup: int = 5, max_time_seconds: float = 60
-) -> Tuple[float, List[float]]:
+def iter_benchmark(iterator, num_iter: int, warmup: int = 5, max_time_seconds: float = 60) -> Tuple[float, List[float]]:
     """
     Benchmark an iterator/iterable for `num_iter` iterations with an extra
     `warmup` iterations of warmup.
@@ -182,9 +180,7 @@ class DataLoaderBenchmark:
         """
         n = self.num_workers
         dataset = _EmptyMapDataset(MapDataset(self.dataset, self.mapper))
-        loader = build_batch_data_loader(
-            dataset, self.sampler, self.total_batch_size, num_workers=n
-        )
+        loader = build_batch_data_loader(dataset, self.sampler, self.total_batch_size, num_workers=n)
         self._benchmark(
             iter(loader),
             num_iter * max(n, 1),
@@ -203,9 +199,7 @@ class DataLoaderBenchmark:
         gpu = comm.get_world_size()
         dataset = MapDataset(self.dataset, self.mapper)
         n = self.num_workers
-        loader = build_batch_data_loader(
-            dataset, self.sampler, self.total_batch_size, num_workers=n
-        )
+        loader = build_batch_data_loader(dataset, self.sampler, self.total_batch_size, num_workers=n)
 
         timer = Timer()
         loader = iter(loader)

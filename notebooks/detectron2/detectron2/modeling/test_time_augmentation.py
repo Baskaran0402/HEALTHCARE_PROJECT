@@ -122,9 +122,7 @@ class GeneralizedRCNNWithTTA(nn.Module):
         ), "TTA is only supported on GeneralizedRCNN. Got a model of type {}".format(type(model))
         self.cfg = cfg.clone()
         assert not self.cfg.MODEL.KEYPOINT_ON, "TTA for keypoint is not supported yet"
-        assert (
-            not self.cfg.MODEL.LOAD_PROPOSALS
-        ), "TTA for pre-computed proposals is not supported yet"
+        assert not self.cfg.MODEL.LOAD_PROPOSALS, "TTA for pre-computed proposals is not supported yet"
 
         self.model = model
 
@@ -222,9 +220,7 @@ class GeneralizedRCNNWithTTA(nn.Module):
 
         if self.cfg.MODEL.MASK_ON:
             # Use the detected boxes to obtain masks
-            augmented_instances = self._rescale_detected_boxes(
-                augmented_inputs, merged_instances, tfms
-            )
+            augmented_instances = self._rescale_detected_boxes(augmented_inputs, merged_instances, tfms)
             # run forward on the detected boxes
             outputs = self._batch_inference(augmented_inputs, augmented_instances)
             # Delete now useless variables to avoid being out of memory

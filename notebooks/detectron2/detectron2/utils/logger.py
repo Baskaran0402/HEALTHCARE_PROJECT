@@ -48,7 +48,7 @@ def setup_logger(
     name="detectron2",
     abbrev_name=None,
     enable_propagation: bool = False,
-    configure_stdout: bool = True
+    configure_stdout: bool = True,
 ):
     """
     Initialize the detectron2 logger and set its verbosity level to "DEBUG".
@@ -76,9 +76,7 @@ def setup_logger(
     if abbrev_name is None:
         abbrev_name = "d2" if name == "detectron2" else name
 
-    plain_formatter = logging.Formatter(
-        "[%(asctime)s] %(name)s %(levelname)s: %(message)s", datefmt="%m/%d %H:%M:%S"
-    )
+    plain_formatter = logging.Formatter("[%(asctime)s] %(name)s %(levelname)s: %(message)s", datefmt="%m/%d %H:%M:%S")
     # stdout logging: master only
     if configure_stdout and distributed_rank == 0:
         ch = logging.StreamHandler(stream=sys.stdout)

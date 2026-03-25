@@ -6,9 +6,7 @@ from detectron2.layers import nonzero_tuple
 __all__ = ["subsample_labels"]
 
 
-def subsample_labels(
-    labels: torch.Tensor, num_samples: int, positive_fraction: float, bg_label: int
-):
+def subsample_labels(labels: torch.Tensor, num_samples: int, positive_fraction: float, bg_label: int):
     """
     Return `num_samples` (or fewer, if not enough found)
     random samples from `labels` which is a mixture of positives & negatives.

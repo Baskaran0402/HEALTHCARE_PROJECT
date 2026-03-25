@@ -74,9 +74,7 @@ class FPN(Backbone):
             lateral_norm = get_norm(norm, out_channels)
             output_norm = get_norm(norm, out_channels)
 
-            lateral_conv = Conv2d(
-                in_channels, out_channels, kernel_size=1, bias=use_bias, norm=lateral_norm
-            )
+            lateral_conv = Conv2d(in_channels, out_channels, kernel_size=1, bias=use_bias, norm=lateral_norm)
             output_conv = Conv2d(
                 out_channels,
                 out_channels,
@@ -142,9 +140,7 @@ class FPN(Backbone):
         results.append(self.output_convs[0](prev_features))
 
         # Reverse feature maps into top-down order (from low to high resolution)
-        for idx, (lateral_conv, output_conv) in enumerate(
-            zip(self.lateral_convs, self.output_convs)
-        ):
+        for idx, (lateral_conv, output_conv) in enumerate(zip(self.lateral_convs, self.output_convs)):
             # Slicing of ModuleList is not supported https://github.com/pytorch/pytorch/issues/47336
             # Therefore we loop over all modules but skip the first one
             if idx > 0:
@@ -168,9 +164,7 @@ class FPN(Backbone):
 
     def output_shape(self):
         return {
-            name: ShapeSpec(
-                channels=self._out_feature_channels[name], stride=self._out_feature_strides[name]
-            )
+            name: ShapeSpec(channels=self._out_feature_channels[name], stride=self._out_feature_strides[name])
             for name in self._out_features
         }
 
@@ -180,9 +174,7 @@ def _assert_strides_are_log2_contiguous(strides):
     Assert that each stride is 2x times its preceding stride, i.e. "contiguous in log2".
     """
     for i, stride in enumerate(strides[1:], 1):
-        assert stride == 2 * strides[i - 1], "Strides {} {} are not log2 contiguous".format(
-            stride, strides[i - 1]
-        )
+        assert stride == 2 * strides[i - 1], "Strides {} {} are not log2 contiguous".format(stride, strides[i - 1])
 
 
 class LastLevelMaxPool(nn.Module):

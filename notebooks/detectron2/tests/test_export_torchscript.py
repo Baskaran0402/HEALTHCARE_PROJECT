@@ -32,7 +32,6 @@ from detectron2.utils.testing import (
     skipIfOnCPUCI,
 )
 
-
 """
 https://detectron2.readthedocs.io/tutorials/deployment.html
 contains some explanations of this file.
@@ -172,8 +171,7 @@ class TestTracing(unittest.TestCase):
         with torch.no_grad():
             # trace with smaller images, and the trace must still work
             trace_inputs = tuple(
-                nn.functional.interpolate(image, scale_factor=random.uniform(0.5, 0.7))
-                for _ in range(batch)
+                nn.functional.interpolate(image, scale_factor=random.uniform(0.5, 0.7)) for _ in range(batch)
             )
             traced_model = torch.jit.trace(wrapper, trace_inputs)
 
@@ -205,9 +203,7 @@ class TestTracing(unittest.TestCase):
             inputs = [{"image": image1}, {"image": image2}]
             return model.inference(inputs, do_postprocess=False)
 
-        self._test_model(
-            "COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml", inference_func, batch=2
-        )
+        self._test_model("COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml", inference_func, batch=2)
 
     def testKeypointHead(self):
         class M(nn.Module):
@@ -306,9 +302,7 @@ class TestTorchscriptUtils(unittest.TestCase):
         self.assertEqual(schema, new_schema)
 
     def test_flatten_instances_boxes(self):
-        inst = Instances(
-            torch.tensor([5, 8]), pred_masks=torch.tensor([3]), pred_boxes=Boxes(torch.ones((1, 4)))
-        )
+        inst = Instances(torch.tensor([5, 8]), pred_masks=torch.tensor([3]), pred_boxes=Boxes(torch.ones((1, 4))))
         obj = [3, ([5, 6], inst)]
         res, schema = flatten_to_tuple(obj)
         self.assertEqual(res[:3], (3, 5, 6))

@@ -107,9 +107,9 @@ class ROIAlignRotatedTest(unittest.TestCase):
     def test_roi_align_rotated_gradcheck_cpu(self):
         dtype = torch.float64
         device = torch.device("cpu")
-        roi_align_rotated_op = ROIAlignRotated(
-            output_size=(5, 5), spatial_scale=0.5, sampling_ratio=1
-        ).to(dtype=dtype, device=device)
+        roi_align_rotated_op = ROIAlignRotated(output_size=(5, 5), spatial_scale=0.5, sampling_ratio=1).to(
+            dtype=dtype, device=device
+        )
         x = torch.rand(1, 1, 10, 10, dtype=dtype, device=device, requires_grad=True)
         # roi format is (batch index, x_center, y_center, width, height, angle)
         rois = torch.tensor(
@@ -135,13 +135,11 @@ class ROIAlignRotatedTest(unittest.TestCase):
         device = torch.device("cuda")
         pool_h, pool_w = (5, 5)
 
-        roi_align = ROIAlign(output_size=(pool_h, pool_w), spatial_scale=1, sampling_ratio=2).to(
+        roi_align = ROIAlign(output_size=(pool_h, pool_w), spatial_scale=1, sampling_ratio=2).to(device=device)
+
+        roi_align_rotated = ROIAlignRotated(output_size=(pool_h, pool_w), spatial_scale=1, sampling_ratio=2).to(
             device=device
         )
-
-        roi_align_rotated = ROIAlignRotated(
-            output_size=(pool_h, pool_w), spatial_scale=1, sampling_ratio=2
-        ).to(device=device)
 
         x = torch.rand(1, 1, 10, 10, dtype=dtype, device=device, requires_grad=True)
         # x_rotated = x.clone() won't work (will lead to grad_fun=CloneBackward)!
@@ -159,17 +157,13 @@ class ROIAlignRotatedTest(unittest.TestCase):
         s_rotated.backward()
 
         # roi format is (batch index, x1, y1, x2, y2)
-        rois = torch.tensor(
-            [[0, 0, 0, 9, 9], [0, 0, 5, 4, 9], [0, 5, 5, 9, 9]], dtype=dtype, device=device
-        )
+        rois = torch.tensor([[0, 0, 0, 9, 9], [0, 0, 5, 4, 9], [0, 5, 5, 9, 9]], dtype=dtype, device=device)
 
         y = roi_align(x, rois)
         s = y.sum()
         s.backward()
 
-        assert torch.allclose(
-            x.grad, x_rotated.grad
-        ), "gradients for ROIAlign and ROIAlignRotated mismatch on CUDA"
+        assert torch.allclose(x.grad, x_rotated.grad), "gradients for ROIAlign and ROIAlignRotated mismatch on CUDA"
 
 
 if __name__ == "__main__":

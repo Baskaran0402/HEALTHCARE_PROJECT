@@ -162,9 +162,7 @@ class TestInstances(unittest.TestCase):
 
             out = f()(inst, idx)
             out_scripted = script_module(new_instance.from_instances(inst), idx)
-            self.assertTrue(
-                torch.equal(out.proposal_boxes.tensor, out_scripted.proposal_boxes.tensor)
-            )
+            self.assertTrue(torch.equal(out.proposal_boxes.tensor, out_scripted.proposal_boxes.tensor))
             self.assertTrue(torch.equal(out.a, out_scripted.a))
 
     def test_from_to_instances(self):

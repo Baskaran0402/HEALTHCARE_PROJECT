@@ -90,9 +90,9 @@ class ROIAlignRotated(nn.Module):
                 input, rois, self.spatial_scale, output_size[0], output_size[1], self.sampling_ratio
             ).to(dtype=orig_dtype)
 
-        return roi_align_rotated(
-            input, rois, self.output_size, self.spatial_scale, self.sampling_ratio
-        ).to(dtype=orig_dtype)
+        return roi_align_rotated(input, rois, self.output_size, self.spatial_scale, self.sampling_ratio).to(
+            dtype=orig_dtype
+        )
 
     def __repr__(self):
         tmpstr = self.__class__.__name__ + "("

@@ -217,9 +217,7 @@ class ROIHeads(torch.nn.Module):
         return sampled_idxs, gt_classes[sampled_idxs]
 
     @torch.no_grad()
-    def label_and_sample_proposals(
-        self, proposals: List[Instances], targets: List[Instances]
-    ) -> List[Instances]:
+    def label_and_sample_proposals(self, proposals: List[Instances], targets: List[Instances]) -> List[Instances]:
         """
         Prepare some proposals to be used to train the ROI heads.
         It performs box matching between `proposals` and `targets`, and assigns
@@ -263,9 +261,7 @@ class ROIHeads(torch.nn.Module):
         num_bg_samples = []
         for proposals_per_image, targets_per_image in zip(proposals, targets):
             has_gt = len(targets_per_image) > 0
-            match_quality_matrix = pairwise_iou(
-                targets_per_image.gt_boxes, proposals_per_image.proposal_boxes
-            )
+            match_quality_matrix = pairwise_iou(targets_per_image.gt_boxes, proposals_per_image.proposal_boxes)
             matched_idxs, matched_labels = self.proposal_matcher(match_quality_matrix)
             sampled_idxs, gt_classes = self._sample_proposals(
                 matched_idxs, matched_labels, targets_per_image.gt_classes
@@ -407,16 +403,11 @@ class Res5ROIHeads(ROIHeads):
         # Compatbility with old moco code. Might be useful.
         # See notes in StandardROIHeads.from_config
         if not inspect.ismethod(cls._build_res5_block):
-            logger.warning(
-                "The behavior of _build_res5_block may change. "
-                "Please do not depend on private methods."
-            )
+            logger.warning("The behavior of _build_res5_block may change. " "Please do not depend on private methods.")
             cls._build_res5_block = classmethod(cls._build_res5_block)
 
         ret["res5"], out_channels = cls._build_res5_block(cfg)
-        ret["box_predictor"] = FastRCNNOutputLayers(
-            cfg, ShapeSpec(channels=out_channels, height=1, width=1)
-        )
+        ret["box_predictor"] = FastRCNNOutputLayers(cfg, ShapeSpec(channels=out_channels, height=1, width=1))
 
         if mask_on:
             ret["mask_head"] = build_mask_head(
@@ -474,18 +465,14 @@ class Res5ROIHeads(ROIHeads):
         del targets
 
         proposal_boxes = [x.proposal_boxes for x in proposals]
-        box_features = self._shared_roi_transform(
-            [features[f] for f in self.in_features], proposal_boxes
-        )
+        box_features = self._shared_roi_transform([features[f] for f in self.in_features], proposal_boxes)
         predictions = self.box_predictor(box_features.mean(dim=[2, 3]))
 
         if self.training:
             del features
             losses = self.box_predictor.losses(predictions, proposals)
             if self.mask_on:
-                proposals, fg_selection_masks = select_foreground_proposals(
-                    proposals, self.num_classes
-                )
+                proposals, fg_selection_masks = select_foreground_proposals(proposals, self.num_classes)
                 # Since the ROI feature transform is shared between boxes and masks,
                 # we don't need to recompute features. The mask loss is only defined
                 # on foreground proposals, so we need to select out the foreground
@@ -677,9 +664,7 @@ class StandardROIHeads(ROIHeads):
             else None
         )
         if pooler_type:
-            shape = ShapeSpec(
-                channels=in_channels, width=pooler_resolution, height=pooler_resolution
-            )
+            shape = ShapeSpec(channels=in_channels, width=pooler_resolution, height=pooler_resolution)
         else:
             shape = {f: input_shape[f] for f in in_features}
         ret["mask_head"] = build_mask_head(cfg, shape)
@@ -711,9 +696,7 @@ class StandardROIHeads(ROIHeads):
             else None
         )
         if pooler_type:
-            shape = ShapeSpec(
-                channels=in_channels, width=pooler_resolution, height=pooler_resolution
-            )
+            shape = ShapeSpec(channels=in_channels, width=pooler_resolution, height=pooler_resolution)
         else:
             shape = {f: input_shape[f] for f in in_features}
         ret["keypoint_head"] = build_keypoint_head(cfg, shape)
@@ -805,9 +788,7 @@ class StandardROIHeads(ROIHeads):
             # proposals is modified in-place below, so losses must be computed first.
             if self.train_on_pred_boxes:
                 with torch.no_grad():
-                    pred_boxes = self.box_predictor.predict_boxes_for_gt_classes(
-                        predictions, proposals
-                    )
+                    pred_boxes = self.box_predictor.predict_boxes_for_gt_classes(predictions, proposals)
                     for proposals_per_image, pred_boxes_per_image in zip(proposals, pred_boxes):
                         proposals_per_image.proposal_boxes = Boxes(pred_boxes_per_image)
             return losses

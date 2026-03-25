@@ -43,9 +43,7 @@ Naming convention:
 """
 
 
-def fast_rcnn_inference_rotated(
-    boxes, scores, image_shapes, score_thresh, nms_thresh, topk_per_image
-):
+def fast_rcnn_inference_rotated(boxes, scores, image_shapes, score_thresh, nms_thresh, topk_per_image):
     """
     Call `fast_rcnn_inference_single_image_rotated` for all images.
 
@@ -81,9 +79,7 @@ def fast_rcnn_inference_rotated(
 
 
 @torch.no_grad()
-def fast_rcnn_inference_single_image_rotated(
-    boxes, scores, image_shape, score_thresh, nms_thresh, topk_per_image
-):
+def fast_rcnn_inference_single_image_rotated(boxes, scores, image_shape, score_thresh, nms_thresh, topk_per_image):
     """
     Single-image inference. Return rotated bounding-box detection results by thresholding
     on scores and applying rotated non-maximum suppression (Rotated NMS).
@@ -140,9 +136,7 @@ class RotatedFastRCNNOutputLayers(FastRCNNOutputLayers):
     @classmethod
     def from_config(cls, cfg, input_shape):
         args = super().from_config(cfg, input_shape)
-        args["box2box_transform"] = Box2BoxTransformRotated(
-            weights=cfg.MODEL.ROI_BOX_HEAD.BBOX_REG_WEIGHTS
-        )
+        args["box2box_transform"] = Box2BoxTransformRotated(weights=cfg.MODEL.ROI_BOX_HEAD.BBOX_REG_WEIGHTS)
         return args
 
     def inference(self, predictions, proposals):
@@ -178,9 +172,7 @@ class RROIHeads(StandardROIHeads):
         NOTE: this interface is experimental.
         """
         super().__init__(**kwargs)
-        assert (
-            not self.mask_on and not self.keypoint_on
-        ), "Mask/Keypoints not supported in Rotated ROIHeads."
+        assert not self.mask_on and not self.keypoint_on, "Mask/Keypoints not supported in Rotated ROIHeads."
         assert not self.train_on_pred_boxes, "train_on_pred_boxes not implemented for RROIHeads!"
 
     @classmethod
@@ -244,9 +236,7 @@ class RROIHeads(StandardROIHeads):
         num_bg_samples = []
         for proposals_per_image, targets_per_image in zip(proposals, targets):
             has_gt = len(targets_per_image) > 0
-            match_quality_matrix = pairwise_iou_rotated(
-                targets_per_image.gt_boxes, proposals_per_image.proposal_boxes
-            )
+            match_quality_matrix = pairwise_iou_rotated(targets_per_image.gt_boxes, proposals_per_image.proposal_boxes)
             matched_idxs, matched_labels = self.proposal_matcher(match_quality_matrix)
             sampled_idxs, gt_classes = self._sample_proposals(
                 matched_idxs, matched_labels, targets_per_image.gt_classes

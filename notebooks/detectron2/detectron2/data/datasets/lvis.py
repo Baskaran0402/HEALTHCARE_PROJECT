@@ -33,9 +33,7 @@ def register_lvis_instances(name, metadata, json_file, image_root):
         image_root (str or path-like): directory which contains all the images.
     """
     DatasetCatalog.register(name, lambda: load_lvis_json(json_file, image_root, name))
-    MetadataCatalog.get(name).set(
-        json_file=json_file, image_root=image_root, evaluator_type="lvis", **metadata
-    )
+    MetadataCatalog.get(name).set(json_file=json_file, image_root=image_root, evaluator_type="lvis", **metadata)
 
 
 def load_lvis_json(json_file, image_root, dataset_name=None, extra_annotation_keys=None):
@@ -102,18 +100,14 @@ def load_lvis_json(json_file, image_root, dataset_name=None, extra_annotation_ke
 
     # Sanity check that each annotation has a unique id
     ann_ids = [ann["id"] for anns_per_image in anns for ann in anns_per_image]
-    assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique".format(
-        json_file
-    )
+    assert len(set(ann_ids)) == len(ann_ids), "Annotation ids in '{}' are not unique".format(json_file)
 
     imgs_anns = list(zip(imgs, anns))
 
     logger.info("Loaded {} images in the LVIS format from {}".format(len(imgs_anns), json_file))
 
     if extra_annotation_keys:
-        logger.info(
-            "The following extra annotation keys will be loaded: {} ".format(extra_annotation_keys)
-        )
+        logger.info("The following extra annotation keys will be loaded: {} ".format(extra_annotation_keys))
     else:
         extra_annotation_keys = []
 
@@ -151,9 +145,7 @@ def load_lvis_json(json_file, image_root, dataset_name=None, extra_annotation_ke
             segm = anno["segmentation"]  # list[list[float]]
             # filter out invalid polygons (< 3 points)
             valid_segm = [poly for poly in segm if len(poly) % 2 == 0 and len(poly) >= 6]
-            assert len(segm) == len(
-                valid_segm
-            ), "Annotation contains an invalid polygon with < 3 points"
+            assert len(segm) == len(valid_segm), "Annotation contains an invalid polygon with < 3 points"
             assert len(segm) > 0
             obj["segmentation"] = segm
             for extra_ann_key in extra_annotation_keys:
@@ -187,9 +179,7 @@ def get_lvis_instances_meta(dataset_name):
 def _get_lvis_instances_meta_v0_5():
     assert len(LVIS_V0_5_CATEGORIES) == 1230
     cat_ids = [k["id"] for k in LVIS_V0_5_CATEGORIES]
-    assert min(cat_ids) == 1 and max(cat_ids) == len(
-        cat_ids
-    ), "Category ids are not in [1, #categories], as expected"
+    assert min(cat_ids) == 1 and max(cat_ids) == len(cat_ids), "Category ids are not in [1, #categories], as expected"
     # Ensure that the category list is sorted by id
     lvis_categories = sorted(LVIS_V0_5_CATEGORIES, key=lambda x: x["id"])
     thing_classes = [k["synonyms"][0] for k in lvis_categories]
@@ -200,9 +190,7 @@ def _get_lvis_instances_meta_v0_5():
 def _get_lvis_instances_meta_v1():
     assert len(LVIS_V1_CATEGORIES) == 1203
     cat_ids = [k["id"] for k in LVIS_V1_CATEGORIES]
-    assert min(cat_ids) == 1 and max(cat_ids) == len(
-        cat_ids
-    ), "Category ids are not in [1, #categories], as expected"
+    assert min(cat_ids) == 1 and max(cat_ids) == len(cat_ids), "Category ids are not in [1, #categories], as expected"
     # Ensure that the category list is sorted by id
     lvis_categories = sorted(LVIS_V1_CATEGORIES, key=lambda x: x["id"])
     thing_classes = [k["synonyms"][0] for k in lvis_categories]

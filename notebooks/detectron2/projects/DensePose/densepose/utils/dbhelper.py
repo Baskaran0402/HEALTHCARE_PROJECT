@@ -80,9 +80,7 @@ class FieldEntrySelector(EntrySelector):
             self.vmax = vmax
 
         def __call__(self, entry):
-            return (entry[self.name] >= self.type(self.vmin)) and (
-                entry[self.name] <= self.type(self.vmax)
-            )
+            return (entry[self.name] >= self.type(self.vmin)) and (entry[self.name] <= self.type(self.vmax))
 
     def __init__(self, spec: str):
         self._predicates = self._parse_specifier_into_predicates(spec)
@@ -104,9 +102,7 @@ class FieldEntrySelector(EntrySelector):
                 field_value_or_range = subspec[eq_idx + 1 :]
                 if self._is_range_spec(field_value_or_range):
                     vmin, vmax = self._get_range_spec(field_value_or_range)
-                    predicate = FieldEntrySelector._FieldEntryRangePredicate(
-                        field_name, field_type, vmin, vmax
-                    )
+                    predicate = FieldEntrySelector._FieldEntryRangePredicate(field_name, field_type, vmin, vmax)
                 else:
                     predicate = FieldEntrySelector._FieldEntryValuePredicate(
                         field_name, field_type, field_value_or_range

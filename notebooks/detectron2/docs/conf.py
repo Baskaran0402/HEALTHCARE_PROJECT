@@ -236,9 +236,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
-latex_documents = [
-    (master_doc, "detectron2.tex", "detectron2 Documentation", "detectron2 contributors", "manual")
-]
+latex_documents = [(master_doc, "detectron2.tex", "detectron2 Documentation", "detectron2 contributors", "manual")]
 
 
 # -- Options for manual page output ------------------------------------------
@@ -295,9 +293,7 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
         "add_export_config",
     }
     try:
-        if name in HIDDEN or (
-            hasattr(obj, "__doc__") and obj.__doc__.lower().strip().startswith("deprecated")
-        ):
+        if name in HIDDEN or (hasattr(obj, "__doc__") and obj.__doc__.lower().strip().startswith("deprecated")):
             print("Skipping deprecated object: {}".format(name))
             return True
     except:

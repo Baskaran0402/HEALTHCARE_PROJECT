@@ -12,6 +12,7 @@ few common configuration parameters currently defined in "configs/common/train.p
 To add more complicated training logic, you can easily add other configs
 in the config file and implement a new train_net.py to handle them.
 """
+
 import logging
 
 from detectron2.checkpoint import DetectionCheckpointer
@@ -83,11 +84,7 @@ def do_train(args, cfg):
         [
             hooks.IterationTimer(),
             hooks.LRScheduler(scheduler=instantiate(cfg.lr_multiplier)),
-            (
-                hooks.PeriodicCheckpointer(checkpointer, **cfg.train.checkpointer)
-                if comm.is_main_process()
-                else None
-            ),
+            (hooks.PeriodicCheckpointer(checkpointer, **cfg.train.checkpointer) if comm.is_main_process() else None),
             hooks.EvalHook(cfg.train.eval_period, lambda: do_test(cfg, model)),
             (
                 hooks.PeriodicWriter(

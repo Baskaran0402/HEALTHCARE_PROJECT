@@ -42,9 +42,7 @@ class CityscapesEvaluator(DatasetEvaluator):
         self._temp_dir = comm.all_gather(self._temp_dir)[0]
         if self._temp_dir != self._working_dir.name:
             self._working_dir.cleanup()
-        self._logger.info(
-            "Writing cityscapes results to temporary directory {} ...".format(self._temp_dir)
-        )
+        self._logger.info("Writing cityscapes results to temporary directory {} ...".format(self._temp_dir))
 
 
 class CityscapesInstanceEvaluator(CityscapesEvaluator):
@@ -75,14 +73,10 @@ class CityscapesInstanceEvaluator(CityscapesEvaluator):
                         class_id = name2label[classes].id
                         score = output.scores[i]
                         mask = output.pred_masks[i].numpy().astype("uint8")
-                        png_filename = os.path.join(
-                            self._temp_dir, basename + "_{}_{}.png".format(i, classes)
-                        )
+                        png_filename = os.path.join(self._temp_dir, basename + "_{}_{}.png".format(i, classes))
 
                         Image.fromarray(mask * 255).save(png_filename)
-                        fout.write(
-                            "{} {} {}\n".format(os.path.basename(png_filename), class_id, score)
-                        )
+                        fout.write("{} {} {}\n".format(os.path.basename(png_filename), class_id, score))
             else:
                 # Cityscapes requires a prediction file for every ground truth image.
                 with open(pred_txt, "w") as fout:
@@ -119,9 +113,9 @@ class CityscapesInstanceEvaluator(CityscapesEvaluator):
         predictionImgList = []
         for gt in groundTruthImgList:
             predictionImgList.append(cityscapes_eval.getPrediction(gt, cityscapes_eval.args))
-        results = cityscapes_eval.evaluateImgLists(
-            predictionImgList, groundTruthImgList, cityscapes_eval.args
-        )["averages"]
+        results = cityscapes_eval.evaluateImgLists(predictionImgList, groundTruthImgList, cityscapes_eval.args)[
+            "averages"
+        ]
 
         ret = OrderedDict()
         ret["segm"] = {"AP": results["allAp"] * 100, "AP50": results["allAp50%"] * 100}
@@ -185,9 +179,7 @@ class CityscapesSemSegEvaluator(CityscapesEvaluator):
         predictionImgList = []
         for gt in groundTruthImgList:
             predictionImgList.append(cityscapes_eval.getPrediction(cityscapes_eval.args, gt))
-        results = cityscapes_eval.evaluateImgLists(
-            predictionImgList, groundTruthImgList, cityscapes_eval.args
-        )
+        results = cityscapes_eval.evaluateImgLists(predictionImgList, groundTruthImgList, cityscapes_eval.args)
         ret = OrderedDict()
         ret["sem_seg"] = {
             "IoU": 100.0 * results["averageScoreClasses"],

@@ -36,9 +36,7 @@ class BufferList(nn.Module):
         return iter(self._buffers.values())
 
 
-def _create_grid_offsets(
-    size: List[int], stride: int, offset: float, target_device_tensor: torch.Tensor
-):
+def _create_grid_offsets(size: List[int], stride: int, offset: float, target_device_tensor: torch.Tensor):
     grid_height, grid_width = size
     shifts_x = move_device_like(
         torch.arange(offset * stride, grid_width * stride, step=stride, dtype=torch.float32),
@@ -67,9 +65,7 @@ def _broadcast_params(params, num_features, name):
     Returns:
         list[list[float]]: param for each feature
     """
-    assert isinstance(
-        params, collections.abc.Sequence
-    ), f"{name} in anchor generator has to be a list! Got {params}."
+    assert isinstance(params, collections.abc.Sequence), f"{name} in anchor generator has to be a list! Got {params}."
     assert len(params), f"{name} in anchor generator cannot be empty!"
     if not isinstance(params[0], collections.abc.Sequence):  # params is list[float]
         return [params] * num_features
@@ -134,9 +130,7 @@ class DefaultAnchorGenerator(nn.Module):
         }
 
     def _calculate_anchors(self, sizes, aspect_ratios):
-        cell_anchors = [
-            self.generate_cell_anchors(s, a).float() for s, a in zip(sizes, aspect_ratios)
-        ]
+        cell_anchors = [self.generate_cell_anchors(s, a).float() for s, a in zip(sizes, aspect_ratios)]
         return BufferList(cell_anchors)
 
     @property

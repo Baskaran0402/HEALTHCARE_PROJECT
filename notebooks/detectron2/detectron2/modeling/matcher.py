@@ -22,9 +22,7 @@ class Matcher:
     (b) a vector of length N containing the labels for each prediction.
     """
 
-    def __init__(
-        self, thresholds: List[float], labels: List[int], allow_low_quality_matches: bool = False
-    ):
+    def __init__(self, thresholds: List[float], labels: List[int], allow_low_quality_matches: bool = False):
         """
         Args:
             thresholds (list): a list of thresholds used to stratify predictions
@@ -75,9 +73,7 @@ class Matcher:
         """
         assert match_quality_matrix.dim() == 2
         if match_quality_matrix.numel() == 0:
-            default_matches = match_quality_matrix.new_full(
-                (match_quality_matrix.size(1),), 0, dtype=torch.int64
-            )
+            default_matches = match_quality_matrix.new_full((match_quality_matrix.size(1),), 0, dtype=torch.int64)
             # When no gt boxes exist, we define IOU = 0 and therefore set labels
             # to `self.labels[0]`, which usually defaults to background class 0
             # To choose to ignore instead, can make labels=[-1,0,-1,1] + set appropriate thresholds
@@ -118,9 +114,7 @@ class Matcher:
         # Find the highest quality match available, even if it is low, including ties.
         # Note that the matches qualities must be positive due to the use of
         # `torch.nonzero`.
-        _, pred_inds_with_highest_quality = nonzero_tuple(
-            match_quality_matrix == highest_quality_foreach_gt[:, None]
-        )
+        _, pred_inds_with_highest_quality = nonzero_tuple(match_quality_matrix == highest_quality_foreach_gt[:, None])
         # If an anchor was labeled positive only due to a low-quality match
         # with gt_A, but it has larger overlap with gt_B, it's matched index will still be gt_B.
         # This follows the implementation in Detectron, and is found to have no significant impact.

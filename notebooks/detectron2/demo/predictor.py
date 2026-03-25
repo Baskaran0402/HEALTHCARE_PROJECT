@@ -21,9 +21,7 @@ class VisualizationDemo:
             parallel (bool): whether to run the model in different processes from visualization.
                 Useful since the visualization logic can be slow.
         """
-        self.metadata = MetadataCatalog.get(
-            cfg.DATASETS.TEST[0] if len(cfg.DATASETS.TEST) else "__unused"
-        )
+        self.metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0] if len(cfg.DATASETS.TEST) else "__unused")
         self.cpu_device = torch.device("cpu")
         self.instance_mode = instance_mode
 
@@ -51,14 +49,10 @@ class VisualizationDemo:
         visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)
         if "panoptic_seg" in predictions:
             panoptic_seg, segments_info = predictions["panoptic_seg"]
-            vis_output = visualizer.draw_panoptic_seg_predictions(
-                panoptic_seg.to(self.cpu_device), segments_info
-            )
+            vis_output = visualizer.draw_panoptic_seg_predictions(panoptic_seg.to(self.cpu_device), segments_info)
         else:
             if "sem_seg" in predictions:
-                vis_output = visualizer.draw_sem_seg(
-                    predictions["sem_seg"].argmax(dim=0).to(self.cpu_device)
-                )
+                vis_output = visualizer.draw_sem_seg(predictions["sem_seg"].argmax(dim=0).to(self.cpu_device))
             if "instances" in predictions:
                 instances = predictions["instances"].to(self.cpu_device)
                 vis_output = visualizer.draw_instance_predictions(predictions=instances)
@@ -171,9 +165,7 @@ class AsyncPredictor:
             cfg = cfg.clone()
             cfg.defrost()
             cfg.MODEL.DEVICE = "cuda:{}".format(gpuid) if num_gpus > 0 else "cpu"
-            self.procs.append(
-                AsyncPredictor._PredictWorker(cfg, self.task_queue, self.result_queue)
-            )
+            self.procs.append(AsyncPredictor._PredictWorker(cfg, self.task_queue, self.result_queue))
 
         self.put_idx = 0
         self.get_idx = 0

@@ -5,7 +5,6 @@ from torch.nn import functional as F
 from detectron2.layers import cat, shapes_to_tensor
 from detectron2.structures import BitMasks, Boxes
 
-
 """
 Shape shorthand in this module:
 
@@ -102,9 +101,7 @@ def get_uncertain_point_coords_with_randomness(
     idx = torch.topk(point_uncertainties[:, 0, :], k=num_uncertain_points, dim=1)[1]
     shift = num_sampled * torch.arange(num_boxes, dtype=torch.long, device=coarse_logits.device)
     idx += shift[:, None]
-    point_coords = point_coords.view(-1, 2)[idx.view(-1), :].view(
-        num_boxes, num_uncertain_points, 2
-    )
+    point_coords = point_coords.view(-1, 2)[idx.view(-1), :].view(num_boxes, num_uncertain_points, 2)
     if num_random_points > 0:
         point_coords = cat(
             [
@@ -233,9 +230,7 @@ def sample_point_labels(instances, point_coords):
     """
     with torch.no_grad():
         gt_mask_logits = []
-        point_coords_splits = torch.split(
-            point_coords, [len(instances_per_image) for instances_per_image in instances]
-        )
+        point_coords_splits = torch.split(point_coords, [len(instances_per_image) for instances_per_image in instances])
         for i, instances_per_image in enumerate(instances):
             if len(instances_per_image) == 0:
                 continue

@@ -61,10 +61,7 @@ class DensePoseChartConfidencePredictorMixin:
                 self.sigma_2_lowres = ConvTranspose2d(  # pyre-ignore[16]
                     dim_in, dim_out_patches, kernel_size, stride=2, padding=int(kernel_size / 2 - 1)
                 )
-            elif (
-                self.confidence_model_cfg.uv_confidence.type
-                == DensePoseUVConfidenceType.INDEP_ANISO
-            ):
+            elif self.confidence_model_cfg.uv_confidence.type == DensePoseUVConfidenceType.INDEP_ANISO:
                 self.sigma_2_lowres = ConvTranspose2d(
                     dim_in, dim_out_patches, kernel_size, stride=2, padding=int(kernel_size / 2 - 1)
                 )
@@ -76,8 +73,7 @@ class DensePoseChartConfidencePredictorMixin:
                 )
             else:
                 raise ValueError(
-                    f"Unknown confidence model type: "
-                    f"{self.confidence_model_cfg.confidence_model_type}"
+                    f"Unknown confidence model type: " f"{self.confidence_model_cfg.confidence_model_type}"
                 )
         if self.confidence_model_cfg.segm_confidence.enabled:
             self.fine_segm_confidence_lowres = ConvTranspose2d(  # pyre-ignore[16]
@@ -109,37 +105,27 @@ class DensePoseChartConfidencePredictorMixin:
             if self.confidence_model_cfg.uv_confidence.type == DensePoseUVConfidenceType.IID_ISO:
                 # assuming base class defines interp2d method for bilinear interpolation
                 output.sigma_2 = self.interp2d(self.sigma_2_lowres(head_outputs))  # pyre-ignore[16]
-            elif (
-                self.confidence_model_cfg.uv_confidence.type
-                == DensePoseUVConfidenceType.INDEP_ANISO
-            ):
+            elif self.confidence_model_cfg.uv_confidence.type == DensePoseUVConfidenceType.INDEP_ANISO:
                 # assuming base class defines interp2d method for bilinear interpolation
                 output.sigma_2 = self.interp2d(self.sigma_2_lowres(head_outputs))
                 output.kappa_u = self.interp2d(self.kappa_u_lowres(head_outputs))  # pyre-ignore[16]
                 output.kappa_v = self.interp2d(self.kappa_v_lowres(head_outputs))  # pyre-ignore[16]
             else:
                 raise ValueError(
-                    f"Unknown confidence model type: "
-                    f"{self.confidence_model_cfg.confidence_model_type}"
+                    f"Unknown confidence model type: " f"{self.confidence_model_cfg.confidence_model_type}"
                 )
         if self.confidence_model_cfg.segm_confidence.enabled:
             # base predictor outputs are assumed to have `fine_segm` and `coarse_segm` attributes
             # base predictor is assumed to define `interp2d` method for bilinear interpolation
             output.fine_segm_confidence = (
-                F.softplus(
-                    self.interp2d(self.fine_segm_confidence_lowres(head_outputs))  # pyre-ignore[16]
-                )
+                F.softplus(self.interp2d(self.fine_segm_confidence_lowres(head_outputs)))  # pyre-ignore[16]
                 + self.confidence_model_cfg.segm_confidence.epsilon
             )
             output.fine_segm = base_predictor_outputs.fine_segm * torch.repeat_interleave(
                 output.fine_segm_confidence, base_predictor_outputs.fine_segm.shape[1], dim=1
             )
             output.coarse_segm_confidence = (
-                F.softplus(
-                    self.interp2d(
-                        self.coarse_segm_confidence_lowres(head_outputs)  # pyre-ignore[16]
-                    )
-                )
+                F.softplus(self.interp2d(self.coarse_segm_confidence_lowres(head_outputs)))  # pyre-ignore[16]
                 + self.confidence_model_cfg.segm_confidence.epsilon
             )
             output.coarse_segm = base_predictor_outputs.coarse_segm * torch.repeat_interleave(

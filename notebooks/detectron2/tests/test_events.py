@@ -15,9 +15,7 @@ from detectron2.utils.events import (
 
 class TestEventWriter(unittest.TestCase):
     def testScalar(self):
-        with tempfile.TemporaryDirectory(
-            prefix="detectron2_tests"
-        ) as dir, EventStorage() as storage:
+        with tempfile.TemporaryDirectory(prefix="detectron2_tests") as dir, EventStorage() as storage:
             json_file = os.path.join(dir, "test.json")
             writer = JSONWriter(json_file)
             for k in range(60):
@@ -31,9 +29,7 @@ class TestEventWriter(unittest.TestCase):
                 self.assertTrue([int(k["key"]) for k in data] == [19, 39, 59])
 
     def testScalarMismatchedPeriod(self):
-        with tempfile.TemporaryDirectory(
-            prefix="detectron2_tests"
-        ) as dir, EventStorage() as storage:
+        with tempfile.TemporaryDirectory(prefix="detectron2_tests") as dir, EventStorage() as storage:
             json_file = os.path.join(dir, "test.json")
 
             writer = JSONWriter(json_file)
@@ -90,9 +86,7 @@ class TestEventWriter(unittest.TestCase):
             self.assertIn("[metric]bn_stat", logs.output[0])
 
     def testSmoothingWithWindowSize(self):
-        with tempfile.TemporaryDirectory(
-            prefix="detectron2_tests"
-        ) as dir, EventStorage() as storage:
+        with tempfile.TemporaryDirectory(prefix="detectron2_tests") as dir, EventStorage() as storage:
             json_file = os.path.join(dir, "test.json")
             writer = JSONWriter(json_file, window_size=10)
             for k in range(20):

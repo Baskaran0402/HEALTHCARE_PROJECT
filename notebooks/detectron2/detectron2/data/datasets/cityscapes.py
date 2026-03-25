@@ -65,8 +65,7 @@ def load_cityscapes_instances(image_dir, gt_dir, from_json=True, to_polygons=Tru
     """
     if from_json:
         assert to_polygons, (
-            "Cityscapes's json annotations are in polygon format. "
-            "Converting to mask format is not supported now."
+            "Cityscapes's json annotations are in polygon format. " "Converting to mask format is not supported now."
         )
     files = _get_cityscapes_files(image_dir, gt_dir)
 
@@ -221,7 +220,7 @@ def _cityscapes_files_to_dict(files, from_json, to_polygons):
                 # codebase support holes in polygons.
                 poly_coord.append(list(chain(*poly_el.exterior.coords)))
             anno["segmentation"] = poly_coord
-            (xmin, ymin, xmax, ymax) = poly_wo_overlaps.bounds
+            xmin, ymin, xmax, ymax = poly_wo_overlaps.bounds
 
             anno["bbox"] = (xmin, ymin, xmax, ymax)
             anno["bbox_mode"] = BoxMode.XYXY_ABS
@@ -266,9 +265,7 @@ def _cityscapes_files_to_dict(files, from_json, to_polygons):
             if to_polygons:
                 # This conversion comes from D4809743 and D5171122,
                 # when Mask-RCNN was first developed.
-                contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[
-                    -2
-                ]
+                contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)[-2]
                 polygons = [c.reshape(-1).tolist() for c in contours if len(c) >= 3]
                 # opencv's can produce invalid polygons
                 if len(polygons) == 0:
@@ -307,9 +304,7 @@ def main() -> None:
     os.makedirs(dirname, exist_ok=True)
 
     if args.type == "instance":
-        dicts = load_cityscapes_instances(
-            args.image_dir, args.gt_dir, from_json=True, to_polygons=True
-        )
+        dicts = load_cityscapes_instances(args.image_dir, args.gt_dir, from_json=True, to_polygons=True)
         logger.info("Done loading {} samples.".format(len(dicts)))
 
         thing_classes = [k.name for k in labels if k.hasInstances and not k.ignoreInEval]

@@ -181,12 +181,8 @@ class TestCseAnnotationsAccumulator(unittest.TestCase):
         data_idx = 0
         pt_offset = 0
         if packed_anns is not None:
-            bbox_xyxy_gt = BoxMode.convert(
-                packed_anns.bbox_xywh_gt.clone(), BoxMode.XYWH_ABS, BoxMode.XYXY_ABS
-            )
-            bbox_xyxy_est = BoxMode.convert(
-                packed_anns.bbox_xywh_est.clone(), BoxMode.XYWH_ABS, BoxMode.XYXY_ABS
-            )
+            bbox_xyxy_gt = BoxMode.convert(packed_anns.bbox_xywh_gt.clone(), BoxMode.XYWH_ABS, BoxMode.XYXY_ABS)
+            bbox_xyxy_est = BoxMode.convert(packed_anns.bbox_xywh_est.clone(), BoxMode.XYWH_ABS, BoxMode.XYXY_ABS)
         for instances in instances_lst:
             if not hasattr(instances, "gt_densepose"):
                 instance_idx += len(instances)
@@ -196,12 +192,8 @@ class TestCseAnnotationsAccumulator(unittest.TestCase):
                     instance_idx += 1
                     continue
                 n_pts = len(dp_data.x)
-                self.assertTrue(
-                    torch.allclose(dp_data.x, packed_anns.x_gt[pt_offset : pt_offset + n_pts])
-                )
-                self.assertTrue(
-                    torch.allclose(dp_data.y, packed_anns.y_gt[pt_offset : pt_offset + n_pts])
-                )
+                self.assertTrue(torch.allclose(dp_data.x, packed_anns.x_gt[pt_offset : pt_offset + n_pts]))
+                self.assertTrue(torch.allclose(dp_data.y, packed_anns.y_gt[pt_offset : pt_offset + n_pts]))
                 self.assertTrue(torch.allclose(dp_data.segm, packed_anns.coarse_segm_gt[data_idx]))
                 self.assertTrue(
                     torch.allclose(
@@ -210,16 +202,10 @@ class TestCseAnnotationsAccumulator(unittest.TestCase):
                     )
                 )
                 self.assertTrue(
-                    torch.allclose(
-                        dp_data.vertex_ids, packed_anns.vertex_ids_gt[pt_offset : pt_offset + n_pts]
-                    )
+                    torch.allclose(dp_data.vertex_ids, packed_anns.vertex_ids_gt[pt_offset : pt_offset + n_pts])
                 )
-                self.assertTrue(
-                    torch.allclose(instances.gt_boxes.tensor[i], bbox_xyxy_gt[data_idx])
-                )
-                self.assertTrue(
-                    torch.allclose(instances.proposal_boxes.tensor[i], bbox_xyxy_est[data_idx])
-                )
+                self.assertTrue(torch.allclose(instances.gt_boxes.tensor[i], bbox_xyxy_gt[data_idx]))
+                self.assertTrue(torch.allclose(instances.proposal_boxes.tensor[i], bbox_xyxy_est[data_idx]))
                 self.assertTrue(
                     torch.allclose(
                         torch.ones(n_pts, dtype=torch.long) * data_idx,

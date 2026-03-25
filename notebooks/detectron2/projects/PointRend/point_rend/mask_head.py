@@ -43,9 +43,7 @@ def calculate_uncertainty(logits, classes):
     if logits.shape[1] == 1:
         gt_class_logits = logits.clone()
     else:
-        gt_class_logits = logits[
-            torch.arange(logits.shape[0], device=logits.device), classes
-        ].unsqueeze(1)
+        gt_class_logits = logits[torch.arange(logits.shape[0], device=logits.device), classes].unsqueeze(1)
     return -(torch.abs(gt_class_logits))
 
 
@@ -59,9 +57,7 @@ class ConvFCHead(nn.Module):
     _version = 2
 
     @configurable
-    def __init__(
-        self, input_shape: ShapeSpec, *, conv_dim: int, fc_dims: List[int], output_shape: Tuple[int]
-    ):
+    def __init__(self, input_shape: ShapeSpec, *, conv_dim: int, fc_dims: List[int], output_shape: Tuple[int]):
         """
         Args:
             conv_dim: the output dimension of the conv layers
@@ -151,10 +147,7 @@ class ConvFCHead(nn.Module):
 
         if version is None or version < 2:
             logger = logging.getLogger(__name__)
-            logger.warning(
-                "Weight format of PointRend models have changed! "
-                "Applying automatic conversion now ..."
-            )
+            logger.warning("Weight format of PointRend models have changed! " "Applying automatic conversion now ...")
             for k in list(state_dict.keys()):
                 newk = k
                 if k.startswith(prefix + "coarse_mask_fc"):
@@ -209,10 +202,7 @@ class PointRendMaskHead(nn.Module):
 
         # An optimization to skip unused subdivision steps: if after subdivision, all pixels on
         # the mask will be selected and recomputed anyway, we should just double our init_resolution
-        while (
-            4 * self.mask_point_subdivision_init_resolution**2
-            <= self.mask_point_subdivision_num_points
-        ):
+        while 4 * self.mask_point_subdivision_init_resolution**2 <= self.mask_point_subdivision_num_points:
             self.mask_point_subdivision_init_resolution *= 2
             self.mask_point_subdivision_steps -= 1
 
@@ -232,9 +222,7 @@ class PointRendMaskHead(nn.Module):
 
             point_coords, point_labels = self._sample_train_points(coarse_mask, instances)
             point_fine_grained_features = self._point_pooler(features, proposal_boxes, point_coords)
-            point_logits = self._get_point_logits(
-                point_fine_grained_features, point_coords, coarse_mask
-            )
+            point_logits = self._get_point_logits(point_fine_grained_features, point_coords, coarse_mask)
             losses["loss_mask_point"] = roi_mask_point_loss(point_logits, instances, point_labels)
             return losses
         else:
@@ -261,9 +249,7 @@ class PointRendMaskHead(nn.Module):
         point_coords = generate_regular_grid_point_coords(num_boxes, output_size, boxes[0].device)
         # For regular grids of points, this function is equivalent to `len(features_list)' calls
         # of `ROIAlign` (with `SAMPLING_RATIO=1`), and concat the results.
-        roi_features, _ = point_sample_fine_grained_features(
-            features_list, features_scales, boxes, point_coords
-        )
+        roi_features, _ = point_sample_fine_grained_features(features_list, features_scales, boxes, point_coords)
         return roi_features.view(num_boxes, roi_features.shape[1], output_size, output_size)
 
     def _sample_train_points(self, coarse_mask, instances):
@@ -319,9 +305,7 @@ class PointRendMaskHead(nn.Module):
                     pred_boxes[0].device,
                 )
             else:
-                mask_logits = interpolate(
-                    mask_logits, scale_factor=2, mode="bilinear", align_corners=False
-                )
+                mask_logits = interpolate(mask_logits, scale_factor=2, mode="bilinear", align_corners=False)
                 uncertainty_map = calculate_uncertainty(mask_logits, pred_classes)
                 point_indices, point_coords = get_uncertain_point_coords_on_grid(
                     uncertainty_map, self.mask_point_subdivision_num_points
@@ -329,9 +313,7 @@ class PointRendMaskHead(nn.Module):
 
             # Run the point head for every point in point_coords
             fine_grained_features = self._point_pooler(features, pred_boxes, point_coords)
-            point_logits = self._get_point_logits(
-                fine_grained_features, point_coords, mask_representations
-            )
+            point_logits = self._get_point_logits(fine_grained_features, point_coords, mask_representations)
 
             if mask_logits is None:
                 # Create initial mask_logits using point_logits on this regular grid
@@ -350,11 +332,7 @@ class PointRendMaskHead(nn.Module):
                 # Put point predictions to the right places on the upsampled grid.
                 R, C, H, W = mask_logits.shape
                 point_indices = point_indices.unsqueeze(1).expand(-1, C, -1)
-                mask_logits = (
-                    mask_logits.reshape(R, C, H * W)
-                    .scatter_(2, point_indices, point_logits)
-                    .view(R, C, H, W)
-                )
+                mask_logits = mask_logits.reshape(R, C, H * W).scatter_(2, point_indices, point_logits).view(R, C, H, W)
         mask_rcnn_inference(mask_logits, instances)
         return instances
 
@@ -385,12 +363,9 @@ class ImplicitPointRendMaskHead(PointRendMaskHead):
         self.num_params = self.point_head.num_params
 
         # inference parameters
-        self.mask_point_subdivision_init_resolution = int(
-            math.sqrt(self.mask_point_subdivision_num_points)
-        )
+        self.mask_point_subdivision_init_resolution = int(math.sqrt(self.mask_point_subdivision_num_points))
         assert (
-            self.mask_point_subdivision_init_resolution
-            * self.mask_point_subdivision_init_resolution
+            self.mask_point_subdivision_init_resolution * self.mask_point_subdivision_init_resolution
             == self.mask_point_subdivision_num_points
         )
 
@@ -408,9 +383,7 @@ class ImplicitPointRendMaskHead(PointRendMaskHead):
 
             point_coords, point_labels = self._uniform_sample_train_points(instances)
             point_fine_grained_features = self._point_pooler(features, proposal_boxes, point_coords)
-            point_logits = self._get_point_logits(
-                point_fine_grained_features, point_coords, parameters
-            )
+            point_logits = self._get_point_logits(point_fine_grained_features, point_coords, parameters)
             losses["loss_mask_point"] = roi_mask_point_loss(point_logits, instances, point_labels)
             return losses
         else:
@@ -423,9 +396,7 @@ class ImplicitPointRendMaskHead(PointRendMaskHead):
         proposal_boxes = [x.proposal_boxes for x in instances]
         cat_boxes = Boxes.cat(proposal_boxes)
         # uniform sample
-        point_coords = torch.rand(
-            len(cat_boxes), self.mask_point_train_num_points, 2, device=cat_boxes.tensor.device
-        )
+        point_coords = torch.rand(len(cat_boxes), self.mask_point_train_num_points, 2, device=cat_boxes.tensor.device)
         # sample point_labels
         point_coords_wrt_image = get_point_coords_wrt_image(cat_boxes.tensor, point_coords)
         point_labels = sample_point_labels(instances, point_coords_wrt_image)

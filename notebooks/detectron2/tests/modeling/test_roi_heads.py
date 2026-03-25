@@ -86,9 +86,7 @@ class ROIHeadsTest(unittest.TestCase):
         )
         self.assertTrue(
             succ,
-            "Losses has changed! New losses: {}".format(
-                {k: v.item() for k, v in detector_losses.items()}
-            ),
+            "Losses has changed! New losses: {}".format({k: v.item() for k, v in detector_losses.items()}),
         )
 
     def test_rroi_heads(self):
@@ -142,18 +140,14 @@ class ROIHeadsTest(unittest.TestCase):
         )
         self.assertTrue(
             succ,
-            "Losses has changed! New losses: {}".format(
-                {k: v.item() for k, v in detector_losses.items()}
-            ),
+            "Losses has changed! New losses: {}".format({k: v.item() for k, v in detector_losses.items()}),
         )
 
     def test_box_head_scriptability(self):
         input_shape = ShapeSpec(channels=1024, height=14, width=14)
         box_features = torch.randn(4, 1024, 14, 14)
 
-        box_head = FastRCNNConvFCHead(
-            input_shape, conv_dims=[512, 512], fc_dims=[1024, 1024]
-        ).eval()
+        box_head = FastRCNNConvFCHead(input_shape, conv_dims=[512, 512], fc_dims=[1024, 1024]).eval()
         script_box_head = torch.jit.script(box_head)
 
         origin_output = box_head(box_features)
@@ -172,9 +166,7 @@ class ROIHeadsTest(unittest.TestCase):
         pred_classes1 = torch.tensor([4], dtype=torch.int64)
         pred_instance1.pred_classes = pred_classes1
 
-        mask_head = MaskRCNNConvUpsampleHead(
-            input_shape, num_classes=80, conv_dims=[256, 256]
-        ).eval()
+        mask_head = MaskRCNNConvUpsampleHead(input_shape, num_classes=80, conv_dims=[256, 256]).eval()
         # pred_instance will be in-place changed during the inference
         # process of `MaskRCNNConvUpsampleHead`
         origin_outputs = mask_head(mask_features, deepcopy([pred_instance0, pred_instance1]))
@@ -201,12 +193,8 @@ class ROIHeadsTest(unittest.TestCase):
         pred_instance1 = Instances(image_shapes[1])
         pred_instance1.pred_boxes = Boxes(pred_boxes1)
 
-        keypoint_head = KRCNNConvDeconvUpsampleHead(
-            input_shape, num_keypoints=17, conv_dims=[512, 512]
-        ).eval()
-        origin_outputs = keypoint_head(
-            keypoint_features, deepcopy([pred_instance0, pred_instance1])
-        )
+        keypoint_head = KRCNNConvDeconvUpsampleHead(input_shape, num_keypoints=17, conv_dims=[512, 512]).eval()
+        origin_outputs = keypoint_head(keypoint_features, deepcopy([pred_instance0, pred_instance1]))
 
         fields = {
             "pred_boxes": Boxes,
@@ -217,9 +205,7 @@ class ROIHeadsTest(unittest.TestCase):
             script_keypoint_head = torch.jit.script(keypoint_head)
             pred_instance0 = NewInstances.from_instances(pred_instance0)
             pred_instance1 = NewInstances.from_instances(pred_instance1)
-            script_outputs = script_keypoint_head(
-                keypoint_features, [pred_instance0, pred_instance1]
-            )
+            script_outputs = script_keypoint_head(keypoint_features, [pred_instance0, pred_instance1])
 
         for origin_ins, script_ins in zip(origin_outputs, script_outputs):
             assert_instances_allclose(origin_ins, script_ins, rtol=0)

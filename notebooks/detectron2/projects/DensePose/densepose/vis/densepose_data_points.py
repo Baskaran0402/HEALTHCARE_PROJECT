@@ -61,9 +61,7 @@ class DensePoseDataPointsVisualizer:
             else:
                 v = self.densepose_data_to_value_fn(densepose_data)
                 img_colors_bgr = cv2.applyColorMap(v, self.cmap)
-                colors_bgr = [
-                    [int(v) for v in img_color_bgr.ravel()] for img_color_bgr in img_colors_bgr
-                ]
+                colors_bgr = [[int(v) for v in img_color_bgr.ravel()] for img_color_bgr in img_colors_bgr]
                 image_bgr = self.points_visualizer.visualize(image_bgr, pts_xy, colors_bgr)
         return image_bgr
 

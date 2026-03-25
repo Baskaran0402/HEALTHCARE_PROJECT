@@ -50,9 +50,7 @@ def assign_boxes_to_levels(
     """
     box_sizes = torch.sqrt(cat([boxes.area() for boxes in box_lists]))
     # Eqn.(1) in FPN paper
-    level_assignments = torch.floor(
-        canonical_level + torch.log2(box_sizes / canonical_box_size + 1e-8)
-    )
+    level_assignments = torch.floor(canonical_level + torch.log2(box_sizes / canonical_box_size + 1e-8))
     # clamp level to (min, max), in case the box size is too large or too small
     # for the available feature maps
     level_assignments = torch.clamp(level_assignments, min=min_level, max=max_level)
@@ -63,9 +61,7 @@ def assign_boxes_to_levels(
 @torch.jit.script_if_tracing
 def _convert_boxes_to_pooler_format(boxes: torch.Tensor, sizes: torch.Tensor) -> torch.Tensor:
     sizes = sizes.to(device=boxes.device)
-    indices = torch.repeat_interleave(
-        torch.arange(len(sizes), dtype=boxes.dtype, device=boxes.device), sizes
-    )
+    indices = torch.repeat_interleave(torch.arange(len(sizes), dtype=boxes.dtype, device=boxes.device), sizes)
     return cat([indices[:, None], boxes], dim=1)
 
 
@@ -162,26 +158,19 @@ class ROIPooler(nn.Module):
 
         if pooler_type == "ROIAlign":
             self.level_poolers = nn.ModuleList(
-                ROIAlign(
-                    output_size, spatial_scale=scale, sampling_ratio=sampling_ratio, aligned=False
-                )
+                ROIAlign(output_size, spatial_scale=scale, sampling_ratio=sampling_ratio, aligned=False)
                 for scale in scales
             )
         elif pooler_type == "ROIAlignV2":
             self.level_poolers = nn.ModuleList(
-                ROIAlign(
-                    output_size, spatial_scale=scale, sampling_ratio=sampling_ratio, aligned=True
-                )
+                ROIAlign(output_size, spatial_scale=scale, sampling_ratio=sampling_ratio, aligned=True)
                 for scale in scales
             )
         elif pooler_type == "ROIPool":
-            self.level_poolers = nn.ModuleList(
-                RoIPool(output_size, spatial_scale=scale) for scale in scales
-            )
+            self.level_poolers = nn.ModuleList(RoIPool(output_size, spatial_scale=scale) for scale in scales)
         elif pooler_type == "ROIAlignRotated":
             self.level_poolers = nn.ModuleList(
-                ROIAlignRotated(output_size, spatial_scale=scale, sampling_ratio=sampling_ratio)
-                for scale in scales
+                ROIAlignRotated(output_size, spatial_scale=scale, sampling_ratio=sampling_ratio) for scale in scales
             )
         else:
             raise ValueError("Unknown pooler type: {}".format(pooler_type))
@@ -233,9 +222,7 @@ class ROIPooler(nn.Module):
         )
         assert_fx_safe(
             len(box_lists) == x[0].size(0),
-            "unequal value, x[0] batch dim 0 is {}, but box_list has length {}".format(
-                x[0].size(0), len(box_lists)
-            ),
+            "unequal value, x[0] batch dim 0 is {}, but box_list has length {}".format(x[0].size(0), len(box_lists)),
         )
         if len(box_lists) == 0:
             return _create_zeros(None, x[0].shape[1], *self.output_size, x[0])

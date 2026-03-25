@@ -101,8 +101,7 @@ def _assign_device_option(
 
     # update ops in predict_net
     predict_net_input_device_types = {
-        (name, 0): _get_device_type(tensor)
-        for name, tensor in zip(predict_net.external_input, tensor_inputs)
+        (name, 0): _get_device_type(tensor) for name, tensor in zip(predict_net.external_input, tensor_inputs)
     }
     predict_net_device_types = infer_device_type(
         predict_net, known_status=predict_net_input_device_types, device_name_style="pytorch"
@@ -113,8 +112,7 @@ def _assign_device_option(
     # update ops in init_net
     init_net_ssa, versions = core.get_ssa(init_net)
     init_net_output_device_types = {
-        (name, versions[name]): predict_net_device_types[(name, 0)]
-        for name in init_net.external_output
+        (name, versions[name]): predict_net_device_types[(name, 0)] for name in init_net.external_output
     }
     init_net_device_types = infer_device_type(
         init_net, known_status=init_net_output_device_types, device_name_style="pytorch"
@@ -144,9 +142,7 @@ def export_caffe2_detection_model(model: torch.nn.Module, tensor_inputs: List[to
     init_net, predict_net = Caffe2Backend.onnx_graph_to_caffe2_net(onnx_model)
     ops_table = [[op.type, op.input, op.output] for op in predict_net.op]
     table = tabulate(ops_table, headers=["type", "input", "output"], tablefmt="pipe")
-    logger.info(
-        "ONNX export Done. Exported predict_net (before optimizations):\n" + colored(table, "cyan")
-    )
+    logger.info("ONNX export Done. Exported predict_net (before optimizations):\n" + colored(table, "cyan"))
 
     # Apply protobuf optimization
     fuse_alias_placeholder(predict_net, init_net)

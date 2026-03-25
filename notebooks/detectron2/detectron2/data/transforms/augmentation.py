@@ -25,14 +25,10 @@ __all__ = [
 
 
 def _check_img_dtype(img):
-    assert isinstance(img, np.ndarray), "[Augmentation] Needs an numpy array, but got a {}!".format(
-        type(img)
-    )
+    assert isinstance(img, np.ndarray), "[Augmentation] Needs an numpy array, but got a {}!".format(type(img))
     assert not isinstance(img.dtype, np.integer) or (
         img.dtype == np.uint8
-    ), "[Augmentation] Got image of type {}, use uint8 or floating points instead!".format(
-        img.dtype
-    )
+    ), "[Augmentation] Got image of type {}, use uint8 or floating points instead!".format(img.dtype)
     assert img.ndim in [2, 3], img.ndim
 
 
@@ -55,13 +51,11 @@ def _get_aug_input_args(aug, aug_input) -> List[Any]:
                     inspect.Parameter.VAR_POSITIONAL,
                     inspect.Parameter.VAR_KEYWORD,
                 ):
-                    raise TypeError(
-                        f""" \
+                    raise TypeError(f""" \
 The default implementation of `{type(aug)}.__call__` does not allow \
 `{type(aug)}.get_transform` to use variable-length arguments (*args, **kwargs)! \
 If arguments are unknown, reimplement `__call__` instead. \
-"""
-                    )
+""")
                 names.append(name)
         aug.input_args = tuple(names)
 
@@ -167,8 +161,7 @@ class Augmentation:
         args = _get_aug_input_args(self, aug_input)
         tfm = self.get_transform(*args)
         assert isinstance(tfm, (Transform, TransformList)), (
-            f"{type(self)}.get_transform must return an instance of Transform! "
-            f"Got {type(tfm)} instead."
+            f"{type(self)}.get_transform must return an instance of Transform! " f"Got {type(tfm)} instead."
         )
         aug_input.transform(tfm)
         return tfm
@@ -341,9 +334,7 @@ class AugInput:
         if self.sem_seg is not None:
             self.sem_seg = tfm.apply_segmentation(self.sem_seg)
 
-    def apply_augmentations(
-        self, augmentations: List[Union[Augmentation, Transform]]
-    ) -> TransformList:
+    def apply_augmentations(self, augmentations: List[Union[Augmentation, Transform]]) -> TransformList:
         """
         Equivalent of ``AugmentationList(augmentations)(self)``
         """

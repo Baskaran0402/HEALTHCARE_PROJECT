@@ -22,9 +22,7 @@ def build_augmentation(cfg, is_train):
     logger = logging.getLogger(__name__)
     result = utils.build_augmentation(cfg, is_train)
     if is_train:
-        random_rotation = T.RandomRotation(
-            cfg.INPUT.ROTATION_ANGLES, expand=False, sample_style="choice"
-        )
+        random_rotation = T.RandomRotation(cfg.INPUT.ROTATION_ANGLES, expand=False, sample_style="choice")
         result.append(random_rotation)
         logger.info("DensePose-specific augmentation used in training: " + str(random_rotation))
     return result
@@ -57,8 +55,7 @@ class DatasetMapper:
 
         if self.densepose_on:
             densepose_transform_srcs = [
-                MetadataCatalog.get(ds).densepose_transform_src
-                for ds in cfg.DATASETS.TRAIN + cfg.DATASETS.TEST
+                MetadataCatalog.get(ds).densepose_transform_src for ds in cfg.DATASETS.TRAIN + cfg.DATASETS.TEST
             ]
             assert len(densepose_transform_srcs) > 0
             # TODO: check that DensePose transformation data is the same for
@@ -67,9 +64,7 @@ class DatasetMapper:
             # all DensePose annotated data uses the same data semantics, we
             # omit this check.
             densepose_transform_data_fpath = PathManager.get_local_path(densepose_transform_srcs[0])
-            self.densepose_transform_data = DensePoseTransformData.load(
-                densepose_transform_data_fpath
-            )
+            self.densepose_transform_data = DensePoseTransformData.load(densepose_transform_data_fpath)
 
         self.is_train = is_train
 
@@ -118,9 +113,7 @@ class DatasetMapper:
         instances = utils.annotations_to_instances(annos, image_shape, mask_format="bitmask")
         densepose_annotations = [obj.get("densepose") for obj in annos]
         if densepose_annotations and not all(v is None for v in densepose_annotations):
-            instances.gt_densepose = DensePoseList(
-                densepose_annotations, instances.gt_boxes, image_shape
-            )
+            instances.gt_densepose = DensePoseList(densepose_annotations, instances.gt_boxes, image_shape)
 
         dataset_dict["instances"] = instances[instances.gt_boxes.nonempty()]
         return dataset_dict
@@ -144,9 +137,7 @@ class DatasetMapper:
             annotation["densepose"] = None
         return annotation
 
-    def _add_densepose_masks_as_segmentation(
-        self, annotations: List[Dict[str, Any]], image_shape_hw: Tuple[int, int]
-    ):
+    def _add_densepose_masks_as_segmentation(self, annotations: List[Dict[str, Any]], image_shape_hw: Tuple[int, int]):
         for obj in annotations:
             if ("densepose" not in obj) or ("segmentation" in obj):
                 continue
@@ -156,9 +147,7 @@ class DatasetMapper:
             segm_h, segm_w = segm_dp.shape
             bbox_segm_dp = torch.tensor((0, 0, segm_h - 1, segm_w - 1), dtype=torch.float32)
             # image bbox
-            x0, y0, x1, y1 = (
-                v.item() for v in BoxMode.convert(obj["bbox"], obj["bbox_mode"], BoxMode.XYXY_ABS)
-            )
+            x0, y0, x1, y1 = (v.item() for v in BoxMode.convert(obj["bbox"], obj["bbox_mode"], BoxMode.XYXY_ABS))
             segm_aligned = (
                 ROIAlign((y1 - y0, x1 - x0), 1.0, 0, aligned=True)
                 .forward(segm_dp.view(1, 1, *segm_dp.shape), bbox_segm_dp)

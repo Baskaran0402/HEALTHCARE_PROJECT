@@ -59,9 +59,7 @@ def find_top_rpn_proposals(
     """
     num_images = len(image_sizes)
     device = (
-        proposals[0].device
-        if torch.jit.is_scripting()
-        else ("cpu" if torch.jit.is_tracing() else proposals[0].device)
+        proposals[0].device if torch.jit.is_scripting() else ("cpu" if torch.jit.is_tracing() else proposals[0].device)
     )
 
     # 1. Select top-k anchor for every level and every image
@@ -105,9 +103,7 @@ def find_top_rpn_proposals(
         valid_mask = torch.isfinite(boxes.tensor).all(dim=1) & torch.isfinite(scores_per_img)
         if not valid_mask.all():
             if training:
-                raise FloatingPointError(
-                    "Predicted boxes or scores contain Inf/NaN. Training has diverged."
-                )
+                raise FloatingPointError("Predicted boxes or scores contain Inf/NaN. Training has diverged.")
             boxes = boxes[valid_mask]
             scores_per_img = scores_per_img[valid_mask]
             lvl = lvl[valid_mask]
@@ -158,15 +154,10 @@ def add_ground_truth_to_proposals(
     if len(proposals) == 0:
         return proposals
 
-    return [
-        add_ground_truth_to_proposals_single_image(gt_i, proposals_i)
-        for gt_i, proposals_i in zip(gt, proposals)
-    ]
+    return [add_ground_truth_to_proposals_single_image(gt_i, proposals_i) for gt_i, proposals_i in zip(gt, proposals)]
 
 
-def add_ground_truth_to_proposals_single_image(
-    gt: Union[Instances, Boxes], proposals: Instances
-) -> Instances:
+def add_ground_truth_to_proposals_single_image(gt: Union[Instances, Boxes], proposals: Instances) -> Instances:
     """
     Augment `proposals` with `gt`.
 
@@ -194,9 +185,7 @@ def add_ground_truth_to_proposals_single_image(
     gt_proposal.objectness_logits = gt_logits
 
     for key in proposals.get_fields().keys():
-        assert gt_proposal.has(
-            key
-        ), "The attribute '{}' in `proposals` does not exist in `gt`".format(key)
+        assert gt_proposal.has(key), "The attribute '{}' in `proposals` does not exist in `gt`".format(key)
 
     # NOTE: Instances.cat only use fields from the first item. Extra fields in latter items
     # will be thrown away.

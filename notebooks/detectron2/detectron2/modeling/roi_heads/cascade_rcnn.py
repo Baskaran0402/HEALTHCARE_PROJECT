@@ -58,8 +58,7 @@ class CascadeROIHeads(StandardROIHeads):
                 by the previous stage as proposals and match them with ground truth.
         """
         assert "proposal_matcher" not in kwargs, (
-            "CascadeROIHeads takes 'proposal_matchers=' for each stage instead "
-            "of one 'proposal_matcher='."
+            "CascadeROIHeads takes 'proposal_matchers=' for each stage instead " "of one 'proposal_matcher='."
         )
         # The first matcher matches RPN proposals with ground truth, done in the base class
         kwargs["proposal_matcher"] = proposal_matchers[0]
@@ -110,9 +109,7 @@ class CascadeROIHeads(StandardROIHeads):
             sampling_ratio=sampling_ratio,
             pooler_type=pooler_type,
         )
-        pooled_shape = ShapeSpec(
-            channels=in_channels, width=pooler_resolution, height=pooler_resolution
-        )
+        pooled_shape = ShapeSpec(channels=in_channels, width=pooler_resolution, height=pooler_resolution)
 
         box_heads, box_predictors, proposal_matchers = [], [], []
         for match_iou, bbox_reg_weights in zip(cascade_ious, cascade_bbox_reg_weights):
@@ -222,9 +219,7 @@ class CascadeROIHeads(StandardROIHeads):
         """
         num_fg_samples, num_bg_samples = [], []
         for proposals_per_image, targets_per_image in zip(proposals, targets):
-            match_quality_matrix = pairwise_iou(
-                targets_per_image.gt_boxes, proposals_per_image.proposal_boxes
-            )
+            match_quality_matrix = pairwise_iou(targets_per_image.gt_boxes, proposals_per_image.proposal_boxes)
             # proposal_labels are 0 or 1
             matched_idxs, proposal_labels = self.proposal_matchers[stage](match_quality_matrix)
             if len(targets_per_image) > 0:
@@ -234,9 +229,7 @@ class CascadeROIHeads(StandardROIHeads):
                 gt_boxes = targets_per_image.gt_boxes[matched_idxs]
             else:
                 gt_classes = torch.zeros_like(matched_idxs) + self.num_classes
-                gt_boxes = Boxes(
-                    targets_per_image.gt_boxes.tensor.new_zeros((len(proposals_per_image), 4))
-                )
+                gt_boxes = Boxes(targets_per_image.gt_boxes.tensor.new_zeros((len(proposals_per_image), 4)))
             proposals_per_image.gt_classes = gt_classes
             proposals_per_image.gt_boxes = gt_boxes
 

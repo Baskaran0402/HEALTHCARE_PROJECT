@@ -61,9 +61,7 @@ def create_data_benchmark(cfg, args):
 
 def RAM_msg():
     vram = psutil.virtual_memory()
-    return "RAM Usage: {:.2f}/{:.2f} GB".format(
-        (vram.total - vram.available) / 1024**3, vram.total / 1024**3
-    )
+    return "RAM Usage: {:.2f}/{:.2f} GB".format((vram.total - vram.available) / 1024**3, vram.total / 1024**3)
 
 
 def benchmark_data(args):
@@ -99,9 +97,7 @@ def benchmark_train(args):
     model = build_model(cfg)
     logger.info("Model:\n{}".format(model))
     if comm.get_world_size() > 1:
-        model = DistributedDataParallel(
-            model, device_ids=[comm.get_local_rank()], broadcast_buffers=False
-        )
+        model = DistributedDataParallel(model, device_ids=[comm.get_local_rank()], broadcast_buffers=False)
     optimizer = build_optimizer(cfg, model)
     checkpointer = DetectionCheckpointer(model, optimizer=optimizer)
     checkpointer.load(cfg.MODEL.WEIGHTS)

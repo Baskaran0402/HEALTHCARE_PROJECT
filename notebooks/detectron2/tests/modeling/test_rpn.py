@@ -37,11 +37,9 @@ class RPNTest(unittest.TestCase):
         cfg = get_cfg()
         backbone = build_backbone(cfg)
         proposal_generator = RPN(cfg, backbone.output_shape())
-        (gt_instances, features, images, image_sizes) = self.get_gt_and_features()
+        gt_instances, features, images, image_sizes = self.get_gt_and_features()
         with EventStorage():  # capture events in a new storage to discard them
-            proposals, proposal_losses = proposal_generator(
-                images, features, [gt_instances[0], gt_instances[1]]
-            )
+            proposals, proposal_losses = proposal_generator(images, features, [gt_instances[0], gt_instances[1]])
 
         expected_losses = {
             "loss_rpn_cls": torch.tensor(0.08011703193),
@@ -59,12 +57,8 @@ class RPNTest(unittest.TestCase):
 
         expected_proposal_box = torch.tensor([[0, 0, 10, 10], [7.2702, 0, 10, 10]])
         expected_objectness_logit = torch.tensor([0.1596, -0.0007])
-        self.assertTrue(
-            torch.allclose(proposals[0].proposal_boxes.tensor, expected_proposal_box, atol=1e-4)
-        )
-        self.assertTrue(
-            torch.allclose(proposals[0].objectness_logits, expected_objectness_logit, atol=1e-4)
-        )
+        self.assertTrue(torch.allclose(proposals[0].proposal_boxes.tensor, expected_proposal_box, atol=1e-4))
+        self.assertTrue(torch.allclose(proposals[0].objectness_logits, expected_objectness_logit, atol=1e-4))
 
     def verify_rpn(self, conv_dims, expected_conv_dims):
         torch.manual_seed(121)
@@ -79,11 +73,9 @@ class RPNTest(unittest.TestCase):
     def test_rpn_larger_num_convs(self):
         conv_dims = [64, 64, 64, 64, 64]
         proposal_generator = self.verify_rpn(conv_dims, conv_dims)
-        (gt_instances, features, images, image_sizes) = self.get_gt_and_features()
+        gt_instances, features, images, image_sizes = self.get_gt_and_features()
         with EventStorage():  # capture events in a new storage to discard them
-            proposals, proposal_losses = proposal_generator(
-                images, features, [gt_instances[0], gt_instances[1]]
-            )
+            proposals, proposal_losses = proposal_generator(images, features, [gt_instances[0], gt_instances[1]])
         expected_losses = {
             "loss_rpn_cls": torch.tensor(0.08122821152),
             "loss_rpn_loc": torch.tensor(0.10064548254),
@@ -116,9 +108,7 @@ class RPNTest(unittest.TestCase):
 
         for proposal, proposal_ts in zip(proposals, proposals_ts):
             self.assertEqual(proposal.image_size, proposal_ts.image_size)
-            self.assertTrue(
-                torch.equal(proposal.proposal_boxes.tensor, proposal_ts.proposal_boxes.tensor)
-            )
+            self.assertTrue(torch.equal(proposal.proposal_boxes.tensor, proposal_ts.proposal_boxes.tensor))
             self.assertTrue(torch.equal(proposal.objectness_logits, proposal_ts.objectness_logits))
 
     def test_rrpn(self):
@@ -144,9 +134,7 @@ class RPNTest(unittest.TestCase):
         gt_instances = Instances(image_shape)
         gt_instances.gt_boxes = RotatedBoxes(gt_boxes)
         with EventStorage():  # capture events in a new storage to discard them
-            proposals, proposal_losses = proposal_generator(
-                images, features, [gt_instances[0], gt_instances[1]]
-            )
+            proposals, proposal_losses = proposal_generator(images, features, [gt_instances[0], gt_instances[1]])
 
         expected_losses = {
             "loss_rpn_cls": torch.tensor(0.04291602224),
@@ -207,9 +195,7 @@ class RPNTest(unittest.TestCase):
         pred_logit = torch.rand(N, Hi * Wi * A)
 
         def func(proposal, logit, image_size):
-            r = find_top_rpn_proposals(
-                [proposal], [logit], [image_size], 0.7, 1000, 1000, 0, False
-            )[0]
+            r = find_top_rpn_proposals([proposal], [logit], [image_size], 0.7, 1000, 1000, 0, False)[0]
             size = r.image_size
             if not isinstance(size, torch.Tensor):
                 size = torch.tensor(size)
@@ -225,9 +211,7 @@ class RPNTest(unittest.TestCase):
                     torch.tensor([shp, shp]),
                 )
             )
-        torch.jit.trace(
-            func, (proposal, pred_logit, torch.tensor([100, 100])), check_inputs=other_inputs
-        )
+        torch.jit.trace(func, (proposal, pred_logit, torch.tensor([100, 100])), check_inputs=other_inputs)
 
     def test_append_gt_to_proposal(self):
         proposals = Instances(
@@ -236,7 +220,7 @@ class RPNTest(unittest.TestCase):
                 "proposal_boxes": Boxes(torch.empty((0, 4))),
                 "objectness_logits": torch.tensor([]),
                 "custom_attribute": torch.tensor([]),
-            }
+            },
         )
         gt_boxes = Boxes(torch.tensor([[0, 0, 1, 1]]))
 
@@ -245,9 +229,7 @@ class RPNTest(unittest.TestCase):
         gt_instances = Instances((10, 10))
         gt_instances.gt_boxes = gt_boxes
 
-        self.assertRaises(
-            AssertionError, add_ground_truth_to_proposals, [gt_instances], [proposals]
-        )
+        self.assertRaises(AssertionError, add_ground_truth_to_proposals, [gt_instances], [proposals])
 
         gt_instances.custom_attribute = torch.tensor([1])
         gt_instances.custom_attribute2 = torch.tensor([1])

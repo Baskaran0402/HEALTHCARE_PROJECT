@@ -6,9 +6,7 @@ from detectron2.structures import Instances, ROIMasks
 
 
 # perhaps should rename to "resize_instance"
-def detector_postprocess(
-    results: Instances, output_height: int, output_width: int, mask_threshold: float = 0.5
-):
+def detector_postprocess(results: Instances, output_height: int, output_width: int, mask_threshold: float = 0.5):
     """
     Resize the output instances.
     The input images are often resized when entering an object detector.
@@ -94,7 +92,5 @@ def sem_seg_postprocess(result, img_size, output_height, output_width):
             (C, output_height, output_width) that contains per-pixel soft predictions.
     """
     result = result[:, : img_size[0], : img_size[1]].expand(1, -1, -1, -1)
-    result = F.interpolate(
-        result, size=(output_height, output_width), mode="bilinear", align_corners=False
-    )[0]
+    result = F.interpolate(result, size=(output_height, output_width), mode="bilinear", align_corners=False)[0]
     return result

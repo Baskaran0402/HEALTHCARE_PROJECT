@@ -20,7 +20,6 @@ from detectron2.structures import Boxes, Instances, ROIMasks
 from detectron2.utils.file_io import PathManager
 from detectron2.utils.torch_version_utils import min_torch_version
 
-
 """
 Internal utilities for tests. Don't use except for writing tests.
 """
@@ -68,9 +67,7 @@ def get_sample_coco_image(tensor=True):
             raise FileNotFoundError()
     except IOError:
         # for public CI to run
-        file_name = PathManager.get_local_path(
-            "http://images.cocodataset.org/train2017/000000000009.jpg"
-        )
+        file_name = PathManager.get_local_path("http://images.cocodataset.org/train2017/000000000009.jpg")
     ret = read_image(file_name, format="BGR")
     if tensor:
         ret = torch.from_numpy(np.ascontiguousarray(ret.transpose(2, 0, 1)))
@@ -81,9 +78,7 @@ def convert_scripted_instances(instances):
     """
     Convert a scripted Instances object to a regular :class:`Instances` object
     """
-    assert hasattr(
-        instances, "image_size"
-    ), f"Expect an Instances object, but got {type(instances)}!"
+    assert hasattr(instances, "image_size"), f"Expect an Instances object, but got {type(instances)}!"
     ret = Instances(instances.image_size)
     for name in instances._field_names:
         val = getattr(instances, "_" + name, None)
@@ -111,9 +106,7 @@ def assert_instances_allclose(input, other, *, rtol=1e-5, msg="", size_as_tensor
 
     size_error_msg = msg + f"image_size is {input.image_size} vs. {other.image_size}!"
     if size_as_tensor:
-        assert torch.equal(
-            torch.tensor(input.image_size), torch.tensor(other.image_size)
-        ), size_error_msg
+        assert torch.equal(torch.tensor(input.image_size), torch.tensor(other.image_size)), size_error_msg
     else:
         assert input.image_size == other.image_size, size_error_msg
     fields = sorted(input.get_fields().keys())
@@ -124,15 +117,11 @@ def assert_instances_allclose(input, other, *, rtol=1e-5, msg="", size_as_tensor
         val1, val2 = input.get(f), other.get(f)
         if isinstance(val1, (Boxes, ROIMasks)):
             # boxes in the range of O(100) and can have a larger tolerance
-            assert torch.allclose(val1.tensor, val2.tensor, atol=100 * rtol), (
-                msg + f"Field {f} differs too much!"
-            )
+            assert torch.allclose(val1.tensor, val2.tensor, atol=100 * rtol), msg + f"Field {f} differs too much!"
         elif isinstance(val1, torch.Tensor):
             if val1.dtype.is_floating_point:
                 mag = torch.abs(val1).max().cpu().item()
-                assert torch.allclose(val1, val2, atol=mag * rtol), (
-                    msg + f"Field {f} differs too much!"
-                )
+                assert torch.allclose(val1, val2, atol=mag * rtol), msg + f"Field {f} differs too much!"
             else:
                 assert torch.equal(val1, val2), msg + f"Field {f} is different!"
         else:
@@ -167,19 +156,13 @@ def has_dynamic_axes(onnx_model):
     Return True when all ONNX input/output have only dynamic axes for all ranks
     """
     return all(
-        not dim.dim_param.isnumeric()
-        for inp in onnx_model.graph.input
-        for dim in inp.type.tensor_type.shape.dim
+        not dim.dim_param.isnumeric() for inp in onnx_model.graph.input for dim in inp.type.tensor_type.shape.dim
     ) and all(
-        not dim.dim_param.isnumeric()
-        for out in onnx_model.graph.output
-        for dim in out.type.tensor_type.shape.dim
+        not dim.dim_param.isnumeric() for out in onnx_model.graph.output for dim in out.type.tensor_type.shape.dim
     )
 
 
-def register_custom_op_onnx_export(
-    opname: str, symbolic_fn: Callable, opset_version: int, min_version: str
-) -> None:
+def register_custom_op_onnx_export(opname: str, symbolic_fn: Callable, opset_version: int, min_version: str) -> None:
     """
     Register `symbolic_fn` as PyTorch's symbolic `opname`-`opset_version` for ONNX export.
     The registration is performed only when current PyTorch's version is < `min_version.`
@@ -215,9 +198,7 @@ def unregister_custom_op_onnx_export(opname: str, opset_version: int, min_versio
 
                     ns, op_name = get_ns_op_name_from_custom_op(symbolic_name)
                 except ImportError as import_error:
-                    if not bool(
-                        re.match(r"^[a-zA-Z0-9-_]*::[a-zA-Z-_]+[a-zA-Z0-9-_]*$", symbolic_name)
-                    ):
+                    if not bool(re.match(r"^[a-zA-Z0-9-_]*::[a-zA-Z-_]+[a-zA-Z0-9-_]*$", symbolic_name)):
                         raise ValueError(
                             f"Invalid symbolic name {symbolic_name}. Must be `domain::name`"
                         ) from import_error
@@ -240,9 +221,7 @@ def unregister_custom_op_onnx_export(opname: str, opset_version: int, min_versio
                         if not sym_registry._registry[(domain, version)]:
                             del sym_registry._registry[(domain, version)]
                     else:
-                        raise RuntimeError(
-                            f"The opname {opname} is not registered."
-                        ) from attribute_error
+                        raise RuntimeError(f"The opname {opname} is not registered.") from attribute_error
 
             ns, op_name = _get_ns_op_name_from_custom_op(symbolic_name)
             for ver in _onnx_stable_opsets + [_onnx_main_opset]:
@@ -274,8 +253,7 @@ def skipIfUnsupportedMinOpsetVersion(min_opset_version, current_opset_version=No
                 opset_version = current_opset_version
             if opset_version < min_opset_version:
                 raise unittest.SkipTest(
-                    f"Unsupported opset_version {opset_version}"
-                    f", required is {min_opset_version}"
+                    f"Unsupported opset_version {opset_version}" f", required is {min_opset_version}"
                 )
             return func(self)
 
@@ -385,17 +363,11 @@ def _pytorch1111_symbolic_opset9_repeat_interleave(g, self, repeats, dim=None, o
     repeats_sizes = sym_help._get_tensor_sizes(repeats)
     input_sizes = sym_help._get_tensor_sizes(input)
     if repeats_dim is None:
-        raise RuntimeError(
-            "Unsupported: ONNX export of repeat_interleave for unknown " "repeats rank."
-        )
+        raise RuntimeError("Unsupported: ONNX export of repeat_interleave for unknown " "repeats rank.")
     if repeats_sizes is None:
-        raise RuntimeError(
-            "Unsupported: ONNX export of repeat_interleave for unknown " "repeats size."
-        )
+        raise RuntimeError("Unsupported: ONNX export of repeat_interleave for unknown " "repeats size.")
     if input_sizes is None:
-        raise RuntimeError(
-            "Unsupported: ONNX export of repeat_interleave for unknown " "input size."
-        )
+        raise RuntimeError("Unsupported: ONNX export of repeat_interleave for unknown " "input size.")
 
     input_sizes_temp = input_sizes.copy()
     for idx, input_size in enumerate(input_sizes):
@@ -430,9 +402,7 @@ def _pytorch1111_symbolic_opset9_repeat_interleave(g, self, repeats, dim=None, o
             return sym_help._onnx_opset_unsupported_detailed(
                 "repeat_interleave", 9, 13, "Unsupported for cases with dynamic repeats"
             )
-        assert (
-            repeats_sizes[0] == input_sizes[dim]
-        ), "repeats must have the same size as input along dim"
+        assert repeats_sizes[0] == input_sizes[dim], "repeats must have the same size as input along dim"
         reps = repeats_sizes[0]
     else:
         raise RuntimeError("repeats must be 0-dim or 1-dim tensor")

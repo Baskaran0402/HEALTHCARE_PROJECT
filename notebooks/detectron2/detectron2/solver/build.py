@@ -80,9 +80,7 @@ def _generate_optimizer_class_with_gradient_clipping(
     return OptimizerWithGradientClip
 
 
-def maybe_add_gradient_clipping(
-    cfg: CfgNode, optimizer: Type[torch.optim.Optimizer]
-) -> Type[torch.optim.Optimizer]:
+def maybe_add_gradient_clipping(cfg: CfgNode, optimizer: Type[torch.optim.Optimizer]) -> Type[torch.optim.Optimizer]:
     """
     If gradient clipping is enabled through config options, wraps the existing
     optimizer type to become a new dynamically created class OptimizerWithGradientClip
@@ -269,13 +267,9 @@ def reduce_param_groups(params: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     ret = []
     for param_keys, param_values in groups.items():
         cur = {kv[0]: kv[1] for kv in param_keys}
-        cur["params"] = list(
-            itertools.chain.from_iterable([params["params"] for params in param_values])
-        )
+        cur["params"] = list(itertools.chain.from_iterable([params["params"] for params in param_values]))
         if len(param_values) > 0 and "param_names" in param_values[0]:
-            cur["param_names"] = list(
-                itertools.chain.from_iterable([params["param_names"] for params in param_values])
-            )
+            cur["param_names"] = list(itertools.chain.from_iterable([params["param_names"] for params in param_values]))
         ret.append(cur)
     return ret
 
@@ -290,10 +284,7 @@ def build_lr_scheduler(cfg: CfgNode, optimizer: torch.optim.Optimizer) -> LRSche
         steps = [x for x in cfg.SOLVER.STEPS if x <= cfg.SOLVER.MAX_ITER]
         if len(steps) != len(cfg.SOLVER.STEPS):
             logger = logging.getLogger(__name__)
-            logger.warning(
-                "SOLVER.STEPS contains values larger than SOLVER.MAX_ITER. "
-                "These values will be ignored."
-            )
+            logger.warning("SOLVER.STEPS contains values larger than SOLVER.MAX_ITER. " "These values will be ignored.")
         sched = MultiStepParamScheduler(
             values=[cfg.SOLVER.GAMMA**k for k in range(len(steps) + 1)],
             milestones=steps,

@@ -74,9 +74,7 @@ class EmbeddingLoss:
             mesh_name = MeshCatalog.get_mesh_name(mesh_id)
             # valid points are those that fall into estimated bbox
             # and correspond to the current mesh
-            j_valid = interpolator.j_valid * (  # pyre-ignore[16]
-                packed_annotations.vertex_mesh_ids_gt == mesh_id
-            )
+            j_valid = interpolator.j_valid * (packed_annotations.vertex_mesh_ids_gt == mesh_id)  # pyre-ignore[16]
             if not torch.any(j_valid):
                 continue
             # extract estimated embeddings for valid points
@@ -99,18 +97,16 @@ class EmbeddingLoss:
             mesh_vertex_embeddings = embedder(mesh_name)
             # unnormalized scores for valid points
             # -> tensor [J, K]
-            scores = squared_euclidean_distance_matrix(
-                vertex_embeddings_i, mesh_vertex_embeddings
-            ) / (-self.embdist_gauss_sigma)
+            scores = squared_euclidean_distance_matrix(vertex_embeddings_i, mesh_vertex_embeddings) / (
+                -self.embdist_gauss_sigma
+            )
             losses[mesh_name] = F.cross_entropy(scores, vertex_indices_i, ignore_index=-1)
 
         # pyre-fixme[29]: `Union[(self: Tensor) -> Any, Module, Tensor]` is not a
         #  function.
         for mesh_name in embedder.mesh_names:
             if mesh_name not in losses:
-                losses[mesh_name] = self.fake_value(
-                    densepose_predictor_outputs, embedder, mesh_name
-                )
+                losses[mesh_name] = self.fake_value(densepose_predictor_outputs, embedder, mesh_name)
         return losses
 
     def fake_values(self, densepose_predictor_outputs: Any, embedder: nn.Module):

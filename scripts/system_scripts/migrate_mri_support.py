@@ -12,6 +12,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 from sqlalchemy import text
 from backend.database import SessionLocal
 
+
 def run_migration():
     """Add mri_image_path column to medical_records table"""
 
@@ -23,29 +24,21 @@ def run_migration():
     try:
         # Check if column already exists
         print("1. Checking existing schema for 'medical_records'...")
-        result = db.execute(
-            text(
-                """
+        result = db.execute(text("""
             SELECT column_name
             FROM information_schema.columns
             WHERE table_name = 'medical_records'
-        """
-            )
-        )
+        """))
         existing_columns = [row[0] for row in result.all()]
         print(f"   Existing columns: {', '.join(existing_columns)}")
 
         # Add mri_image_path column if it doesn't exist
         if "mri_image_path" not in existing_columns:
             print("2. Adding 'mri_image_path' column...")
-            db.execute(
-                text(
-                    """
+            db.execute(text("""
                 ALTER TABLE medical_records
                 ADD COLUMN mri_image_path VARCHAR(500)
-            """
-                )
-            )
+            """))
             db.commit()
             print("   [OK] 'mri_image_path' column added successfully")
         else:
@@ -61,6 +54,7 @@ def run_migration():
 
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     run_migration()

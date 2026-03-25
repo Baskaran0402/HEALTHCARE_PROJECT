@@ -203,10 +203,7 @@ class TestRotatedBoxesStructure(unittest.TestCase):
         # to be within (-180, 180]
 
         self.assertTrue(
-            torch.all(
-                torch.abs(test_boxes_5d.tensor[:, 4][torch.where(areas_diff < 0)])
-                < clip_angle_threshold
-            )
+            torch.all(torch.abs(test_boxes_5d.tensor[:, 4][torch.where(areas_diff < 0)]) < clip_angle_threshold)
         )
 
     def test_normalize_angles(self):
@@ -401,10 +398,7 @@ def benchmark_rotated_iou():
     num_boxes1 = 200
     num_boxes2 = 500
     boxes1 = torch.stack(
-        [
-            torch.tensor([5 + 20 * i, 5 + 20 * i, 10, 10, 0], dtype=torch.float32)
-            for i in range(num_boxes1)
-        ]
+        [torch.tensor([5 + 20 * i, 5 + 20 * i, 10, 10, 0], dtype=torch.float32) for i in range(num_boxes1)]
     )
     boxes2 = torch.stack(
         [

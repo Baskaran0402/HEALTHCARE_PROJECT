@@ -117,9 +117,7 @@ class TestBoxMode(unittest.TestCase):
             box = np.asarray([[30, 40, 70, 60], [30, 40, 60, 70], [-1, -1, 2, 2]], dtype=dtype)
             output = self._convert_xywh_to_xywha(box)
             self.assertEqual(output.dtype, box.dtype)
-            expected = np.asarray(
-                [[65, 70, 70, 60, 0], [60, 75, 60, 70, 0], [0, 0, 2, 2, 0]], dtype=dtype
-            )
+            expected = np.asarray([[65, 70, 70, 60, 0], [60, 75, 60, 70, 0], [0, 0, 2, 2, 0]], dtype=dtype)
             self.assertTrue(np.allclose(output, expected, atol=1e-6), "output={}".format(output))
 
     def test_box_convert_xywh_to_xywha_tensor(self):
@@ -127,9 +125,7 @@ class TestBoxMode(unittest.TestCase):
             box = torch.tensor([[30, 40, 70, 60], [30, 40, 60, 70], [-1, -1, 2, 2]], dtype=dtype)
             output = self._convert_xywh_to_xywha(box)
             self.assertEqual(output.dtype, box.dtype)
-            expected = torch.tensor(
-                [[65, 70, 70, 60, 0], [60, 75, 60, 70, 0], [0, 0, 2, 2, 0]], dtype=dtype
-            )
+            expected = torch.tensor([[65, 70, 70, 60, 0], [60, 75, 60, 70, 0], [0, 0, 2, 2, 0]], dtype=dtype)
 
             self.assertTrue(torch.allclose(output, expected, atol=1e-6), "output={}".format(output))
 
@@ -179,9 +175,7 @@ class TestBoxIOU(unittest.TestCase):
 
     def test_pairwise_ioa(self):
         boxes1, boxes2 = self.create_boxes()
-        expected_ioas = torch.tensor(
-            [[1.0, 1.0, 1.0, 1.0, 1.0, 0.25], [1.0, 1.0, 1.0, 1.0, 1.0, 0.25]]
-        )
+        expected_ioas = torch.tensor([[1.0, 1.0, 1.0, 1.0, 1.0, 0.25], [1.0, 1.0, 1.0, 1.0, 1.0, 0.25]])
         ioas = pairwise_ioa(Boxes(boxes1), Boxes(boxes2))
         self.assertTrue(torch.allclose(ioas, expected_ioas))
 

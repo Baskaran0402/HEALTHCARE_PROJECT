@@ -22,9 +22,7 @@ class DensePoseList:
                 "Attempt to initialize DensePoseList with DensePose datas "
                 "of type {}, expected DensePoseDataRelative".format(type(densepose_data))
             )
-            densepose_data_ondevice = (
-                densepose_data.to(device) if densepose_data is not None else None
-            )
+            densepose_data_ondevice = densepose_data.to(device) if densepose_data is not None else None
             self.densepose_datas.append(densepose_data_ondevice)
         self.boxes_xyxy_abs = boxes_xyxy_abs.to(device)
         self.image_size_hw = image_size_hw
@@ -55,18 +53,12 @@ class DensePoseList:
         elif isinstance(item, slice):
             densepose_datas_rel = self.densepose_datas[item]
             boxes_xyxy_abs = self.boxes_xyxy_abs[item]
-            return DensePoseList(
-                densepose_datas_rel, boxes_xyxy_abs, self.image_size_hw, self.device
-            )
+            return DensePoseList(densepose_datas_rel, boxes_xyxy_abs, self.image_size_hw, self.device)
         elif isinstance(item, torch.Tensor) and (item.dtype == torch.bool):
             densepose_datas_rel = [self.densepose_datas[i] for i, x in enumerate(item) if x > 0]
             boxes_xyxy_abs = self.boxes_xyxy_abs[item]
-            return DensePoseList(
-                densepose_datas_rel, boxes_xyxy_abs, self.image_size_hw, self.device
-            )
+            return DensePoseList(densepose_datas_rel, boxes_xyxy_abs, self.image_size_hw, self.device)
         else:
             densepose_datas_rel = [self.densepose_datas[i] for i in item]
             boxes_xyxy_abs = self.boxes_xyxy_abs[item]
-            return DensePoseList(
-                densepose_datas_rel, boxes_xyxy_abs, self.image_size_hw, self.device
-            )
+            return DensePoseList(densepose_datas_rel, boxes_xyxy_abs, self.image_size_hw, self.device)

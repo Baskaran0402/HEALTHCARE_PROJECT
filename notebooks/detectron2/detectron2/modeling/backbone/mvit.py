@@ -343,9 +343,7 @@ class MViT(Backbone):
 
         if use_abs_pos:
             # Initialize absoluate positional embedding with pretrain image size.
-            num_patches = (pretrain_img_size // patch_stride[0]) * (
-                pretrain_img_size // patch_stride[1]
-            )
+            num_patches = (pretrain_img_size // patch_stride[0]) * (pretrain_img_size // patch_stride[1])
             num_positions = (num_patches + 1) if pretrain_use_cls_token else num_patches
             self.pos_embed = nn.Parameter(torch.zeros(1, num_positions, embed_dim))
         else:

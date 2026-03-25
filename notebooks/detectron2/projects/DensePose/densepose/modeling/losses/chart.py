@@ -63,9 +63,7 @@ class DensePoseChartLoss:
         self.segm_trained_by_masks = cfg.MODEL.ROI_DENSEPOSE_HEAD.COARSE_SEGM_TRAINED_BY_MASKS
         self.segm_loss = MaskOrSegmentationLoss(cfg)
 
-    def __call__(
-        self, proposals_with_gt: List[Instances], densepose_predictor_outputs: Any, **kwargs
-    ) -> LossDict:
+    def __call__(self, proposals_with_gt: List[Instances], densepose_predictor_outputs: Any, **kwargs) -> LossDict:
         """
         Produce chart-based DensePose losses
 
@@ -113,9 +111,7 @@ class DensePoseChartLoss:
             (h, w),
         )
 
-        j_valid_fg = interpolator.j_valid * (  # pyre-ignore[16]
-            packed_annotations.fine_segm_labels_gt > 0
-        )
+        j_valid_fg = interpolator.j_valid * (packed_annotations.fine_segm_labels_gt > 0)  # pyre-ignore[16]
         # pyre-fixme[6]: For 1st param expected `Tensor` but got `int`.
         if not torch.any(j_valid_fg):
             return self.produce_fake_densepose_losses(densepose_predictor_outputs)
@@ -273,9 +269,7 @@ class DensePoseChartLoss:
                  instance segmentation data is performed (`segm_trained_by_masks` is True),
                  this loss is handled by `produce_mask_losses` instead
         """
-        fine_segm_gt = packed_annotations.fine_segm_labels_gt[
-            interpolator.j_valid  # pyre-ignore[16]
-        ]
+        fine_segm_gt = packed_annotations.fine_segm_labels_gt[interpolator.j_valid]  # pyre-ignore[16]
         fine_segm_est = interpolator.extract_at_points(
             densepose_predictor_outputs.fine_segm,
             slice_fine_segm=slice(None),
@@ -286,8 +280,6 @@ class DensePoseChartLoss:
         )[interpolator.j_valid, :]
         return {
             "loss_densepose_I": F.cross_entropy(fine_segm_est, fine_segm_gt.long()) * self.w_part,
-            "loss_densepose_S": self.segm_loss(
-                proposals_with_gt, densepose_predictor_outputs, packed_annotations
-            )
+            "loss_densepose_S": self.segm_loss(proposals_with_gt, densepose_predictor_outputs, packed_annotations)
             * self.w_segm,
         }

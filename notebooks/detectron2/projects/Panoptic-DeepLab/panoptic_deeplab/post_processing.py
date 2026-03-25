@@ -23,9 +23,7 @@ def find_instance_center(center_heatmap, threshold=0.1, nms_kernel=3, top_k=None
 
     # NMS
     nms_padding = (nms_kernel - 1) // 2
-    center_heatmap_max_pooled = F.max_pool2d(
-        center_heatmap, kernel_size=nms_kernel, stride=1, padding=nms_padding
-    )
+    center_heatmap_max_pooled = F.max_pool2d(center_heatmap, kernel_size=nms_kernel, stride=1, padding=nms_padding)
     center_heatmap[center_heatmap != center_heatmap_max_pooled] = -1
 
     # Squeeze first two dimensions.
@@ -99,18 +97,14 @@ def get_instance_segmentation(
         A Tensor of shape [1, K, 2] where K is the number of center points.
             The order of second dim is (y, x).
     """
-    center_points = find_instance_center(
-        center_heatmap, threshold=threshold, nms_kernel=nms_kernel, top_k=top_k
-    )
+    center_points = find_instance_center(center_heatmap, threshold=threshold, nms_kernel=nms_kernel, top_k=top_k)
     if center_points.size(0) == 0:
         return torch.zeros_like(sem_seg), center_points.unsqueeze(0)
     ins_seg = group_pixels(center_points, offsets)
     return thing_seg * ins_seg, center_points.unsqueeze(0)
 
 
-def merge_semantic_and_instance(
-    sem_seg, ins_seg, semantic_thing_seg, label_divisor, thing_ids, stuff_area, void_label
-):
+def merge_semantic_and_instance(sem_seg, ins_seg, semantic_thing_seg, label_divisor, thing_ids, stuff_area, void_label):
     """
     Post-processing for panoptic segmentation, by merging semantic segmentation
         label and class agnostic instance segmentation label.
@@ -200,16 +194,12 @@ def get_panoptic_segmentation(
     if sem_seg.dim() != 3 and sem_seg.size(0) != 1:
         raise ValueError("Semantic prediction with un-supported shape: {}.".format(sem_seg.size()))
     if center_heatmap.dim() != 3:
-        raise ValueError(
-            "Center prediction with un-supported dimension: {}.".format(center_heatmap.dim())
-        )
+        raise ValueError("Center prediction with un-supported dimension: {}.".format(center_heatmap.dim()))
     if offsets.dim() != 3:
         raise ValueError("Offset prediction with un-supported dimension: {}.".format(offsets.dim()))
     if foreground_mask is not None:
         if foreground_mask.dim() != 3 and foreground_mask.size(0) != 1:
-            raise ValueError(
-                "Foreground prediction with un-supported shape: {}.".format(sem_seg.size())
-            )
+            raise ValueError("Foreground prediction with un-supported shape: {}.".format(sem_seg.size()))
         thing_seg = foreground_mask
     else:
         # inference from semantic segmentation

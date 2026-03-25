@@ -101,9 +101,7 @@ class MMDetBackbone(Backbone):
         outs = self.backbone(x)
         if self.neck is not None:
             outs = self.neck(outs)
-        assert isinstance(
-            outs, (list, tuple)
-        ), "mmdet backbone should return a list/tuple of tensors!"
+        assert isinstance(outs, (list, tuple)), "mmdet backbone should return a list/tuple of tensors!"
         if len(outs) != len(self._output_shapes):
             raise ValueError(
                 "Length of output_shapes does not match outputs from the mmdet backbone: "
@@ -169,9 +167,7 @@ class MMDetDetector(nn.Module):
             c, h, w = input["image"].shape
             meta["img_shape"] = meta["ori_shape"] = (h, w, c)
             if rescale:
-                scale_factor = np.array(
-                    [w / input["width"], h / input["height"]] * 2, dtype="float32"
-                )
+                scale_factor = np.array([w / input["width"], h / input["height"]] * 2, dtype="float32")
                 ori_shape = (input["height"], input["width"])
                 output_shapes.append(ori_shape)
                 meta["ori_shape"] = ori_shape + (c,)
@@ -214,10 +210,7 @@ class MMDetDetector(nn.Module):
             return _parse_losses(losses_and_metrics)
         else:
             results = self.detector.simple_test(images, metas, rescale=rescale)
-            results = [
-                {"instances": _convert_mmdet_result(r, shape)}
-                for r, shape in zip(results, output_shapes)
-            ]
+            results = [{"instances": _convert_mmdet_result(r, shape)} for r, shape in zip(results, output_shapes)]
             return results
 
     @property
@@ -237,9 +230,7 @@ def _convert_mmdet_result(result, shape: Tuple[int, int]) -> Instances:
 
     bboxes = torch.from_numpy(np.vstack(bbox_result))  # Nx5
     bboxes, scores = bboxes[:, :4], bboxes[:, -1]
-    labels = [
-        torch.full((bbox.shape[0],), i, dtype=torch.int32) for i, bbox in enumerate(bbox_result)
-    ]
+    labels = [torch.full((bbox.shape[0],), i, dtype=torch.int32) for i, bbox in enumerate(bbox_result)]
     labels = torch.cat(labels)
     inst = Instances(shape)
     inst.pred_boxes = Boxes(bboxes)

@@ -319,9 +319,7 @@ async def analyze_brain_tumor(
     # 2. Construct Analysis Request
     # Heuristic lookup to avoid duplicate patient records
     db_patient = None
-    all_potential_patients = db.query(models.Patient).filter(
-        models.Patient.age == age
-    ).all()
+    all_potential_patients = db.query(models.Patient).filter(models.Patient.age == age).all()
 
     # Decrypt and compare names manually since name is an EncryptedString
     db_patient: Optional[models.Patient] = None
@@ -366,10 +364,7 @@ async def analyze_brain_tumor(
             email=patient_email,
             medical_record_number=mrn,
         ),
-        medical_data=schemas.MedicalRecordBase(
-            mri_image_path=abs_file_path,
-            **existing_vitals
-        ),
+        medical_data=schemas.MedicalRecordBase(mri_image_path=abs_file_path, **existing_vitals),
         role="Doctor",
         conversation_history=[],
     )

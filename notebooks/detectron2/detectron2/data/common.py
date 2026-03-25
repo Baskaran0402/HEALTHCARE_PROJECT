@@ -134,11 +134,7 @@ class MapDataset(data.Dataset):
 
             if retry_count >= 3:
                 logger = logging.getLogger(__name__)
-                logger.warning(
-                    "Failed to apply `_map_func` for idx: {}, retry count: {}".format(
-                        idx, retry_count
-                    )
-                )
+                logger.warning("Failed to apply `_map_func` for idx: {}, retry count: {}".format(idx, retry_count))
 
 
 class _TorchSerializedList:
@@ -163,11 +159,7 @@ class _TorchSerializedList:
             buffer = pickle.dumps(data, protocol=-1)
             return np.frombuffer(buffer, dtype=np.uint8)
 
-        logger.info(
-            "Serializing {} elements to byte tensors and concatenating them all ...".format(
-                len(self._lst)
-            )
-        )
+        logger.info("Serializing {} elements to byte tensors and concatenating them all ...".format(len(self._lst)))
         self._lst = [_serialize(x) for x in self._lst]
         self._addr = np.asarray([len(x) for x in self._lst], dtype=np.int64)
         self._addr = torch.from_numpy(np.cumsum(self._addr))
@@ -231,9 +223,7 @@ class DatasetFromList(data.Dataset):
 
         if self._serialize:
             serialize_method = (
-                serialize
-                if isinstance(serialize, Callable)
-                else _DEFAULT_DATASET_FROM_LIST_SERIALIZE_METHOD
+                serialize if isinstance(serialize, Callable) else _DEFAULT_DATASET_FROM_LIST_SERIALIZE_METHOD
             )
             logger.info(f"Serializing the dataset using: {serialize_method}")
             self._lst = serialize_method(self._lst)

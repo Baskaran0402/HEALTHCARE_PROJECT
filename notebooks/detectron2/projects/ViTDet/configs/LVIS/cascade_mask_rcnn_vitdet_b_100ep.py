@@ -38,14 +38,11 @@ model.roi_heads.update(
             cls_agnostic_bbox_reg=True,
             use_sigmoid_ce=True,
             use_fed_loss=True,
-            get_fed_loss_cls_weights=lambda: get_fed_loss_cls_weights(
-                dataloader.train.dataset.names, 0.5
-            ),
+            get_fed_loss_cls_weights=lambda: get_fed_loss_cls_weights(dataloader.train.dataset.names, 0.5),
         )
         for (w1, w2) in [(10, 5), (20, 10), (30, 15)]
     ],
     proposal_matchers=[
-        L(Matcher)(thresholds=[th], labels=[0, 1], allow_low_quality_matches=False)
-        for th in [0.5, 0.6, 0.7]
+        L(Matcher)(thresholds=[th], labels=[0, 1], allow_low_quality_matches=False) for th in [0.5, 0.6, 0.7]
     ],
 )

@@ -33,9 +33,7 @@ def merge_branch_instances(instances, num_branch, nms_thresh, topk_per_image):
         instance = Instances.cat([instances[i + batch_size * j] for j in range(num_branch)])
 
         # Apply per-class NMS
-        keep = batched_nms(
-            instance.pred_boxes.tensor, instance.scores, instance.pred_classes, nms_thresh
-        )
+        keep = batched_nms(instance.pred_boxes.tensor, instance.scores, instance.pred_classes, nms_thresh)
         keep = keep[:topk_per_image]
         result = instance[keep]
 

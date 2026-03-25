@@ -190,18 +190,14 @@ def register_all_cityscapes(root):
         inst_key = key.format(task="instance_seg")
         DatasetCatalog.register(
             inst_key,
-            lambda x=image_dir, y=gt_dir: load_cityscapes_instances(
-                x, y, from_json=True, to_polygons=True
-            ),
+            lambda x=image_dir, y=gt_dir: load_cityscapes_instances(x, y, from_json=True, to_polygons=True),
         )
         MetadataCatalog.get(inst_key).set(
             image_dir=image_dir, gt_dir=gt_dir, evaluator_type="cityscapes_instance", **meta
         )
 
         sem_key = key.format(task="sem_seg")
-        DatasetCatalog.register(
-            sem_key, lambda x=image_dir, y=gt_dir: load_cityscapes_semantic(x, y)
-        )
+        DatasetCatalog.register(sem_key, lambda x=image_dir, y=gt_dir: load_cityscapes_semantic(x, y))
         MetadataCatalog.get(sem_key).set(
             image_dir=image_dir,
             gt_dir=gt_dir,
@@ -234,9 +230,7 @@ def register_all_ade20k(root):
         image_dir = os.path.join(root, "images", dirname)
         gt_dir = os.path.join(root, "annotations_detectron2", dirname)
         name = f"ade20k_sem_seg_{name}"
-        DatasetCatalog.register(
-            name, lambda x=image_dir, y=gt_dir: load_sem_seg(y, x, gt_ext="png", image_ext="jpg")
-        )
+        DatasetCatalog.register(name, lambda x=image_dir, y=gt_dir: load_sem_seg(y, x, gt_ext="png", image_ext="jpg"))
         MetadataCatalog.get(name).set(
             stuff_classes=ADE20K_SEM_SEG_CATEGORIES[:],
             image_root=image_dir,

@@ -100,9 +100,7 @@ def flop_count_operators(model: nn.Module, inputs: list) -> typing.DefaultDict[s
     return {k: v / 1e9 for k, v in ret.items()}
 
 
-def activation_count_operators(
-    model: nn.Module, inputs: list, **kwargs
-) -> typing.DefaultDict[str, float]:
+def activation_count_operators(model: nn.Module, inputs: list, **kwargs) -> typing.DefaultDict[str, float]:
     """
     Implement operator-level activations counting using jit.
     This is a wrapper of fvcore.nn.activation_count, that supports standard detection models
@@ -125,9 +123,7 @@ def activation_count_operators(
     return _wrapper_count_operators(model=model, inputs=inputs, mode=ACTIVATIONS_MODE, **kwargs)
 
 
-def _wrapper_count_operators(
-    model: nn.Module, inputs: list, mode: str, **kwargs
-) -> typing.DefaultDict[str, float]:
+def _wrapper_count_operators(model: nn.Module, inputs: list, mode: str, **kwargs) -> typing.DefaultDict[str, float]:
     # ignore some ops
     supported_ops = {k: lambda *args, **kwargs: {} for k in _IGNORED_OPS}
     supported_ops.update(kwargs.pop("supported_ops", {}))

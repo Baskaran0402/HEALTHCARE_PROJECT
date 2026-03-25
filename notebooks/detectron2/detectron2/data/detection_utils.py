@@ -5,6 +5,7 @@
 Common data processing utilities that are used in a
 typical object detection data pipeline.
 """
+
 import logging
 import numpy as np
 from typing import List, Union
@@ -196,11 +197,7 @@ def check_image_size(dataset_dict, image):
         if not image_wh == expected_wh:
             raise SizeMismatchError(
                 "Mismatched image shape{}, got {}, expect {}.".format(
-                    (
-                        " for image " + dataset_dict["file_name"]
-                        if "file_name" in dataset_dict
-                        else ""
-                    ),
+                    (" for image " + dataset_dict["file_name"] if "file_name" in dataset_dict else ""),
                     image_wh,
                     expected_wh,
                 )
@@ -242,9 +239,7 @@ def transform_proposals(dataset_dict, image_shape, transforms, *, proposal_topk,
             )
         )
         boxes = Boxes(boxes)
-        objectness_logits = torch.as_tensor(
-            dataset_dict.pop("proposal_objectness_logits").astype("float32")
-        )
+        objectness_logits = torch.as_tensor(dataset_dict.pop("proposal_objectness_logits").astype("float32"))
 
         boxes.clip(image_shape)
         keep = boxes.nonempty(threshold=min_box_size)
@@ -270,9 +265,7 @@ def get_bbox(annotation):
     return bbox
 
 
-def transform_instance_annotations(
-    annotation, transforms, image_size, *, keypoint_hflip_indices=None
-):
+def transform_instance_annotations(annotation, transforms, image_size, *, keypoint_hflip_indices=None):
     """
     Apply transforms to box, segmentation and keypoints annotations of a single instance.
 
@@ -309,9 +302,7 @@ def transform_instance_annotations(
         if isinstance(segm, list):
             # polygons
             polygons = [np.asarray(p).reshape(-1, 2) for p in segm]
-            annotation["segmentation"] = [
-                p.reshape(-1) for p in transforms.apply_polygons(polygons)
-            ]
+            annotation["segmentation"] = [p.reshape(-1) for p in transforms.apply_polygons(polygons)]
         elif isinstance(segm, dict):
             # RLE
             mask = mask_util.decode(segm)
@@ -399,9 +390,7 @@ def annotations_to_instances(annos, image_size, mask_format="polygon"):
             This is the format that builtin models expect.
     """
     boxes = (
-        np.stack(
-            [BoxMode.convert(obj["bbox"], obj["bbox_mode"], BoxMode.XYXY_ABS) for obj in annos]
-        )
+        np.stack([BoxMode.convert(obj["bbox"], obj["bbox_mode"], BoxMode.XYXY_ABS) for obj in annos])
         if len(annos)
         else np.zeros((0, 4))
     )
@@ -418,9 +407,7 @@ def annotations_to_instances(annos, image_size, mask_format="polygon"):
             try:
                 masks = PolygonMasks(segms)
             except ValueError as e:
-                raise ValueError(
-                    "Failed to use mask_format=='polygon' from the given annotations!"
-                ) from e
+                raise ValueError("Failed to use mask_format=='polygon' from the given annotations!") from e
         else:
             assert mask_format == "bitmask", mask_format
             masks = []
@@ -432,9 +419,7 @@ def annotations_to_instances(annos, image_size, mask_format="polygon"):
                     # COCO RLE
                     masks.append(mask_util.decode(segm))
                 elif isinstance(segm, np.ndarray):
-                    assert segm.ndim == 2, "Expect segmentation of 2 dimensions, got {}.".format(
-                        segm.ndim
-                    )
+                    assert segm.ndim == 2, "Expect segmentation of 2 dimensions, got {}.".format(segm.ndim)
                     # mask array
                     masks.append(segm)
                 else:
@@ -445,9 +430,7 @@ def annotations_to_instances(annos, image_size, mask_format="polygon"):
                         " in a 2D numpy array of shape HxW.".format(type(segm))
                     )
             # torch.from_numpy does not support array with negative stride.
-            masks = BitMasks(
-                torch.stack([torch.from_numpy(np.ascontiguousarray(x)) for x in masks])
-            )
+            masks = BitMasks(torch.stack([torch.from_numpy(np.ascontiguousarray(x)) for x in masks]))
         target.gt_masks = masks
 
     if len(annos) and "keypoints" in annos[0]:
@@ -486,9 +469,7 @@ def annotations_to_instances_rotated(annos, image_size):
     return target
 
 
-def filter_empty_instances(
-    instances, by_box=True, by_mask=True, box_threshold=1e-5, return_mask=False
-):
+def filter_empty_instances(instances, by_box=True, by_mask=True, box_threshold=1e-5, return_mask=False):
     """
     Filter out empty instances in an `Instances` object.
 
@@ -563,9 +544,7 @@ def get_fed_loss_cls_weights(dataset_names: Union[str, List[str]], freq_weight_p
 
     meta = MetadataCatalog.get(dataset_names[0])
     class_freq_meta = meta.class_image_count
-    class_freq = torch.tensor(
-        [c["image_count"] for c in sorted(class_freq_meta, key=lambda x: x["id"])]
-    )
+    class_freq = torch.tensor([c["image_count"] for c in sorted(class_freq_meta, key=lambda x: x["id"])])
     class_freq_weight = class_freq.float() ** freq_weight_power
     return class_freq_weight
 
@@ -587,9 +566,7 @@ def gen_crop_transform_with_instance(crop_size, image_size, instance):
     assert (
         image_size[0] >= center_yx[0] and image_size[1] >= center_yx[1]
     ), "The annotation bounding box is outside of the image!"
-    assert (
-        image_size[0] >= crop_size[0] and image_size[1] >= crop_size[1]
-    ), "Crop size is larger than image size!"
+    assert image_size[0] >= crop_size[0] and image_size[1] >= crop_size[1], "Crop size is larger than image size!"
 
     min_yx = np.maximum(np.floor(center_yx).astype(np.int32) - crop_size, 0)
     max_yx = np.maximum(np.asarray(image_size, dtype=np.int32) - crop_size, 0)
@@ -618,13 +595,9 @@ def check_metadata_consistency(key, dataset_names):
     entries_per_dataset = [getattr(MetadataCatalog.get(d), key) for d in dataset_names]
     for idx, entry in enumerate(entries_per_dataset):
         if entry != entries_per_dataset[0]:
+            logger.error("Metadata '{}' for dataset '{}' is '{}'".format(key, dataset_names[idx], str(entry)))
             logger.error(
-                "Metadata '{}' for dataset '{}' is '{}'".format(key, dataset_names[idx], str(entry))
-            )
-            logger.error(
-                "Metadata '{}' for dataset '{}' is '{}'".format(
-                    key, dataset_names[0], str(entries_per_dataset[0])
-                )
+                "Metadata '{}' for dataset '{}' is '{}'".format(key, dataset_names[0], str(entries_per_dataset[0]))
             )
             raise ValueError("Datasets have different metadata '{}'!".format(key))
 

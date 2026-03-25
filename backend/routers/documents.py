@@ -108,12 +108,16 @@ def get_patient_documents(
     if not (is_admin or is_patient_owner):
         if current_user.role == "doctor":
             doctor_id = current_user.doctor_profile.id if current_user.doctor_profile else current_user.id
-            docs = db.query(models.PatientDocument).filter(
-                models.PatientDocument.patient_id == patient_id,
-                models.PatientDocument.shared_with_doctor_id == doctor_id,
-                (models.PatientDocument.share_expires_at.is_(None))
-                | (models.PatientDocument.share_expires_at > datetime.now()),
-            ).all()
+            docs = (
+                db.query(models.PatientDocument)
+                .filter(
+                    models.PatientDocument.patient_id == patient_id,
+                    models.PatientDocument.shared_with_doctor_id == doctor_id,
+                    (models.PatientDocument.share_expires_at.is_(None))
+                    | (models.PatientDocument.share_expires_at > datetime.now()),
+                )
+                .all()
+            )
             return docs
 
         raise HTTPException(status_code=403, detail="Not authorized to access these documents")

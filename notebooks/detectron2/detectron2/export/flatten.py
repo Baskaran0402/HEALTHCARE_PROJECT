@@ -54,9 +54,7 @@ class Schema:
     def _split(values, sizes):
         if len(sizes):
             expected_len = sum(sizes)
-            assert (
-                len(values) == expected_len
-            ), f"Values has length {len(values)} but expect length {expected_len}."
+            assert len(values) == expected_len, f"Values has length {len(values)} but expect length {expected_len}."
         ret = []
         for k in range(len(sizes)):
             begin, end = sum(sizes[:k]), sum(sizes[: k + 1])
@@ -72,9 +70,7 @@ class ListSchema(Schema):
     def __call__(self, values):
         values = self._split(values, self.sizes)
         if len(values) != len(self.schemas):
-            raise ValueError(
-                f"Values has length {len(values)} but schemas " f"has length {len(self.schemas)}!"
-            )
+            raise ValueError(f"Values has length {len(values)} but schemas " f"has length {len(self.schemas)}!")
         values = [m(v) for m, v in zip(self.schemas, values)]
         return list(values)
 
@@ -264,17 +260,12 @@ class TracingAdapter(nn.Module):
         if all(isinstance(x, torch.Tensor) for x in self.flattened_inputs):
             return
         if self.allow_non_tensor:
-            self.flattened_inputs = tuple(
-                [x for x in self.flattened_inputs if isinstance(x, torch.Tensor)]
-            )
+            self.flattened_inputs = tuple([x for x in self.flattened_inputs if isinstance(x, torch.Tensor)])
             self.inputs_schema = None
         else:
             for input in self.flattened_inputs:
                 if not isinstance(input, torch.Tensor):
-                    raise ValueError(
-                        "Inputs for tracing must only contain tensors. "
-                        f"Got a {type(input)} instead."
-                    )
+                    raise ValueError("Inputs for tracing must only contain tensors. " f"Got a {type(input)} instead.")
 
     def forward(self, *args: torch.Tensor):
         with torch.no_grad(), patch_builtin_len():
@@ -294,25 +285,19 @@ class TracingAdapter(nn.Module):
             outputs = self.inference_func(self.model, *inputs_orig_format)
             flattened_outputs, schema = flatten_to_tuple(outputs)
 
-            flattened_output_tensors = tuple(
-                [x for x in flattened_outputs if isinstance(x, torch.Tensor)]
-            )
+            flattened_output_tensors = tuple([x for x in flattened_outputs if isinstance(x, torch.Tensor)])
             if len(flattened_output_tensors) < len(flattened_outputs):
                 if self.allow_non_tensor:
                     flattened_outputs = flattened_output_tensors
                     self.outputs_schema = None
                 else:
-                    raise ValueError(
-                        "Model cannot be traced because some model outputs "
-                        "cannot flatten to tensors."
-                    )
+                    raise ValueError("Model cannot be traced because some model outputs " "cannot flatten to tensors.")
             else:  # schema is valid
                 if self.outputs_schema is None:
                     self.outputs_schema = schema
                 else:
                     assert self.outputs_schema == schema, (
-                        "Model should always return outputs with the same "
-                        "structure so it can be traced!"
+                        "Model should always return outputs with the same " "structure so it can be traced!"
                     )
             return flattened_outputs
 

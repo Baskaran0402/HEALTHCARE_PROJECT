@@ -72,9 +72,7 @@ class PanopticFPN(GeneralizedRCNN):
             )
         if cfg.MODEL.PANOPTIC_FPN.INSTANCE_LOSS_WEIGHT != 1.0:
             w = cfg.MODEL.PANOPTIC_FPN.INSTANCE_LOSS_WEIGHT
-            logger.warning(
-                "PANOPTIC_FPN.INSTANCE_LOSS_WEIGHT should be replaced by weights on each ROI head."
-            )
+            logger.warning("PANOPTIC_FPN.INSTANCE_LOSS_WEIGHT should be replaced by weights on each ROI head.")
 
             def update_weight(x):
                 if isinstance(x, dict):
@@ -128,9 +126,7 @@ class PanopticFPN(GeneralizedRCNN):
 
         gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
         proposals, proposal_losses = self.proposal_generator(images, features, gt_instances)
-        detector_results, detector_losses = self.roi_heads(
-            images, features, proposals, gt_instances
-        )
+        detector_results, detector_losses = self.roi_heads(images, features, proposals, gt_instances)
 
         losses = sem_seg_losses
         losses.update(proposal_losses)

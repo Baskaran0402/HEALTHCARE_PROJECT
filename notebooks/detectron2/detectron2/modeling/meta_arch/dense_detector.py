@@ -108,9 +108,7 @@ class DenseDetector(nn.Module):
                 return results
 
             processed_results = []
-            for results_per_image, input_per_image, image_size in zip(
-                results, batched_inputs, images.image_sizes
-            ):
+            for results_per_image, input_per_image, image_size in zip(results, batched_inputs, images.image_sizes):
                 height = input_per_image.get("height", image_size[0])
                 width = input_per_image.get("width", image_size[1])
                 r = detector_postprocess(results_per_image, height, width)
@@ -225,12 +223,8 @@ class DenseDetector(nn.Module):
 
         anchor_idxs, classes_idxs = topk_idxs.unbind(dim=1)
 
-        pred_boxes = self.box2box_transform.apply_deltas(
-            pred_deltas[anchor_idxs], anchors.tensor[anchor_idxs]
-        )
-        return Instances(
-            image_size, pred_boxes=Boxes(pred_boxes), scores=pred_scores, pred_classes=classes_idxs
-        )
+        pred_boxes = self.box2box_transform.apply_deltas(pred_deltas[anchor_idxs], anchors.tensor[anchor_idxs])
+        return Instances(image_size, pred_boxes=Boxes(pred_boxes), scores=pred_scores, pred_classes=classes_idxs)
 
     def _decode_multi_level_predictions(
         self,
@@ -270,9 +264,7 @@ class DenseDetector(nn.Module):
         """
         from detectron2.utils.visualizer import Visualizer
 
-        assert len(batched_inputs) == len(
-            results
-        ), "Cannot visualize inputs and results of different sizes"
+        assert len(batched_inputs) == len(results), "Cannot visualize inputs and results of different sizes"
         storage = get_event_storage()
         max_boxes = 20
 

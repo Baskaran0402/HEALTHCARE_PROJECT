@@ -94,12 +94,8 @@ class DensePoseCseLoss:
             )
         return all_loss_dict
 
-    def produce_fake_losses(
-        self, densepose_predictor_outputs: Any, embedder: nn.Module
-    ) -> LossDict:
-        meshname_to_embed_losses = self.embed_loss.fake_values(
-            densepose_predictor_outputs, embedder=embedder
-        )
+    def produce_fake_losses(self, densepose_predictor_outputs: Any, embedder: nn.Module) -> LossDict:
+        meshname_to_embed_losses = self.embed_loss.fake_values(densepose_predictor_outputs, embedder=embedder)
         embed_loss_dict = {
             f"loss_densepose_E{mesh_name}": meshname_to_embed_losses[mesh_name]
             for mesh_name in meshname_to_embed_losses
@@ -111,7 +107,5 @@ class DensePoseCseLoss:
         if self.do_shape2shape:
             all_loss_dict["loss_shape2shape"] = self.shape2shape_loss.fake_value(embedder)
         if self.do_pix2shape:
-            all_loss_dict["loss_pix2shape"] = self.pix2shape_loss.fake_value(
-                densepose_predictor_outputs, embedder
-            )
+            all_loss_dict["loss_pix2shape"] = self.pix2shape_loss.fake_value(densepose_predictor_outputs, embedder)
         return all_loss_dict

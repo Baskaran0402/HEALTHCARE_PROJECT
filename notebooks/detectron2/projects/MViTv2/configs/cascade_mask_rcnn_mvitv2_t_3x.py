@@ -7,7 +7,6 @@ from detectron2.layers.batch_norm import NaiveSyncBatchNorm
 
 from .mask_rcnn_mvitv2_t_3x import model, dataloader, optimizer, lr_multiplier, train
 
-
 # arguments that don't exist for Cascade R-CNN
 [model.roi_heads.pop(k) for k in ["box_head", "box_predictor", "proposal_matcher"]]
 
@@ -33,8 +32,7 @@ model.roi_heads.update(
         for (w1, w2) in [(10, 5), (20, 10), (30, 15)]
     ],
     proposal_matchers=[
-        L(Matcher)(thresholds=[th], labels=[0, 1], allow_low_quality_matches=False)
-        for th in [0.5, 0.6, 0.7]
+        L(Matcher)(thresholds=[th], labels=[0, 1], allow_low_quality_matches=False) for th in [0.5, 0.6, 0.7]
     ],
 )
 

@@ -69,6 +69,5 @@ def wrap_shuffle(module_type, method):
 
 from .mask_rcnn_BNhead import model, dataloader, lr_multiplier, optimizer, train
 
-
 model.roi_heads.box_head._target_ = wrap_shuffle(FastRCNNConvFCHead, "forward")
 model.roi_heads.mask_head._target_ = wrap_shuffle(MaskRCNNConvUpsampleHead, "layers")

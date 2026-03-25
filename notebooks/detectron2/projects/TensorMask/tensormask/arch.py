@@ -97,9 +97,7 @@ def _assignment_rule(
     # Fall back for small objects
     gt_size_upper[gt_size_upper < min_anchor_size] = min_anchor_size
     # Due to sampling of locations, the anchor sizes are deducted with sampling strides
-    anchor_size = (
-        torch.max(anchor_boxes[:, 2:] - anchor_boxes[:, :2], dim=1)[0] - unit_lengths
-    )  # [M]
+    anchor_size = torch.max(anchor_boxes[:, 2:] - anchor_boxes[:, :2], dim=1)[0] - unit_lengths  # [M]
 
     size_diff_upper = gt_size_upper[:, None] - anchor_size  # [N,M]
     scale_matrix = size_diff_upper >= 0  # [N,M]
@@ -236,25 +234,17 @@ class TensorMaskAnchorGenerator(DefaultAnchorGenerator):
         anchors = []
         unit_lengths = []
         indexes = []
-        for lvl, (size, stride, base_anchors) in enumerate(
-            zip(grid_sizes, self.strides, self.cell_anchors)
-        ):
+        for lvl, (size, stride, base_anchors) in enumerate(zip(grid_sizes, self.strides, self.cell_anchors)):
             grid_height, grid_width = size
             device = base_anchors.device
-            shifts_x = torch.arange(
-                0, grid_width * stride, step=stride, dtype=torch.float32, device=device
-            )
-            shifts_y = torch.arange(
-                0, grid_height * stride, step=stride, dtype=torch.float32, device=device
-            )
+            shifts_x = torch.arange(0, grid_width * stride, step=stride, dtype=torch.float32, device=device)
+            shifts_y = torch.arange(0, grid_height * stride, step=stride, dtype=torch.float32, device=device)
             shift_y, shift_x = torch.meshgrid(shifts_y, shifts_x)
             shifts = torch.stack((shift_x, shift_y, shift_x, shift_y), dim=2)
             # Stack anchors in shapes of (HWA, 4)
             cur_anchor = (shifts[:, :, None, :] + base_anchors.view(1, 1, -1, 4)).view(-1, 4)
             anchors.append(cur_anchor)
-            unit_lengths.append(
-                torch.full((cur_anchor.shape[0],), stride, dtype=torch.float32, device=device)
-            )
+            unit_lengths.append(torch.full((cur_anchor.shape[0],), stride, dtype=torch.float32, device=device))
             # create mask indexes using mesh grid
             shifts_l = torch.full((1,), lvl, dtype=torch.int64, device=device)
             shifts_i = torch.zeros((1,), dtype=torch.int64, device=device)
@@ -281,9 +271,7 @@ class TensorMaskAnchorGenerator(DefaultAnchorGenerator):
         """
         num_images = len(features[0])
         grid_sizes = [feature_map.shape[-2:] for feature_map in features]
-        anchors_list, lengths_list, indexes_list = self.grid_anchors_with_unit_lengths_and_indexes(
-            grid_sizes
-        )
+        anchors_list, lengths_list, indexes_list = self.grid_anchors_with_unit_lengths_and_indexes(grid_sizes)
 
         # Convert anchors from Tensor to Boxes
         anchors_per_im = [Boxes(x) for x in anchors_list]
@@ -343,9 +331,7 @@ class TensorMask(nn.Module):
         self.min_anchor_size = min(anchors_min_level) - feature_strides[0]
 
         # head of the TensorMask
-        self.head = TensorMaskHead(
-            cfg, self.num_levels, self.num_anchors, self.mask_sizes, feature_shapes
-        )
+        self.head = TensorMaskHead(cfg, self.num_levels, self.num_anchors, self.mask_sizes, feature_shapes)
         # box transform
         self.box2box_transform = Box2BoxTransform(weights=cfg.MODEL.TENSOR_MASK.BBOX_REG_WEIGHTS)
         self.register_buffer("pixel_mean", torch.tensor(cfg.MODEL.PIXEL_MEAN).view(-1, 1, 1), False)
@@ -402,9 +388,7 @@ class TensorMask(nn.Module):
             # do inference to get the output
             results = self.inference(pred_logits, pred_deltas, pred_masks, anchors, indexes, images)
             processed_results = []
-            for results_im, input_im, image_size in zip(
-                results, batched_inputs, images.image_sizes
-            ):
+            for results_im, input_im, image_size in zip(results, batched_inputs, images.image_sizes):
                 height = input_im.get("height", image_size[0])
                 width = input_im.get("width", image_size[1])
                 # this is to do post-processing with the image size
@@ -459,8 +443,7 @@ class TensorMask(nn.Module):
             loss_box_reg = pred_deltas.sum() * 0
         else:
             loss_box_reg = (
-                smooth_l1_loss(pred_deltas[gt_fg_inds], gt_deltas, beta=0.0, reduction="sum")
-                / loss_normalizer
+                smooth_l1_loss(pred_deltas[gt_fg_inds], gt_deltas, beta=0.0, reduction="sum") / loss_normalizer
             )
         losses = {"loss_cls": loss_cls, "loss_box_reg": loss_box_reg}
 
@@ -554,9 +537,7 @@ class TensorMask(nn.Module):
             zip(anchors, unit_lengths, indexes, targets)
         ):
             # Initialize all
-            gt_classes_i = torch.full_like(
-                unit_lengths_im, self.num_classes, dtype=torch.int64, device=self.device
-            )
+            gt_classes_i = torch.full_like(unit_lengths_im, self.num_classes, dtype=torch.int64, device=self.device)
             # Ground truth classes
             has_gt = len(targets_im) > 0
             if has_gt:
@@ -579,9 +560,7 @@ class TensorMask(nn.Module):
                 # Ground truth box regression, only for foregrounds
                 matched_gt_boxes = targets_im[gt_fg_matched_inds].gt_boxes
                 # Compute box regression offsets for foregrounds only
-                gt_deltas_i = self.box2box_transform.get_deltas(
-                    fg_anchors.tensor, matched_gt_boxes.tensor
-                )
+                gt_deltas_i = self.box2box_transform.get_deltas(fg_anchors.tensor, matched_gt_boxes.tensor)
                 gt_deltas.append(gt_deltas_i)
 
                 # Masks
@@ -596,9 +575,7 @@ class TensorMask(nn.Module):
                                 ids_lvl_anchor = ids_lvl & (matched_indexes[:, 4] == anc)
                                 if torch.any(ids_lvl_anchor):
                                     gt_masks[lvl][anc].append(
-                                        targets_im[
-                                            gt_fg_matched_inds[ids_lvl_anchor]
-                                        ].gt_masks.crop_and_resize(
+                                        targets_im[gt_fg_matched_inds[ids_lvl_anchor]].gt_masks.crop_and_resize(
                                             fg_anchors[ids_lvl_anchor].tensor,
                                             self.mask_sizes[anc] * cur_level_factor,
                                         )
@@ -672,9 +649,7 @@ class TensorMask(nn.Module):
             results.append(results_im)
         return results
 
-    def inference_single_image(
-        self, pred_logits, pred_deltas, pred_masks, anchors, indexes, image_size
-    ):
+    def inference_single_image(self, pred_logits, pred_deltas, pred_masks, anchors, indexes, image_size):
         """
         Single-image inference. Return bounding-box detection results by thresholding
         on scores and applying non-maximum suppression (NMS).
@@ -711,9 +686,7 @@ class TensorMask(nn.Module):
         # HWA index
         top_idxs //= self.num_classes
         # predict boxes
-        pred_boxes = self.box2box_transform.apply_deltas(
-            pred_deltas[top_idxs], anchors[top_idxs].tensor
-        )
+        pred_boxes = self.box2box_transform.apply_deltas(pred_deltas[top_idxs], anchors[top_idxs].tensor)
         # apply nms
         keep = batched_nms(pred_boxes, pred_prob, cls_idxs, self.nms_threshold)
         # pick the top ones
@@ -735,9 +708,7 @@ class TensorMask(nn.Module):
             # Get masks and do sigmoid
             for lvl, _, h, w, anc in result_indexes.tolist():
                 cur_size = self.mask_sizes[anc] * (2**lvl if self.bipyramid_on else 1)
-                result_masks.append(
-                    torch.sigmoid(pred_masks[lvl][anc][:, h, w].view(1, cur_size, cur_size))
-                )
+                result_masks.append(torch.sigmoid(pred_masks[lvl][anc][:, h, w].view(1, cur_size, cur_size)))
 
         return results, (result_masks, result_anchors)
 
@@ -777,32 +748,24 @@ class TensorMaskHead(nn.Module):
         cls_subnet = []
         cur_channels = in_channels
         for _ in range(num_convs):
-            cls_subnet.append(
-                nn.Conv2d(cur_channels, cls_channels, kernel_size=3, stride=1, padding=1)
-            )
+            cls_subnet.append(nn.Conv2d(cur_channels, cls_channels, kernel_size=3, stride=1, padding=1))
             cur_channels = cls_channels
             cls_subnet.append(nn.ReLU())
 
         self.cls_subnet = nn.Sequential(*cls_subnet)
-        self.cls_score = nn.Conv2d(
-            cur_channels, num_anchors * num_classes, kernel_size=3, stride=1, padding=1
-        )
+        self.cls_score = nn.Conv2d(cur_channels, num_anchors * num_classes, kernel_size=3, stride=1, padding=1)
         modules_list = [self.cls_subnet, self.cls_score]
 
         # box subnet
         bbox_subnet = []
         cur_channels = in_channels
         for _ in range(num_convs):
-            bbox_subnet.append(
-                nn.Conv2d(cur_channels, bbox_channels, kernel_size=3, stride=1, padding=1)
-            )
+            bbox_subnet.append(nn.Conv2d(cur_channels, bbox_channels, kernel_size=3, stride=1, padding=1))
             cur_channels = bbox_channels
             bbox_subnet.append(nn.ReLU())
 
         self.bbox_subnet = nn.Sequential(*bbox_subnet)
-        self.bbox_pred = nn.Conv2d(
-            cur_channels, num_anchors * 4, kernel_size=3, stride=1, padding=1
-        )
+        self.bbox_pred = nn.Conv2d(cur_channels, num_anchors * 4, kernel_size=3, stride=1, padding=1)
         modules_list.extend([self.bbox_subnet, self.bbox_pred])
 
         # mask subnet
@@ -810,9 +773,7 @@ class TensorMaskHead(nn.Module):
             mask_subnet = []
             cur_channels = in_channels
             for _ in range(num_convs):
-                mask_subnet.append(
-                    nn.Conv2d(cur_channels, mask_channels, kernel_size=3, stride=1, padding=1)
-                )
+                mask_subnet.append(nn.Conv2d(cur_channels, mask_channels, kernel_size=3, stride=1, padding=1))
                 cur_channels = mask_channels
                 mask_subnet.append(nn.ReLU())
 
@@ -822,9 +783,7 @@ class TensorMaskHead(nn.Module):
                 cur_mask_module = "mask_pred_%02d" % mask_size
                 self.add_module(
                     cur_mask_module,
-                    nn.Conv2d(
-                        cur_channels, mask_size * mask_size, kernel_size=1, stride=1, padding=0
-                    ),
+                    nn.Conv2d(cur_channels, mask_size * mask_size, kernel_size=1, stride=1, padding=0),
                 )
                 modules_list.append(getattr(self, cur_mask_module))
             if self.align_on:
@@ -891,9 +850,7 @@ class TensorMaskHead(nn.Module):
                         mask_feat_up = F.interpolate(
                             mask_feat, scale_factor=lambda_val, mode="bilinear", align_corners=False
                         )
-                    mask_feats_up.append(
-                        self.mask_fuse(mask_feat_up[:, :, :H, :W] + mask_feat_high_res)
-                    )
+                    mask_feats_up.append(self.mask_fuse(mask_feat_up[:, :, :H, :W] + mask_feat_high_res))
                 mask_feats = mask_feats_up
 
             pred_masks = []

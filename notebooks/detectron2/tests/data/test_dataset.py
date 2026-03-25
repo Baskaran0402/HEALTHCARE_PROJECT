@@ -172,9 +172,7 @@ class TestDataLoader(unittest.TestCase):
             self.assertEqual(len(data), len(dl))  # floor(N / batch_size)
             self._check_is_range(dl, N // batch_size * batch_size)
 
-            dl = build_batch_data_loader(
-                ds, sampler, batch_size, num_workers=num_workers, drop_last=False
-            )
+            dl = build_batch_data_loader(ds, sampler, batch_size, num_workers=num_workers, drop_last=False)
             data = list(iter(dl))
             self.assertEqual(len(data), len(dl))  # ceil(N / batch_size)
             self._check_is_range(dl, N)
@@ -190,15 +188,11 @@ class TestDataLoader(unittest.TestCase):
         ds = DatasetFromList(list(range(N)))
         sampler = InferenceSampler(len(ds))
         # test that parallel loader works correctly
-        dl = build_detection_test_loader(
-            dataset=ds, sampler=sampler, mapper=lambda x: x, num_workers=3
-        )
+        dl = build_detection_test_loader(dataset=ds, sampler=sampler, mapper=lambda x: x, num_workers=3)
         self._check_is_range(dl, N)
 
         # test that batch_size works correctly
-        dl = build_detection_test_loader(
-            dataset=ds, sampler=sampler, mapper=lambda x: x, batch_size=4, num_workers=0
-        )
+        dl = build_detection_test_loader(dataset=ds, sampler=sampler, mapper=lambda x: x, batch_size=4, num_workers=0)
         self._check_is_range(dl, N)
 
     def test_build_iterable_dataloader_inference(self):

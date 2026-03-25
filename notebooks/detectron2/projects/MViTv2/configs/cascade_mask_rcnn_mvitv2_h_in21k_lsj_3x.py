@@ -1,7 +1,6 @@
 from .cascade_mask_rcnn_mvitv2_b_3x import model, optimizer, train, lr_multiplier
 from .common.coco_loader_lsj import dataloader
 
-
 model.backbone.bottom_up.embed_dim = 192
 model.backbone.bottom_up.depth = 80
 model.backbone.bottom_up.num_heads = 3

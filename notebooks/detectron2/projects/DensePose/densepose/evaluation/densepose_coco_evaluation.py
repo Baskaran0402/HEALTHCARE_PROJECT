@@ -148,9 +148,7 @@ class DensePoseCocoEval:
         self.ignoreThrUV = 0.9
 
     def _loadGEval(self):
-        smpl_subdiv_fpath = PathManager.get_local_path(
-            "https://dl.fbaipublicfiles.com/densepose/data/SMPL_subdiv.mat"
-        )
+        smpl_subdiv_fpath = PathManager.get_local_path("https://dl.fbaipublicfiles.com/densepose/data/SMPL_subdiv.mat")
         pdist_transform_fpath = PathManager.get_local_path(
             "https://dl.fbaipublicfiles.com/densepose/data/SMPL_SUBDIV_TRANSFORM.mat"
         )
@@ -166,9 +164,7 @@ class DensePoseCocoEval:
         self.Part_ClosestVertInds = []
         for i in np.arange(24):
             self.Part_UVs.append(UV[:, SMPL_subdiv["Part_ID_subdiv"].squeeze() == (i + 1)])
-            self.Part_ClosestVertInds.append(
-                ClosestVertInds[SMPL_subdiv["Part_ID_subdiv"].squeeze() == (i + 1)]
-            )
+            self.Part_ClosestVertInds.append(ClosestVertInds[SMPL_subdiv["Part_ID_subdiv"].squeeze() == (i + 1)])
 
         with open(pdist_matrix_fpath, "rb") as hFile:
             arrays = pickle.load(hFile, encoding="latin1")
@@ -177,9 +173,7 @@ class DensePoseCocoEval:
         # Mean geodesic distances for parts.
         self.Mean_Distances = np.array([0, 0.351, 0.107, 0.126, 0.237, 0.173, 0.142, 0.128, 0.150])
         # Coarse Part labels.
-        self.CoarseParts = np.array(
-            [0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8]
-        )
+        self.CoarseParts = np.array([0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8])
 
     def _prepare(self):
         """
@@ -329,14 +323,10 @@ class DensePoseCocoEval:
             computeIoU = self.computeOgps
             if self._dpEvalMode in {DensePoseEvalMode.GPSM, DensePoseEvalMode.IOU}:
                 self.real_ious = {
-                    (imgId, catId): self.computeDPIoU(imgId, catId)
-                    for imgId in p.imgIds
-                    for catId in catIds
+                    (imgId, catId): self.computeDPIoU(imgId, catId) for imgId in p.imgIds for catId in catIds
                 }
 
-        self.ious = {
-            (imgId, catId): computeIoU(imgId, catId) for imgId in p.imgIds for catId in catIds
-        }
+        self.ious = {(imgId, catId): computeIoU(imgId, catId) for imgId in p.imgIds for catId in catIds}
 
         evaluateImg = self.evaluateImg
         maxDet = p.maxDets[-1]
@@ -653,9 +643,7 @@ class DensePoseCocoEval:
 
     def extract_iuv_from_quantized(self, dt, gt, py, px, pt_mask):
         densepose_results_quantized = dt["densepose"]
-        ipoints, upoints, vpoints = self._extract_iuv(
-            densepose_results_quantized.labels_uv_uint8.numpy(), py, px, gt
-        )
+        ipoints, upoints, vpoints = self._extract_iuv(densepose_results_quantized.labels_uv_uint8.numpy(), py, px, gt)
         ipoints[pt_mask == -1] = 0
         return ipoints, upoints, vpoints
 
@@ -665,9 +653,7 @@ class DensePoseCocoEval:
             dt["coarse_segm"].unsqueeze(0),
             dt["bbox"],
         )
-        uv = resample_uv_tensors_to_bbox(
-            dt["u"].unsqueeze(0), dt["v"].unsqueeze(0), labels_dt.squeeze(0), dt["bbox"]
-        )
+        uv = resample_uv_tensors_to_bbox(dt["u"].unsqueeze(0), dt["v"].unsqueeze(0), labels_dt.squeeze(0), dt["bbox"])
         labels_uv_uint8 = torch.cat((labels_dt.byte(), (uv * 255).clamp(0, 255).byte()))
         ipoints, upoints, vpoints = self._extract_iuv(labels_uv_uint8.numpy(), py, px, gt)
         ipoints[pt_mask == -1] = 0
@@ -686,15 +672,11 @@ class DensePoseCocoEval:
         ]
         return dist, Current_Mean_Distances
 
-    def computeOgps_single_pair_cse(
-        self, dt, gt, py, px, pt_mask, coarse_segm, embedding, bbox_xywh_abs
-    ):
+    def computeOgps_single_pair_cse(self, dt, gt, py, px, pt_mask, coarse_segm, embedding, bbox_xywh_abs):
         # 0-based mesh vertex indices
         cVertsGT = torch.as_tensor(gt["dp_vertex"], dtype=torch.int64)
         # label for each pixel of the bbox, [H, W] tensor of long
-        labels_dt = resample_coarse_segm_tensor_to_bbox(
-            coarse_segm.unsqueeze(0), bbox_xywh_abs
-        ).squeeze(0)
+        labels_dt = resample_coarse_segm_tensor_to_bbox(coarse_segm.unsqueeze(0), bbox_xywh_abs).squeeze(0)
         x, y, w, h = bbox_xywh_abs
         # embedding for each pixel of the bbox, [D, H, W] tensor of float32
         embedding = F.interpolate(
@@ -704,16 +686,12 @@ class DensePoseCocoEval:
         py_pt = torch.from_numpy(py[pt_mask > -1])
         px_pt = torch.from_numpy(px[pt_mask > -1])
         cVerts = torch.ones_like(cVertsGT) * -1
-        cVerts[pt_mask > -1] = self.findClosestVertsCse(
-            embedding, py_pt, px_pt, labels_dt, gt["ref_model"]
-        )
+        cVerts[pt_mask > -1] = self.findClosestVertsCse(embedding, py_pt, px_pt, labels_dt, gt["ref_model"])
         # Get pairwise geodesic distances between gt and estimated mesh points.
         dist = self.getDistancesCse(cVertsGT, cVerts, gt["ref_model"])
         # normalize distances
         if (gt["ref_model"] == "smpl_27554") and ("dp_I" in gt):
-            Current_Mean_Distances = self.Mean_Distances[
-                self.CoarseParts[np.array(gt["dp_I"], dtype=int)]
-            ]
+            Current_Mean_Distances = self.Mean_Distances[self.CoarseParts[np.array(gt["dp_I"], dtype=int)]]
         else:
             Current_Mean_Distances = 0.255
         return dist, Current_Mean_Distances
@@ -759,13 +737,9 @@ class DensePoseCocoEval:
                     else:
                         px[pts == -1] = 0
                         py[pts == -1] = 0
-                        dists_between_matches, dist_norm_coeffs = self.computeOgps_single_pair(
-                            dt, gt, py, px, pts
-                        )
+                        dists_between_matches, dist_norm_coeffs = self.computeOgps_single_pair(dt, gt, py, px, pts)
                         # Compute gps
-                        ogps_values = np.exp(
-                            -(dists_between_matches**2) / (2 * (dist_norm_coeffs**2))
-                        )
+                        ogps_values = np.exp(-(dists_between_matches**2) / (2 * (dist_norm_coeffs**2)))
                         #
                         ogps = np.mean(ogps_values) if len(ogps_values) > 0 else 0.0
                     ious[i, j] = ogps
@@ -812,15 +786,9 @@ class DensePoseCocoEval:
             # print('Checking the length', len(self.ious[imgId, catId]))
             # if len(self.ious[imgId, catId]) == 0:
             #    print(self.ious[imgId, catId])
-            ious = (
-                self.ious[imgId, catId][0][:, gtind]
-                if len(self.ious[imgId, catId]) > 0
-                else self.ious[imgId, catId]
-            )
+            ious = self.ious[imgId, catId][0][:, gtind] if len(self.ious[imgId, catId]) > 0 else self.ious[imgId, catId]
             ioubs = (
-                self.ious[imgId, catId][1][:, gtind]
-                if len(self.ious[imgId, catId]) > 0
-                else self.ious[imgId, catId]
+                self.ious[imgId, catId][1][:, gtind] if len(self.ious[imgId, catId]) > 0 else self.ious[imgId, catId]
             )
             if self._dpEvalMode in {DensePoseEvalMode.GPSM, DensePoseEvalMode.IOU}:
                 iousM = (
@@ -829,11 +797,7 @@ class DensePoseCocoEval:
                     else self.real_ious[imgId, catId]
                 )
         else:
-            ious = (
-                self.ious[imgId, catId][:, gtind]
-                if len(self.ious[imgId, catId]) > 0
-                else self.ious[imgId, catId]
-            )
+            ious = self.ious[imgId, catId][:, gtind] if len(self.ious[imgId, catId]) > 0 else self.ious[imgId, catId]
 
         T = len(p.iouThrs)
         G = len(gt)
@@ -1015,9 +979,7 @@ class DensePoseCocoEval:
                         except Exception:
                             pass
                         precision[t, :, k, a, m] = np.array(q)
-        logger.info(
-            "Final: max precision {}, min precision {}".format(np.max(precision), np.min(precision))
-        )
+        logger.info("Final: max precision {}, min precision {}".format(np.max(precision), np.min(precision)))
         self.eval = {
             "params": p,
             "counts": [T, R, K, A, M],
@@ -1045,9 +1007,7 @@ class DensePoseCocoEval:
             elif self.params.iouType == "densepose":
                 measure = "OGPS"
             iouStr = (
-                "{:0.2f}:{:0.2f}".format(p.iouThrs[0], p.iouThrs[-1])
-                if iouThr is None
-                else "{:0.2f}".format(iouThr)
+                "{:0.2f}:{:0.2f}".format(p.iouThrs[0], p.iouThrs[-1]) if iouThr is None else "{:0.2f}".format(iouThr)
             )
 
             aind = [i for i, aRng in enumerate(p.areaRngLbl) if aRng == areaRng]
@@ -1168,15 +1128,11 @@ class DensePoseCocoEval:
         for i in np.arange(24):
             #
             if (i + 1) in Index_points:
-                UVs = np.array(
-                    [U_points[Index_points == (i + 1)], V_points[Index_points == (i + 1)]]
-                )
+                UVs = np.array([U_points[Index_points == (i + 1)], V_points[Index_points == (i + 1)]])
                 Current_Part_UVs = self.Part_UVs[i]
                 Current_Part_ClosestVertInds = self.Part_ClosestVertInds[i]
                 D = ssd.cdist(Current_Part_UVs.transpose(), UVs.transpose()).squeeze()
-                ClosestVerts[Index_points == (i + 1)] = Current_Part_ClosestVertInds[
-                    np.argmin(D, axis=0)
-                ]
+                ClosestVerts[Index_points == (i + 1)] = Current_Part_ClosestVertInds[np.argmin(D, axis=0)]
         ClosestVertsTransformed = self.PDIST_transform[ClosestVerts.astype(int) - 1]
         ClosestVertsTransformed[ClosestVerts < 0] = 0
         return ClosestVertsTransformed

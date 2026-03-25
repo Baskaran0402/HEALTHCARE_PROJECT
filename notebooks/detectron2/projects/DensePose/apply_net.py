@@ -106,9 +106,7 @@ class InferenceAction(Action):
         cls.postexecute(context)
 
     @classmethod
-    def setup_config(
-        cls: type, config_fpath: str, model_fpath: str, args: argparse.Namespace, opts: List[str]
-    ):
+    def setup_config(cls: type, config_fpath: str, model_fpath: str, args: argparse.Namespace, opts: List[str]):
         cfg = get_cfg()
         add_densepose_config(cfg)
         cfg.merge_from_file(config_fpath)
@@ -159,9 +157,7 @@ class DumpAction(InferenceAction):
         )
 
     @classmethod
-    def execute_on_outputs(
-        cls: type, context: Dict[str, Any], entry: Dict[str, Any], outputs: Instances
-    ):
+    def execute_on_outputs(cls: type, context: Dict[str, Any], entry: Dict[str, Any], outputs: Instances):
         image_fpath = entry["file_name"]
         logger.info(f"Processing {image_fpath}")
         result = {"file_name": image_fpath}
@@ -233,9 +229,7 @@ class ShowAction(InferenceAction):
             type=float,
             help="Minimum detection score to visualize",
         )
-        parser.add_argument(
-            "--nms_thresh", metavar="<threshold>", default=None, type=float, help="NMS threshold"
-        )
+        parser.add_argument("--nms_thresh", metavar="<threshold>", default=None, type=float, help="NMS threshold")
         parser.add_argument(
             "--texture_atlas",
             metavar="<texture_atlas>",
@@ -256,9 +250,7 @@ class ShowAction(InferenceAction):
         )
 
     @classmethod
-    def setup_config(
-        cls: type, config_fpath: str, model_fpath: str, args: argparse.Namespace, opts: List[str]
-    ):
+    def setup_config(cls: type, config_fpath: str, model_fpath: str, args: argparse.Namespace, opts: List[str]):
         opts.append("MODEL.ROI_HEADS.SCORE_THRESH_TEST")
         opts.append(str(args.min_score))
         if args.nms_thresh is not None:
@@ -268,9 +260,7 @@ class ShowAction(InferenceAction):
         return cfg
 
     @classmethod
-    def execute_on_outputs(
-        cls: type, context: Dict[str, Any], entry: Dict[str, Any], outputs: Instances
-    ):
+    def execute_on_outputs(cls: type, context: Dict[str, Any], entry: Dict[str, Any], outputs: Instances):
         import cv2
         import numpy as np
 

@@ -3,6 +3,7 @@
 """
 Implement many useful :class:`Augmentation`.
 """
+
 import numpy as np
 import sys
 from numpy import random
@@ -126,9 +127,7 @@ class Resize(Augmentation):
         self._init(locals())
 
     def get_transform(self, image):
-        return ResizeTransform(
-            image.shape[0], image.shape[1], self.shape[0], self.shape[1], self.interp
-        )
+        return ResizeTransform(image.shape[0], image.shape[1], self.shape[0], self.shape[1], self.interp)
 
 
 class ResizeShortestEdge(Augmentation):
@@ -140,9 +139,7 @@ class ResizeShortestEdge(Augmentation):
     """
 
     @torch.jit.unused
-    def __init__(
-        self, short_edge_length, max_size=sys.maxsize, sample_style="range", interp=Image.BILINEAR
-    ):
+    def __init__(self, short_edge_length, max_size=sys.maxsize, sample_style="range", interp=Image.BILINEAR):
         """
         Args:
             short_edge_length (list[int]): If ``sample_style=="range"``,
@@ -159,8 +156,7 @@ class ResizeShortestEdge(Augmentation):
             short_edge_length = (short_edge_length, short_edge_length)
         if self.is_range:
             assert len(short_edge_length) == 2, (
-                "short_edge_length must be two values using 'range' sample style."
-                f" Got {short_edge_length}!"
+                "short_edge_length must be two values using 'range' sample style." f" Got {short_edge_length}!"
             )
         self._init(locals())
 
@@ -178,9 +174,7 @@ class ResizeShortestEdge(Augmentation):
         return ResizeTransform(h, w, newh, neww, self.interp)
 
     @staticmethod
-    def get_output_shape(
-        oldh: int, oldw: int, short_edge_length: int, max_size: int
-    ) -> Tuple[int, int]:
+    def get_output_shape(oldh: int, oldw: int, short_edge_length: int, max_size: int) -> Tuple[int, int]:
         """
         Compute the output size given input size and target short edge length.
         """
@@ -236,14 +230,10 @@ class ResizeScale(Augmentation):
         target_scale_size = np.multiply(target_size, scale)
 
         # Compute actual rescaling applied to input image and output size.
-        output_scale = np.minimum(
-            target_scale_size[0] / input_size[0], target_scale_size[1] / input_size[1]
-        )
+        output_scale = np.minimum(target_scale_size[0] / input_size[0], target_scale_size[1] / input_size[1])
         output_size = np.round(np.multiply(input_size, output_scale)).astype(int)
 
-        return ResizeTransform(
-            input_size[0], input_size[1], int(output_size[0]), int(output_size[1]), self.interp
-        )
+        return ResizeTransform(input_size[0], input_size[1], int(output_size[0]), int(output_size[1]), self.interp)
 
     def get_transform(self, image: np.ndarray) -> Transform:
         random_scale = np.random.uniform(self.min_scale, self.max_scale)
@@ -339,9 +329,7 @@ class FixedSizeCrop(Augmentation):
         max_offset = np.maximum(max_offset, 0)
         offset = np.multiply(max_offset, np.random.uniform(0.0, 1.0))
         offset = np.round(offset).astype(int)
-        return CropTransform(
-            offset[1], offset[0], output_size[1], output_size[0], input_size[1], input_size[0]
-        )
+        return CropTransform(offset[1], offset[0], output_size[1], output_size[0], input_size[1], input_size[0])
 
     def _get_pad(self, image: np.ndarray) -> Transform:
         # Compute the image scale and scaled size.
@@ -620,17 +608,13 @@ class RandomLighting(Augmentation):
         """
         super().__init__()
         self._init(locals())
-        self.eigen_vecs = np.array(
-            [[-0.5675, 0.7192, 0.4009], [-0.5808, -0.0045, -0.8140], [-0.5836, -0.6948, 0.4203]]
-        )
+        self.eigen_vecs = np.array([[-0.5675, 0.7192, 0.4009], [-0.5808, -0.0045, -0.8140], [-0.5836, -0.6948, 0.4203]])
         self.eigen_vals = np.array([0.2175, 0.0188, 0.0045])
 
     def get_transform(self, image):
         assert image.shape[-1] == 3, "RandomLighting only works on RGB images"
         weights = np.random.normal(scale=self.scale, size=3)
-        return BlendTransform(
-            src_image=self.eigen_vecs.dot(weights * self.eigen_vals), src_weight=1.0, dst_weight=1.0
-        )
+        return BlendTransform(src_image=self.eigen_vecs.dot(weights * self.eigen_vals), src_weight=1.0, dst_weight=1.0)
 
 
 class RandomResize(Augmentation):
@@ -710,9 +694,7 @@ class MinIoURandomCrop(Augmentation):
                 # Line or point crop is not allowed
                 if patch[2] == patch[0] or patch[3] == patch[1]:
                     continue
-                overlaps = pairwise_iou(
-                    Boxes(patch.reshape(-1, 4)), Boxes(boxes.reshape(-1, 4))
-                ).reshape(-1)
+                overlaps = pairwise_iou(Boxes(patch.reshape(-1, 4)), Boxes(boxes.reshape(-1, 4))).reshape(-1)
                 if len(overlaps) > 0 and overlaps.min() < min_iou:
                     continue
 

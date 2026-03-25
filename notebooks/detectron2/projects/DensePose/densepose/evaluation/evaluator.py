@@ -208,14 +208,10 @@ def prediction_to_dict(instances, img_id, embedder, class_to_mesh_name, use_stor
     """
     scores = instances.scores.tolist()
     classes = instances.pred_classes.tolist()
-    raw_boxes_xywh = BoxMode.convert(
-        instances.pred_boxes.tensor.clone(), BoxMode.XYXY_ABS, BoxMode.XYWH_ABS
-    )
+    raw_boxes_xywh = BoxMode.convert(instances.pred_boxes.tensor.clone(), BoxMode.XYXY_ABS, BoxMode.XYWH_ABS)
 
     if isinstance(instances.pred_densepose, DensePoseEmbeddingPredictorOutput):
-        results_densepose = densepose_cse_predictions_to_dict(
-            instances, embedder, class_to_mesh_name, use_storage
-        )
+        results_densepose = densepose_cse_predictions_to_dict(instances, embedder, class_to_mesh_name, use_storage)
     elif isinstance(instances.pred_densepose, DensePoseChartPredictorOutput):
         if not use_storage:
             results_densepose = densepose_chart_predictions_to_dict(instances)
@@ -235,22 +231,16 @@ def prediction_to_dict(instances, img_id, embedder, class_to_mesh_name, use_stor
 
 
 def densepose_chart_predictions_to_dict(instances):
-    segmentations = ToMaskConverter.convert(
-        instances.pred_densepose, instances.pred_boxes, instances.image_size
-    )
+    segmentations = ToMaskConverter.convert(instances.pred_densepose, instances.pred_boxes, instances.image_size)
 
     results = []
     for k in range(len(instances)):
         densepose_results_quantized = quantize_densepose_chart_result(
             ToChartResultConverter.convert(instances.pred_densepose[k], instances.pred_boxes[k])
         )
-        densepose_results_quantized.labels_uv_uint8 = (
-            densepose_results_quantized.labels_uv_uint8.cpu()
-        )
+        densepose_results_quantized.labels_uv_uint8 = densepose_results_quantized.labels_uv_uint8.cpu()
         segmentation = segmentations.tensor[k]
-        segmentation_encoded = mask_utils.encode(
-            np.require(segmentation.numpy(), dtype=np.uint8, requirements=["F"])
-        )
+        segmentation_encoded = mask_utils.encode(np.require(segmentation.numpy(), dtype=np.uint8, requirements=["F"]))
         segmentation_encoded["counts"] = segmentation_encoded["counts"].decode("utf-8")
         result = {
             "densepose": densepose_results_quantized,
@@ -311,9 +301,7 @@ def _evaluate_predictions_on_coco(
     results = []
     for eval_mode_name in ["GPS", "GPSM", "IOU"]:
         eval_mode = getattr(DensePoseEvalMode, eval_mode_name)
-        coco_eval = DensePoseCocoEval(
-            coco_gt, coco_dt, "densepose", multi_storage, embedder, dpEvalMode=eval_mode
-        )
+        coco_eval = DensePoseCocoEval(coco_gt, coco_dt, "densepose", multi_storage, embedder, dpEvalMode=eval_mode)
         result = _derive_results_from_coco_eval(
             coco_eval, eval_mode_name, densepose_metrics, class_names, min_threshold, img_ids
         )
@@ -333,9 +321,7 @@ def _get_densepose_metrics(min_threshold: float = 0.5):
     return metrics
 
 
-def _derive_results_from_coco_eval(
-    coco_eval, eval_mode_name, metrics, class_names, min_threshold: float, img_ids
-):
+def _derive_results_from_coco_eval(coco_eval, eval_mode_name, metrics, class_names, min_threshold: float, img_ids):
     if img_ids is not None:
         coco_eval.params.imgIds = img_ids
     coco_eval.params.iouThrs = np.linspace(
@@ -346,10 +332,7 @@ def _derive_results_from_coco_eval(
     coco_eval.summarize()
     results = {metric: float(coco_eval.stats[idx] * 100) for idx, metric in enumerate(metrics)}
     logger = logging.getLogger(__name__)
-    logger.info(
-        f"Evaluation results for densepose, {eval_mode_name} metric: \n"
-        + create_small_table(results)
-    )
+    logger.info(f"Evaluation results for densepose, {eval_mode_name} metric: \n" + create_small_table(results))
     if class_names is None or len(class_names) <= 1:
         return results
 

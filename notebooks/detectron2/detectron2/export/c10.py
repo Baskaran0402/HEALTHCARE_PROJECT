@@ -14,7 +14,6 @@ from detectron2.structures import Boxes, ImageList, Instances, Keypoints, Rotate
 
 from .shared import alias, to_device
 
-
 """
 This file contains caffe2-compatible implementation of several detectron2 components.
 """
@@ -89,9 +88,9 @@ class InstancesList:
             # an unbounded SymInt.
             if torch._utils.is_compiling():
                 torch._check(len(self) == data_len)
-            assert (
-                len(self) == data_len
-            ), "Adding a field of length {} to a Instances of length {}".format(data_len, len(self))
+            assert len(self) == data_len, "Adding a field of length {} to a Instances of length {}".format(
+                data_len, len(self)
+            )
         self.batch_extra_fields[name] = value
 
     def __getattr__(self, name):
@@ -178,16 +177,12 @@ class Caffe2RPN(Caffe2Compatible, rpn.RPN):
         ) == (1.0, 1.0, 1.0, 1.0, 1.0)
         return ret
 
-    def _generate_proposals(
-        self, images, objectness_logits_pred, anchor_deltas_pred, gt_instances=None
-    ):
+    def _generate_proposals(self, images, objectness_logits_pred, anchor_deltas_pred, gt_instances=None):
         assert isinstance(images, ImageList)
         if self.tensor_mode:
             im_info = images.image_sizes
         else:
-            im_info = torch.tensor([[im_sz[0], im_sz[1], 1.0] for im_sz in images.image_sizes]).to(
-                images.tensor.device
-            )
+            im_info = torch.tensor([[im_sz[0], im_sz[1], 1.0] for im_sz in images.image_sizes]).to(images.tensor.device)
         assert isinstance(im_info, torch.Tensor)
 
         rpn_rois_list = []
@@ -332,9 +327,7 @@ class Caffe2ROIPooler(Caffe2Compatible, poolers.ROIPooler):
             return out
 
         device = pooler_fmt_boxes.device
-        assert (
-            self.max_level - self.min_level + 1 == 4
-        ), "Currently DistributeFpnProposals only support 4 levels"
+        assert self.max_level - self.min_level + 1 == 4, "Currently DistributeFpnProposals only support 4 levels"
         fpn_outputs = torch.ops._caffe2.DistributeFpnProposals(
             to_device(pooler_fmt_boxes, "cpu"),
             roi_canonical_scale=self.canonical_box_size,
@@ -424,8 +417,7 @@ def caffe2_fast_rcnn_outputs_inference(tensor_mode, box_predictor, predictions, 
         rois = Boxes.cat([p.proposal_boxes for p in proposals])
     else:
         raise NotImplementedError(
-            'Expected proposals[0].proposal_boxes to be type "Boxes", '
-            f"instead got {type(proposal_boxes)}"
+            'Expected proposals[0].proposal_boxes to be type "Boxes", ' f"instead got {type(proposal_boxes)}"
         )
 
     device, dtype = rois.tensor.device, rois.tensor.dtype
@@ -435,10 +427,7 @@ def caffe2_fast_rcnn_outputs_inference(tensor_mode, box_predictor, predictions, 
     else:
         im_info = torch.tensor([[sz[0], sz[1], 1.0] for sz in [x.image_size for x in proposals]])
         batch_ids = cat(
-            [
-                torch.full((b, 1), i, dtype=dtype, device=device)
-                for i, b in enumerate(len(p) for p in proposals)
-            ],
+            [torch.full((b, 1), i, dtype=dtype, device=device) for i, b in enumerate(len(p) for p in proposals)],
             dim=0,
         )
         rois = torch.cat([batch_ids, rois.tensor], dim=1)
@@ -526,9 +515,7 @@ class Caffe2FastRCNNOutputsInference:
         self.tensor_mode = tensor_mode  # whether the output is caffe2 tensor mode
 
     def __call__(self, box_predictor, predictions, proposals):
-        return caffe2_fast_rcnn_outputs_inference(
-            self.tensor_mode, box_predictor, predictions, proposals
-        )
+        return caffe2_fast_rcnn_outputs_inference(self.tensor_mode, box_predictor, predictions, proposals)
 
 
 def caffe2_mask_rcnn_inference(pred_mask_logits, pred_instances):
@@ -571,6 +558,4 @@ class Caffe2KeypointRCNNInference:
         self.use_heatmap_max_keypoint = use_heatmap_max_keypoint
 
     def __call__(self, pred_keypoint_logits, pred_instances):
-        return caffe2_keypoint_rcnn_inference(
-            self.use_heatmap_max_keypoint, pred_keypoint_logits, pred_instances
-        )
+        return caffe2_keypoint_rcnn_inference(self.use_heatmap_max_keypoint, pred_keypoint_logits, pred_instances)

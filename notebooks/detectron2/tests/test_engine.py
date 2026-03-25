@@ -44,16 +44,12 @@ class TestTrainer(unittest.TestCase):
 
     def test_simple_trainer(self, device="cpu"):
         model = _SimpleModel().to(device=device)
-        trainer = SimpleTrainer(
-            model, self._data_loader(device), torch.optim.SGD(model.parameters(), 0.1)
-        )
+        trainer = SimpleTrainer(model, self._data_loader(device), torch.optim.SGD(model.parameters(), 0.1))
         trainer.train(0, 10)
 
     def test_simple_trainer_reset_dataloader(self, device="cpu"):
         model = _SimpleModel().to(device=device)
-        trainer = SimpleTrainer(
-            model, self._data_loader(device), torch.optim.SGD(model.parameters(), 0.1)
-        )
+        trainer = SimpleTrainer(model, self._data_loader(device), torch.optim.SGD(model.parameters(), 0.1))
         trainer.train(0, 10)
         trainer.reset_data_loader(lambda: self._data_loader(device))
         trainer.train(0, 10)
@@ -64,9 +60,7 @@ class TestTrainer(unittest.TestCase):
 
     def test_writer_hooks(self):
         model = _SimpleModel(sleep_sec=0.1)
-        trainer = SimpleTrainer(
-            model, self._data_loader("cpu"), torch.optim.SGD(model.parameters(), 0.1)
-        )
+        trainer = SimpleTrainer(model, self._data_loader("cpu"), torch.optim.SGD(model.parameters(), 0.1))
 
         max_iter = 50
 
@@ -74,9 +68,7 @@ class TestTrainer(unittest.TestCase):
             json_file = os.path.join(d, "metrics.json")
             writers = [CommonMetricPrinter(max_iter), JSONWriter(json_file)]
 
-            trainer.register_hooks(
-                [hooks.EvalHook(0, lambda: {"metric": 100}), hooks.PeriodicWriter(writers)]
-            )
+            trainer.register_hooks([hooks.EvalHook(0, lambda: {"metric": 100}), hooks.PeriodicWriter(writers)])
             with self.assertLogs(writers[0].logger) as logs:
                 trainer.train(0, max_iter)
 

@@ -43,9 +43,7 @@ class TestAnchorGenerator(unittest.TestCase):
 
     def test_default_anchor_generator_centered(self):
         # test explicit args
-        anchor_generator = DefaultAnchorGenerator(
-            sizes=[32, 64], aspect_ratios=[0.25, 1, 4], strides=[4]
-        )
+        anchor_generator = DefaultAnchorGenerator(sizes=[32, 64], aspect_ratios=[0.25, 1, 4], strides=[4])
 
         # only the last two dimensions of features matter here
         num_images = 2

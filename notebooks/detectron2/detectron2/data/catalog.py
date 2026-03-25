@@ -51,9 +51,7 @@ class _DatasetCatalog(UserDict):
             f = self[name]
         except KeyError as e:
             raise KeyError(
-                "Dataset '{}' is not registered! Available datasets are: {}".format(
-                    name, ", ".join(list(self.keys()))
-                )
+                "Dataset '{}' is not registered! Available datasets are: {}".format(name, ", ".join(list(self.keys())))
             ) from e
         return f()
 
@@ -79,13 +77,10 @@ class _DatasetCatalog(UserDict):
 
 
 DatasetCatalog = _DatasetCatalog()
-DatasetCatalog.__doc__ = (
-    _DatasetCatalog.__doc__
-    + """
+DatasetCatalog.__doc__ = _DatasetCatalog.__doc__ + """
     .. automethod:: detectron2.data.catalog.DatasetCatalog.register
     .. automethod:: detectron2.data.catalog.DatasetCatalog.get
 """
-)
 
 
 class Metadata(types.SimpleNamespace):
@@ -129,8 +124,7 @@ class Metadata(types.SimpleNamespace):
             )
         else:
             raise AttributeError(
-                f"Attribute '{key}' does not exist in the metadata of dataset '{self.name}': "
-                "metadata is empty."
+                f"Attribute '{key}' does not exist in the metadata of dataset '{self.name}': " "metadata is empty."
             )
 
     def __setattr__(self, key, val):
@@ -145,9 +139,10 @@ class Metadata(types.SimpleNamespace):
         # Ensure that metadata of the same name stays consistent
         try:
             oldval = getattr(self, key)
-            assert oldval == val, (
-                "Attribute '{}' in the metadata of '{}' cannot be set "
-                "to a different value!\n{} != {}".format(key, self.name, oldval, val)
+            assert (
+                oldval == val
+            ), "Attribute '{}' in the metadata of '{}' cannot be set " "to a different value!\n{} != {}".format(
+                key, self.name, oldval, val
             )
         except AttributeError:
             super().__setattr__(key, val)
@@ -228,9 +223,6 @@ class _MetadataCatalog(UserDict):
 
 
 MetadataCatalog = _MetadataCatalog()
-MetadataCatalog.__doc__ = (
-    _MetadataCatalog.__doc__
-    + """
+MetadataCatalog.__doc__ = _MetadataCatalog.__doc__ + """
     .. automethod:: detectron2.data.catalog.MetadataCatalog.get
 """
-)

@@ -25,12 +25,8 @@ def densepose_chart_predictor_output_hflip(
             if isinstance(field_value, torch.Tensor):
                 setattr(densepose_predictor_output, field.name, torch.flip(field_value, [3]))
 
-        densepose_predictor_output = _flip_iuv_semantics_tensor(
-            densepose_predictor_output, transform_data
-        )
-        densepose_predictor_output = _flip_segm_semantics_tensor(
-            densepose_predictor_output, transform_data
-        )
+        densepose_predictor_output = _flip_iuv_semantics_tensor(densepose_predictor_output, transform_data)
+        densepose_predictor_output = _flip_segm_semantics_tensor(densepose_predictor_output, transform_data)
 
         for field in fields(densepose_predictor_output):
             output_dict[field.name] = getattr(densepose_predictor_output, field.name)
@@ -50,9 +46,7 @@ def _flip_iuv_semantics_tensor(
     N, C, H, W = densepose_predictor_output.u.shape
     u_loc = (densepose_predictor_output.u[:, 1:, :, :].clamp(0, 1) * 255).long()
     v_loc = (densepose_predictor_output.v[:, 1:, :, :].clamp(0, 1) * 255).long()
-    Iindex = torch.arange(C - 1, device=densepose_predictor_output.u.device)[
-        None, :, None, None
-    ].expand(N, C - 1, H, W)
+    Iindex = torch.arange(C - 1, device=densepose_predictor_output.u.device)[None, :, None, None].expand(N, C - 1, H, W)
     densepose_predictor_output.u[:, 1:, :, :] = uv_symmetries["U_transforms"][Iindex, v_loc, u_loc]
     densepose_predictor_output.v[:, 1:, :, :] = uv_symmetries["V_transforms"][Iindex, v_loc, u_loc]
 
@@ -63,9 +57,7 @@ def _flip_iuv_semantics_tensor(
     return densepose_predictor_output
 
 
-def _flip_segm_semantics_tensor(
-    densepose_predictor_output: DensePoseChartPredictorOutput, dp_transform_data
-):
+def _flip_segm_semantics_tensor(densepose_predictor_output: DensePoseChartPredictorOutput, dp_transform_data):
     if densepose_predictor_output.coarse_segm.shape[1] > 2:
         densepose_predictor_output.coarse_segm = densepose_predictor_output.coarse_segm[
             :, dp_transform_data.mask_label_symmetries, :, :
