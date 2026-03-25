@@ -104,9 +104,10 @@ def logout(request: schemas.LogoutRequest, db: Session = Depends(get_db)):
 
 @router.post("/google", response_model=schemas.Token)
 def google_login(request: schemas.GoogleLoginRequest, db: Session = Depends(get_db)):
+    import os
+
     from google.auth.transport import requests
     from google.oauth2 import id_token
-    import os
 
     try:
         # Verify the token

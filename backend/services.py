@@ -188,8 +188,9 @@ class HealthAnalysisService:
 
         # 10. REAL-TIME ALERT: Broadcast "Critical Risk" to Doctor/Admin Nodes
         if assessment.overall_risk_level in ["Critical", "High"]:
-            from backend.websocket_manager import manager
             import json
+
+            from backend.websocket_manager import manager
 
             alert_payload = {
                 "type": "CRITICAL_RISK_ALERT",

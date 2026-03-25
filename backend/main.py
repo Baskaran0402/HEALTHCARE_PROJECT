@@ -29,8 +29,8 @@ from backend.routers import (
 )
 from backend.services import HealthAnalysisService
 from backend.utils.pdf_generator import PDFReportGenerator
-from src.agents.heart_agent import generate_shap_plot
 from backend.websocket_manager import manager
+from src.agents.heart_agent import generate_shap_plot
 
 # Create database tables
 Base.metadata.create_all(bind=engine)

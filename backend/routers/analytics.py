@@ -1,6 +1,6 @@
-from typing import Any, Dict, List
-from datetime import datetime, timedelta
 import random
+from datetime import datetime, timedelta
+from typing import Any, Dict, List
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session

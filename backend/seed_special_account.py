@@ -4,9 +4,9 @@ import uuid
 
 try:
     # Relative imports — resolved by the IDE and when run as part of the package
-    from . import models, schemas, auth
-    from .database import SessionLocal
+    from . import auth, models, schemas
     from .crud import get_user_by_email
+    from .database import SessionLocal
 except ImportError:
     # Fallback for running as a standalone script:
     # python seed_special_account.py  (from the backend/ dir)
@@ -14,9 +14,9 @@ except ImportError:
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if project_root not in sys.path:
         sys.path.insert(0, project_root)
-    from backend import models, schemas, auth  # type: ignore[import]  # noqa: E402
-    from backend.database import SessionLocal  # type: ignore[import]  # noqa: E402
+    from backend import auth, models, schemas  # type: ignore[import]  # noqa: E402
     from backend.crud import get_user_by_email  # type: ignore[import]  # noqa: E402
+    from backend.database import SessionLocal  # type: ignore[import]  # noqa: E402
 
 
 def seed_special_account():
