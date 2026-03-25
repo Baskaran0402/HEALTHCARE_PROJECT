@@ -1,7 +1,7 @@
 import os
 import shutil
 import uuid
-from typing import List
+from typing import Any, Dict, List, Optional
 
 import uvicorn
 from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, WebSocket, WebSocketDisconnect, status
@@ -323,18 +323,23 @@ async def analyze_brain_tumor(
     ).all()
 
     # Decrypt and compare names manually since name is an EncryptedString
+    db_patient: Optional[models.Patient] = None
+    p: models.Patient
     for p in all_potential_patients:
         if p.name == patient_name:
             db_patient = p
             break
 
-    existing_vitals = {}
+    # Existing user data or defaults
+    existing_vitals: Dict[str, Any] = {}
     patient_email = f"temp_{uuid.uuid4()}@example.com"
-    mrn = f"MRI-{uuid.uuid4().hex[:6]}"
+    # Slicing UUID hex string safely
+    mrn_suffix: str = str(uuid.uuid4().hex)[:6]  # type: ignore
+    mrn = f"MRI-{mrn_suffix}"
 
-    if db_patient:
-        patient_email = db_patient.email
-        mrn = db_patient.medical_record_number or mrn
+    if db_patient is not None:
+        patient_email = str(db_patient.email)
+        mrn = str(db_patient.medical_record_number or mrn)
         latest_record = crud.get_latest_medical_record(db, db_patient.id)
         if latest_record:
             # Fetch existing vitals from the latest record

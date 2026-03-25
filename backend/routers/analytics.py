@@ -71,7 +71,7 @@ def get_execution_logs(limit: int = 10, db: Session = Depends(get_db)):
     Get recent system execution logs.
     """
     # Mock logs for now
-    logs = [
+    logs: List[Dict[str, Any]] = [
         {"id": 1, "level": "INFO", "message": "Neural node heartbeat nominal", "timestamp": datetime.now().isoformat()},
         {
             "id": 2,
@@ -92,7 +92,7 @@ def get_execution_logs(limit: int = 10, db: Session = Depends(get_db)):
             "timestamp": (datetime.now() - timedelta(hours=1)).isoformat(),
         },
     ]
-    return logs[:limit]
+    return logs[:limit]  # type: ignore
 
 
 @router.get("/patients/{patient_id}/history", response_model=List[Dict[str, Any]])
