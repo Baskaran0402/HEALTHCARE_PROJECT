@@ -12,7 +12,7 @@ class PatientBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=200)
     medical_record_number: Optional[str] = Field(None, max_length=50)
     age: int = Field(..., ge=0, le=120)
-    gender: str = Field(..., pattern="^(Male|Female)$")
+    gender: str = Field(..., pattern="^(Male|Female|Other|Unknown)$")
     email: Optional[EmailStr] = None
     phone: Optional[str] = None
     latitude: Optional[float] = None

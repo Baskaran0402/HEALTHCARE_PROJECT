@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { 
-  Activity, User, Heart, ChevronRight, Zap, 
-  ShieldCheck, ArrowRight, Database, 
-  Dna, Brain, Scale
+import { motion } from 'framer-motion';
+import {
+  Activity, User, Heart, ChevronRight, Zap,
+  ShieldCheck, ArrowRight, Database,
+  Dna, Brain, Scale, Save
 } from 'lucide-react';
 import consultationService from '../services/consultationService';
 import { AruviAILayout } from '../components/ui/AruviAILayout';
