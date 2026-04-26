@@ -17,10 +17,7 @@ services:
       - key: MASTER_CRYPTO_KEY
         value: mXp-tW7-9u_X_Xz-p1Z-w-X_p_X_X-p_X_X-u_X_X_X= # Placeholder or user provided
       - key: FRONTEND_URL
-        fromService:
-          type: web
-          name: aruviai-frontend
-          property: url
+        value: https://aruviai-frontend.onrender.com # Update this after frontend deployment
 
   # Frontend Vite/React Service
   - type: web
@@ -30,10 +27,7 @@ services:
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_BASE_URL
-        fromService:
-          type: web
-          name: aruviai-backend
-          property: url
+        value: https://aruviai-backend.onrender.com # Update this after backend deployment
 
 databases:
   - name: healthcare-db
