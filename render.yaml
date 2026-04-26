@@ -18,12 +18,12 @@ services:
         value: mXp-tW7-9u_X_Xz-p1Z-w-X_p_X_X-p_X_X-u_X_X_X= # Placeholder or user provided
       - key: FRONTEND_URL
         fromService:
-          type: static
+          type: static_site
           name: aruviai-frontend
           property: url
 
   # Frontend Vite/React Service
-  - type: static
+  - type: static_site
     name: aruviai-frontend
     env: node
     buildCommand: cd frontend && npm install && npm run build
