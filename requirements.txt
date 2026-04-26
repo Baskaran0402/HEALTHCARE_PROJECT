@@ -22,7 +22,7 @@ imbalanced-learn>=0.11.0
 # Deep Learning (Brain MRI)
 torch>=2.0.0
 torchvision>=0.15.0
-opencv-python>=4.8.0
+opencv-python-headless>=4.8.0
 
 # Support
 pydantic>=2.0.0
